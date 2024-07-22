@@ -1,0 +1,82 @@
+<form name="ctrl.forma" novalidate ng-submit="ctrl.upis();">
+    <div class="container">
+        <div class="row g-3">
+            <div class="col-12 col-md-8">
+                <label for="artikal-naziv" class="form-label">Naziv</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    fis-autofocus
+                    name="naziv"
+                    id="artikal-naziv"
+                    ng-model="ctrl.grupaArtikala.naziv"
+                    required
+                    ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.naziv.$invalid }">
+                <div ng-messages="ctrl.forma.naziv.$error" role="alert" class="invalid-feedback">
+                    <div ng-messages-include="error-messages"></div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <label for="grupa-artikala-boja" class="form-label">Boja</label>
+                <div class="dropdown">
+                    <button
+                        type="button"
+                        class="btn border w-100"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        ng-style="{ backgroundColor: ctrl.grupaArtikala.boja ? ctrl.grupaArtikala.boja : '#fff' }">
+                        &nbsp;
+                    </button>
+                    <div class="dropdown-menu p-2">
+                        <div class="d-flex gap-2">
+                            <div class="d-flex flex-column gap-2">
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #de6464;" ng-click="ctrl.grupaArtikala.boja = '#de6464'"></div>
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #e76f51;" ng-click="ctrl.grupaArtikala.boja = '#e76f51'"></div>
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #f69284;" ng-click="ctrl.grupaArtikala.boja = '#f69284'"></div>
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #f4a261;" ng-click="ctrl.grupaArtikala.boja = '#f4a261'"></div>
+                            </div>
+                            <div class="d-flex flex-column gap-2">
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #ffdf74;" ng-click="ctrl.grupaArtikala.boja = '#ffdf74'"></div>
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #f6dda7;" ng-click="ctrl.grupaArtikala.boja = '#f6dda7'"></div>
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #ffefad;" ng-click="ctrl.grupaArtikala.boja = '#ffefad'"></div>
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #fff384;" ng-click="ctrl.grupaArtikala.boja = '#fff384'"></div>
+                            </div>
+                            <div class="d-flex flex-column gap-2">
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #0096c7;" ng-click="ctrl.grupaArtikala.boja = '#0096c7'"></div>
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #00b2ed;" ng-click="ctrl.grupaArtikala.boja = '#00b2ed'"></div>
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #95dfe3;" ng-click="ctrl.grupaArtikala.boja = '#95dfe3'"></div>
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #a7f4ff;" ng-click="ctrl.grupaArtikala.boja = '#a7f4ff'"></div>
+                            </div>
+                            <div class="d-flex flex-column gap-2">
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #20ad6b;" ng-click="ctrl.grupaArtikala.boja = '#20ad6b'"></div>
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #00c783;" ng-click="ctrl.grupaArtikala.boja = '#00c783'"></div>
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #00ed9c;" ng-click="ctrl.grupaArtikala.boja = '#00ed9c'"></div>
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #abe997;" ng-click="ctrl.grupaArtikala.boja = '#abe997'"></div>
+                            </div>
+                            <div class="d-flex flex-column gap-2">
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #2a9d8f;" ng-click="ctrl.grupaArtikala.boja = '#2a9d8f'"></div>
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #53af8b;" ng-click="ctrl.grupaArtikala.boja = '#53af8b'"></div>
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #82a18f;" ng-click="ctrl.grupaArtikala.boja = '#82a18f'"></div>
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #a0c7b0;" ng-click="ctrl.grupaArtikala.boja = '#a0c7b0'"></div>
+                            </div>
+                            <div class="d-flex flex-column gap-2">
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #9b72e7;" ng-click="ctrl.grupaArtikala.boja = '#9b72e7'"></div>
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #bb7dff;" ng-click="ctrl.grupaArtikala.boja = '#bb7dff'"></div>
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #b19cd9;" ng-click="ctrl.grupaArtikala.boja = '#b19cd9'"></div>
+                                <div class="rounded" href="#" style="width: 3rem; height: 3rem; background-color: #d8bfd8;" ng-click="ctrl.grupaArtikala.boja = '#d8bfd8'"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4 d-flex flex-column-reverse flex-md-row gap-2">
+            <button type="button" class="btn btn-dark flex-grow-1" ui-sref="grupa-artikala-pregled-lista">
+                <i class="fa fa-close"></i> Odustani
+            </button>
+            <button type="submit" class="btn btn-success flex-grow-1">
+                <i class="fa fa-check"></i> Potvrdi unos
+            </button>
+        </div>
+    </div>
+</form>

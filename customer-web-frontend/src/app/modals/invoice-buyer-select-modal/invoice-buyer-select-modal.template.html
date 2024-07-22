@@ -1,0 +1,106 @@
+<div class="modal-header position-sticky top-0 bg-white" style="z-index: 1;">
+    <h4 class="mb-0">Kupac</h4>
+</div>
+<div class="modal-body border-bottom p-0 flex-grow-0">
+    <input
+        type="text"
+        class="form-control py-3 ps-3 shadow-none border-0 fs-5 lh-base"
+        uib-typeahead="item as item.naziv for item in ctrl.onTypeaheadSearch($viewValue)"
+        typeahead-template-url="app/modals/invoice-buyer-select-modal/invoice-buyer-picker-popup.template.html"
+        typeahead-focus-first="false"
+        typeahead-min-length="0"
+        typeahead-focus-on-select="false"
+        typeahead-loading="ctrl.typeaheadState.isLoading"
+        typeahead-wait-ms="300"
+        typeahead-is-open="ctrl.typeaheadState.isOpen"
+        typeahead-on-select="ctrl.onSelect($item, '#zxcza');"
+        typeahead-append-to="'#buyer-search-result-container'"
+        typeahead-popup-classes="'position-static top-0 start-0 border-0 rounded-0'"
+        typeahead-additional-options="{ openOnFocus: true, clearOnFocus: true }"
+        placeholder="Pretraga"
+        ng-model="ctrl.query">
+</div>
+<div id="zxcza" class="modal-body overflow-y-auto p-0" style="height: 500px;">
+    <div class="p-3" ng-show="!ctrl.typeaheadState.isOpen">
+        <div ng-if="!ctrl.typeaheadState.isLoading">
+            <div class="card bg-light" ng-if="!ctrl.invoice.komitent">
+                <div class="card-body">
+                    Kupac nije odabran
+                </div>
+            </div>
+            <div class="card bg-light" ng-if="ctrl.invoice.komitent">
+                <div class="card-body">
+                    <div class="fw-bold fs-5">
+                        {{ ctrl.invoice.komitent.naziv }}
+                    </div>
+                    <div>
+                        <span class="fw-bold">{{ ctrl.invoice.komitent.tip_identifikacione_oznake.naziv }}:</span>
+                        {{ ctrl.invoice.komitent.identifikaciona_oznaka }}
+                    </div>
+                    <div>
+                        <span class="fw-bold">Adresa:</span>
+                        {{ ctrl.invoice.komitent.adresa }}
+                    </div>
+                    <div>
+                        <span class="fw-bold">Grad:</span>
+                        {{ ctrl.invoice.komitent.grad }}
+                    </div>
+                    <div class="d-none drzava">
+                        <span class="fw-bold">Država:</span>
+                        {{ ctrl.invoice.komitent.drzava }}
+                    </div>
+                </div>
+            </div>
+            <div class="mt-2" ng-if="!disabled">
+                <div class="row g-2">
+                    <div class="{{ buttonResponsiveClasses }}">
+                        <button
+                            type="button"
+                            class="btn btn-light border w-100"
+                            data-ng-click="ctrl.showCreateBuyerModal();">
+                            <i class="fa fa-plus"></i> Novi kupac
+                        </button>
+                    </div>
+                    <div class="{{ buttonResponsiveClasses }}">
+                        <button
+                            type="button"
+                            class="btn btn-light border w-100"
+                            data-ng-click="ctrl.removeBuyer()"
+                            ng-if="ctrl.invoice.komitent !== null">
+                            <i class="fa fa-close"></i> Poništi odabir
+                        </button>
+                    </div>
+                    <div class="{{ buttonResponsiveClasses }}">
+                        <button
+                            type="button"
+                            class="btn btn-light border w-100"
+                            data-ng-click="ctrl.showBuyerUpdateModal()"
+                            ng-if="ctrl.invoice.komitent !== null">
+                            <i class="fa fa-edit"></i> Izmijeni podatke
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div
+        class="text-center"
+        ng-show="ctrl.typeaheadState.isLoading">
+        <div class="mt-5"></div>
+        <div class="spinner-border spinner-lg"></div>
+    </div>
+
+    <div id="buyer-search-result-container" class="position-relative">
+    </div>
+</div>
+<div class="modal-footer position-sticky bottom-0 bg-white" style="z-index: 1;">
+    <div class="text-end">
+        <button type="button" class="btn btn-light border" data-ng-click="$close({ isConfirmed: false })">
+            Nazad
+        </button>
+        <button type="button" class="btn btn-primary" data-ng-click="ctrl.confirm()">
+            Potvrdi
+        </button>
+    </div>
+</div>

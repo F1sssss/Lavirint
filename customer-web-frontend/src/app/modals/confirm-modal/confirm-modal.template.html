@@ -1,0 +1,14 @@
+<div class="modal-header">
+    <div>
+        <i class="{{ ctrl.headerIcon }}" ng-if="ctrl.headerIcon"></i>
+        <b>{{ ctrl.headerText }}</b>
+    </div>
+</div>
+<div class="modal-body">
+    {{ ctrl.bodyText }}
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" data-ng-click="$close({})">
+        {{ ctrl.buttonText }}
+    </button>
+</div>

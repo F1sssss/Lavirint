@@ -1,0 +1,114 @@
+<div class="modal-header">
+    <span class="fw-bold text-uppercase" ng-if="ctrl.options.type === 'return'">Stavka povrata</span>
+    <span class="fw-bold text-uppercase" ng-if="ctrl.options.type === 'discount'">Stavka popusta</span>
+</div>
+<div class="modal-body">
+    <form name="ctrl.form">
+        <div class="row g-3">
+            <div class="col-12">
+                <label for="credit-note-item-description" class="form-label">Opis</label>
+                <input
+                    type="text"
+                    id="credit-note-item-description"
+                    class="form-control"
+                    name="description"
+                    data-ng-model="ctrl.item.description"
+                    data-ng-class="{ 'is-invalid': ctrl.form.$submitted && ctrl.form.amount.$invalid }"
+                    required>
+                <div ng-messages="ctrl.form.description.$error" role="alert" class="invalid-feedback">
+                    <div ng-messages-include="error-messages"></div>
+                </div>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Stopa poreza</label>
+                <div class="d-flex w-100 gap-3">
+                    <input
+                        type="radio"
+                        class="btn-check"
+                        name="taxRate"
+                        id="btnradio1"
+                        autocomplete="off"
+                        data-ng-model="ctrl.item.taxRate"
+                        data-ng-value="21"
+                        required>
+                    <label
+                        class="btn btn-outline-primary flex-grow-1"
+                        for="btnradio1"
+                        ng-class="{ 'btn-outline-danger': ctrl.form.$submitted && ctrl.form.taxRate.$invalid }">
+                        21%
+                    </label>
+                    <input
+                        type="radio"
+                        class="btn-check"
+                        name="taxRate"
+                        id="btnradio2"
+                        autocomplete="off"
+                        data-ng-model="ctrl.item.taxRate"
+                        data-ng-value="7"
+                        required>
+                    <label
+                        class="btn btn-outline-primary flex-grow-1"
+                        for="btnradio2"
+                        ng-class="{ 'btn-outline-danger': ctrl.form.$submitted && ctrl.form.taxRate.$invalid }">
+                        7%
+                    </label>
+                    <input
+                        type="radio"
+                        class="btn-check"
+                        name="taxRate"
+                        id="btnradio3"
+                        autocomplete="off"
+                        data-ng-model="ctrl.item.taxRate"
+                        data-ng-value="0"
+                        required>
+                    <label
+                        class="btn btn-outline-primary flex-grow-1"
+                        for="btnradio3"
+                        ng-class="{ 'btn-outline-danger': ctrl.form.$submitted && ctrl.form.taxRate.$invalid }">
+                        0%
+                    </label>
+                </div>
+                <div ng-messages="ctrl.form.taxRate.$error" role="alert" class="invalid-feedback">
+                    <div ng-messages-include="error-messages"></div>
+                </div>
+            </div>
+            <div class="col-12">
+                <label for="credit-note-item-description" class="form-label">Iznos</label>
+                <input
+                    type="number"
+                    class="form-control"
+                    name="amount"
+                    data-ng-model="ctrl.item.amount"
+                    data-ng-class="{ 'is-invalid': ctrl.form.$submitted && ctrl.form.amount.$invalid }"
+                    data-ng-min="0.0001"
+                    required>
+                <div ng-messages="ctrl.form.amount.$error" role="alert" class="invalid-feedback">
+                    <div ng-messages-include="error-messages"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <div class="w-100 text-end">
+        <button
+            type="button"
+            class="btn btn-light border"
+            ng-click="$close({ action: 'cancel' });">
+            Odustani
+        </button>
+        <button
+            type="button"
+            class="btn btn-outline-danger"
+            ng-if="ctrl.cachedItem !== null"
+            ng-click="$close({ action: 'delete' });">
+            Obriši
+        </button>
+        <button
+            type="button"
+            class="btn btn-primary"
+            ng-click="ctrl.confirm();">
+            Sačuvaj
+        </button>
+    </div>
+</div>

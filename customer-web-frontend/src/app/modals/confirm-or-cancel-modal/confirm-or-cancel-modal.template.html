@@ -1,0 +1,16 @@
+<div class="modal-header">
+    <div>
+        <i class="{{ ctrl.headerIcon }}" ng-if="ctrl.headerIcon"></i>
+        <b>{{ ctrl.headerText }}</b>
+    </div>
+</div>
+<div class="modal-body" ng-bind-html="ctrl.bodyText">
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-light border" data-ng-click="$close({ isConfirmed: false })">
+        {{ ctrl.cancelButtonText }}
+    </button>
+    <button type="button" class="btn btn-primary" data-ng-click="$close({ isConfirmed: true })">
+        {{ ctrl.confirmButtonText }}
+    </button>
+</div>

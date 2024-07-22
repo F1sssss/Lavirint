@@ -1,0 +1,1 @@
+Primijećeni korisnici za koje nisu definisana podešavanja

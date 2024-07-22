@@ -1,0 +1,1 @@
+SELECT * FROM operater WHERE id NOT IN (SELECT operater_id FROM podesavanja_aplikacije);

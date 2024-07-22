@@ -1,0 +1,30 @@
+<div class="py-3 py-lg-5">
+    <div class="container-lg">
+        <div class="row g-3">
+            <div class="col-12 col-md-6 col-xl-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body flex-grow-0">
+                        <div class="d-flex justify-content-between">
+                            <div><span class="fw-bold">Stanje</span></div>
+                            <div><span class="fw-bold">{{ ctrl.stanje.ukupno }} €</span></div>
+                        </div>
+                    </div>
+                    <ul class="list-group list-group-flush flex-grow-1 d-flex justify-content-evenly">
+                        <li class="list-group-item flex-grow-1 d-flex justify-content-between align-items-center">
+                            <span>Depozit</span>
+                            <span>{{ ctrl.stanje.depozit }} €</span>
+                        </li>
+                        <li class="list-group-item flex-grow-1 d-flex justify-content-between align-items-center">
+                            <span>Razduženja</span>
+                            <span>{{ ctrl.stanje.isplate }} €</span>
+                        </li>
+                        <li class="list-group-item flex-grow-1 d-flex justify-content-between align-items-center">
+                            <span>Plaćanja</span>
+                            <span>{{ ctrl.stanje.suma_racuna }} €</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

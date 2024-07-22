@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Genije Pro.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="manifest.json">
+
+    <script>
+        if (window.location.hostname === '159.65.118.169') {
+            window.location.href = window.location.href.replace('159.65.118.169', 'pos.e-lavirint.com');
+        }
+    </script>
+
+    <!-- build:css bundle.vendor.css -->
+    <link rel="stylesheet" href="vendor/animate.css/animate.min.css">
+    <link rel="stylesheet" href="vendor/select2/select2.css">
+    <link rel="stylesheet" href="vendor/angular-ui-bootstrap/dist/ui-bootstrap-csp.css">
+    <link rel="stylesheet" href="vendor/ui-select/dist/select.css">
+    <link rel="stylesheet" href="vendor/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="vendor/angular/angular-csp.css">
+    <link rel="stylesheet" href="vendor/simple-keyboard/build/css/index.css">
+    <!-- endbuild -->
+
+    <link rel="stylesheet" href="style.css?v=<%= resourceVersion %>">
+
+    <script type="text/ng-template" id="error-messages">
+        <div ng-message="minDate">Datum je manji od dozvoljenjog.</div>
+        <div ng-message="required">Polje je obavezno</div>
+        <div ng-message="minlength">Sadržaj polja je prekratak</div>
+        <div ng-message="maxlength">Sadržaj polja je predugačak</div>
+        <div ng-message="min">Vrijednost je manja od minimalno dozvoljene</div>
+        <div ng-message="max">Vrijednost je veća od maksimalno dozvoljene</div>
+        <div ng-message="parse">Vrijednost nije u odgovarajućem formatu</div>
+        <div ng-message="step">Vrijednost sadrži više decimalnih mjesta od dozvoljenog</div>
+    </script>
+
+    <script>
+        // if ('serviceWorker' in navigator) {
+        //     navigator.serviceWorker.register('/service-worker.js')
+        //         .then((registration) => {
+        //             console.log('Service Worker registered with scope:', registration.scope);
+        //         })
+        //         .catch((error) => {
+        //             console.error('Service Worker registration failed:', error);
+        //         });
+        // }
+    </script>
+</head>
+
+<body ng-class="{ 'overflow-hidden': $root.showSidebar }">
+
+<div
+    class="position-fixed vw-100 vh-100 top-0 start-0 d-flex align-items-center justify-content-center"
+    style="z-index: 1049; background-color: rgba(0, 0, 0, .5);"
+    ng-show="$root.showLoader"
+    ng-class="{ 'pe-none': !$root.showLoader }">
+    <i class="fa fa-circle-o-notch fa-spin fa-3x text-white"></i>
+</div>
+
+<div
+    ng-show="$root.showSidebar"
+    class="mobile-navbar ng-cloak"
+    style="overflow-y: auto;
+    background-color: #333a46;">
+    <nav class="h-100 p-0 navbar navbar-dark text-white">
+        <div class="position-relative" style="border-bottom: 1px solid #4a545e; background-color: #262c38;">
+            <div class="h-navbar border-secondary p-2 d-flex align-items-center">
+                <button
+                    type="button"
+                    class="btn lh-1 px-2"
+                    style="color: #999;"
+                    data-ng-click="$event.preventDefault(); $root.showSidebar = false">
+                    <i class="fa fa-arrow-left"></i> Nazad
+                </button>
+            </div>
+        </div>
+        <div class="flex-grow-1 overflow-y-scroll text-uppercase text-white">
+            <div style="border-bottom: 1px solid #4a545e; background-color: #262c38;">
+                <div class="px-3 d-flex fw-bold" ng-click="$root.isCompanyCollapsed = !$root.isCompanyCollapsed">
+                    <i class="fa" style="min-width: 20px; margin-top: 18px;" ng-class="{'fa-caret-right': $root.isCompanyCollapsed, 'fa-caret-down': !$root.isCompanyCollapsed}"></i>
+                    <div class="py-3">
+                        <span class="me-2">Firma</span> {{ $root.fisConfig.user.firma.naziv }}
+                    </div>
+                </div>
+                <div class="pb-3" ng-show="!$root.isCompanyCollapsed">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="firma-azuriraj" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-plus me-1"></i> Ažuriranje firme
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="certificates-list-view" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-plus me-1"></i> Sertifikati
+                            </a>
+                        </li>
+                        <li style="margin-left: 20px;" class="nav-item" ng-if="$root.fisConfig.user.podesavanja_aplikacije.vidi_dospjele_fakture">
+                            <a class="nav-link py-3" href="#" ui-sref="firma-dospjela-faktura-listaj" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-table me-1"></i> Dospjeli računi
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div style="border-bottom: 1px solid #4a545e; background-color: #262c38;">
+                <div class="px-3 d-flex fw-bold" ng-click="$root.isRacuniCollapsed = !$root.isRacuniCollapsed">
+                    <i class="fa" style="min-width: 20px; margin-top: 18px;" ng-class="{'fa-caret-right': $root.isRacuniCollapsed, 'fa-caret-down': !$root.isRacuniCollapsed}"></i>
+                    <div class="py-3">Računi</div>
+                </div>
+                <div class="pb-3" ng-show="!$root.isRacuniCollapsed">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="regularInvoiceInput" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-plus me-1"></i> Slobodan unos računa
+                            </a>
+                        </li>
+                        <li class="nav-item d-none">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="corrective-invoice-create" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-plus me-1"></i> Slobodan unos korekcije
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="faktura-unos-po-grupama" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-plus me-1"></i> Unos računa po grupama
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="prodaja-racun-unos" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-plus me-1"></i> Prodaja po artiklima
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="faktura_pregled_redovnih()" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-table me-2"></i> Pregled računa
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="advanceInvoiceInput" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-plus me-1"></i> Slobodan unos avansa
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="faktura_preged_avansa({ broj_stranice: 1 })" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-table me-2"></i> Pregled avansa
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="profaktura-pregled" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-table me-2"></i> Pregled predračuna
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="depozit" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-dot-circle-o me-2"></i> Depozit
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="stanje" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-dot-circle-o me-2"></i> Pregled stanja
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div style="border-bottom: 1px solid #4a545e; background-color: #262c38;">
+                <div class="px-3 d-flex fw-bold" data-ng-click="$root.isCreditNoteCollapsed = !$root.isCreditNoteCollapsed">
+                    <i class="fa" style="min-width: 20px; margin-top: 18px;" ng-class="{'fa-caret-right': $root.isCreditNoteCollapsed, 'fa-caret-down': !$root.isCreditNoteCollapsed}"></i>
+                    <div class="py-3">Knjižno odobrenje</div>
+                </div>
+                <div class="pb-3" ng-show="!$root.isCreditNoteCollapsed">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="credit_note_view({ broj_stranice: 1, broj_stavki_po_stranici: 12 })" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-dot-circle-o me-2"></i> Pregled knjižnih odobrenja
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="credit_note_create" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-dot-circle-o me-2"></i> Unos knjižnih odobrenja
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div style="border-bottom: 1px solid #4a545e; background-color: #262c38;">
+                <div class="px-3 d-flex fw-bold" ng-click="$root.isReportCollapsed = !$root.isReportCollapsed">
+                    <i class="fa" style="min-width: 20px; margin-top: 18px;" ng-class="{'fa-caret-right': $root.isReportCollapsed, 'fa-caret-down': !$root.isReportCollapsed}"></i>
+                    <div class="py-3">Izvještaji</div>
+                </div>
+                <div class="pb-3" ng-show="!$root.isReportCollapsed">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ng-click="$event.preventDefault(); fisReportService.presjekStanja();">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-file me-2"></i> Presjek stanja
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="izvjestaj_dnevni_izvjestaj" ui-sref-active="text-primary fw-bold">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-file me-2"></i> Dnevni izvještaj
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="izvjestaj_periodicni_izvjestaj" ui-sref-active="text-primary fw-bold">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-file me-2"></i> Periodični izvještaj
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="izvjestaj_zurnal" ui-sref-active="text-primary fw-bold">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-file me-2"></i> Žurnal
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="izvjestaj_po_grupama_artikala" ui-sref-active="text-primary fw-bold">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-file me-2"></i> Po grupama artikala
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="izvjestaj_po_artiklima" ui-sref-active="text-primary fw-bold">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-file me-2"></i> Po artiklima
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div style="border-bottom: 1px solid #4a545e; background-color: #262c38;">
+                <div class="px-3 d-flex fw-bold" ng-click="$root.isArtikliCollapsed = !$root.isArtikliCollapsed">
+                    <i class="fa" style="min-width: 20px; margin-top: 18px;" ng-class="{'fa-caret-right': $root.isArtikliCollapsed, 'fa-caret-down': !$root.isArtikliCollapsed}"></i>
+                    <div class="py-3">Artikli</div>
+                </div>
+                <div class="pb-3" ng-show="!$root.isArtikliCollapsed">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="artikal-unos" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-plus me-1"></i> Unos artikla
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="artikal-pregled-lista({ broj_stranice: 1, broj_stavki_po_stranici: 12 })" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-table me-2"></i> Pregled artikala
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="grupa-artikala-unos" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-plus me-1"></i> Unos grupe artikala
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="grupa-artikala-pregled-lista" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-table me-2"></i> Pregled grupa artikala
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div style="border-bottom: 1px solid #4a545e; background-color: #262c38;">
+                <div class="px-3 d-flex fw-bold" ng-click="$root.isPartneriCollapsed = !$root.isPartneriCollapsed">
+                    <i class="fa" style="min-width: 20px; margin-top: 18px;" ng-class="{'fa-caret-right': $root.isPartneriCollapsed, 'fa-caret-down': !$root.isPartneriCollapsed}"></i>
+                    <div class="py-3">Partneri</div>
+                </div>
+                <div class="pb-3" ng-show="!$root.isPartneriCollapsed">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="komitent-unos" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-plus me-1"></i> Unos partnera
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="komitent-pregled-lista({broj_stavki_po_stranici: 12, broj_stranice: 1})" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-table me-2"></i> Pregled partnera
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="komitent-unos-placanja" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-plus me-1"></i> Unos plaćanja
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div style="border-bottom: 1px solid #4a545e; background-color: #262c38;">
+                <div class="px-3 d-flex align-items-center fw-bold" ng-click="$root.showSidebar = false; $root.logout();">
+                    <i class="fa fa-sign-out me-3"></i>
+                    <div class="py-3">Odjava</div>
+                </div>
+            </div>
+            <div class="scroll-buffer-large"></div>
+        </div>
+    </nav>
+</div>
+<div ng-show="$root.showSidebar" ng-click="$root.showSidebar = false" class="mobile-navbar-backdrop ng-cloak"></div>
+
+<nav id="main-navbar" class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top p-0 ng-cloak">
+    <div class="container-lg">
+        <div class="w-100 d-flex d-lg-none align-items-center">
+            <button type="button" href="#" class="btn btn-link fs-3 lh-1" data-ng-click="$root.goToHomepage()"
+                    style="color: #999;">
+                <i class="fa fa-home"></i>
+            </button>
+            <div class="flex-grow-1 px-3 text-center" style="color: #999;">
+                {{ $root.title }}
+            </div>
+            <button type="button"
+                    class="btn btn-link fs-3 lh-1"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                    style="color: #999;"
+                    data-ng-click="$root.showSidebar = !$root.showSidebar">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <button type="button" href="#" class="btn btn-link fs-3 lh-1" data-ng-click="$root.goToHomepage()"
+                    style="color: #999; margin-left: -.75rem;">
+                <i class="fa fa-home"></i>
+            </button>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Računi</a>
+                    <ul class="dropdown-menu" aria-labelledby="nav-artikli">
+                        <li><h6 class="dropdown-header">Računi</h6></li>
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="regularInvoiceInput" ui-sref-active="active">
+                                <i class="fa fa-plus me-2"></i> Slobodan unos računa
+                            </a>
+                        </li>
+                        <li class="d-none">
+                            <a href="#" class="dropdown-item" ui-sref="corrective-invoice-create" ui-sref-active="active">
+                                <i class="fa fa-plus me-2"></i> Slobodan unos korekcije
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="faktura-unos-po-grupama" ui-sref-active="active">
+                                <i class="fa fa-plus me-2"></i> Unos računa po grupama
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="prodaja-racun-unos" ui-sref-active="active">
+                                <i class="fa fa-plus me-2"></i> Prodaja po artiklima
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="faktura_pregled_redovnih()" ui-sref-active="active">
+                                <i class="fa fa-table me-2"></i> Pregled računa
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><h6 class="dropdown-header">Avansi</h6></li>
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="advanceInvoiceInput" ui-sref-active="active">
+                                <i class="fa fa-plus me-2"></i> Slobodan unos avansa
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="faktura_preged_avansa()" ui-sref-active="active">
+                                <i class="fa fa-table me-2"></i> Pregled avansa
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><h6 class="dropdown-header">Ostalo</h6></li>
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="profaktura-pregled" ui-sref-active="active">
+                                <i class="fa fa-table me-2"></i> Pregled predračuna
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="depozit" ui-sref-active="active">
+                                <i class="fa fa-dot-circle-o me-2"></i> Depozit
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="stanje" ui-sref-active="active">
+                                <i class="fa fa-dot-circle-o me-2"></i> Pregled stanja
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="nav-credit-note" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Knjižno odobrenje
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="nav-credit-note">
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="credit_note_view({ broj_stranice: 1, broj_stavki_po_stranici: 12 })" ui-sref-active="active">
+                                <i class="fa fa-table me-2"></i> Pregled knjižnih odobrenja
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="credit_note_create" ui-sref-active="active">
+                                <i class="fa fa-plus me-2"></i> Unos knjižnih odobrenja
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="nav-artikli" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Artikli
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="nav-artikli">
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="artikal-unos" ui-sref-active="active">
+                                <i class="fa fa-plus me-2"></i> Unos artikla
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="artikal-pregled-lista({ broj_stranice: 1, broj_stavki_po_stranici: 12 })" ui-sref-active="active">
+                                <i class="fa fa-table me-2"></i> Pregled artikala
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="grupa-artikala-unos" ui-sref-active="active">
+                                <i class="fa fa-plus me-2"></i> Unos grupe artikala
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="grupa-artikala-pregled-lista" ui-sref-active="active">
+                                <i class="fa fa-table me-2"></i> Pregled grupa artikala
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Partneri</a>
+                    <ul class="dropdown-menu" aria-labelledby="nav-prijemnice">
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="komitent-unos" ui-sref-active="active">
+                                <i class="fa fa-plus me-2"></i> Unos partnera
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="komitent-pregled-lista({broj_stavki_po_stranici: 12, broj_stranice: 1})" ui-sref-active="active">
+                                <i class="fa fa-table me-2"></i> Pregled partnera
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="komitent-unos-placanja" ui-sref-active="active">
+                                <i class="fa fa-plus me-2"></i> Unos plaćanja
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="nav-prijemnice" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Prijemnice
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="nav-prijemnice">
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="prijemnica-unos" ui-sref-active="active">
+                                <i class="fa fa-plus me-2"></i> Unos prijemnice
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="prijemnica-pregled-lista({ broj_stavki_po_stranici: 10, broj_stranice: 1 })" ui-sref-active="active">
+                                <i class="fa fa-table me-2"></i> Pregled prijemnica
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="nav-izvjestaji" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Izvještaji
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="nav-izvjestaji">
+                        <li>
+                            <a href="#" class="dropdown-item" ng-click="$event.preventDefault(); fisReportService.presjekStanja();">
+                                <i class="fa fa-file me-2"></i> Presjek stanja
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="izvjestaj_dnevni_izvjestaj" ui-sref-active="active">
+                                <i class="fa fa-file me-2"></i> Dnevni izvještaj
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="izvjestaj_periodicni_izvjestaj" ui-sref-active="active">
+                                <i class="fa fa-file me-2"></i> Periodični izvještaj
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="izvjestaj_zurnal" ui-sref-active="active">
+                                <i class="fa fa-file me-2"></i> Žurnal
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="izvjestaj_po_grupama_artikala" ui-sref-active="active">
+                                <i class="fa fa-file me-2"></i> Po grupama artikala
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="izvjestaj_po_artiklima" ui-sref-active="active">
+                                <i class="fa fa-file me-2"></i> Po artiklima
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        {{ $root.fisConfig.user.firma.naziv }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-artikli">
+                        <li>
+                            <a class="dropdown-item" href="#" ui-sref="firma-azuriraj">
+                                <i class="fa fa-edit"></i> Ažuriranje firme
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#" ui-sref="certificates-list-view">
+                                <i class="fa fa-edit"></i> Sertifikati
+                            </a>
+                        </li>
+                        <li ng-if="$root.fisConfig.user.podesavanja_aplikacije.vidi_dospjele_fakture">
+                            <a class="dropdown-item" href="#" ui-sref="firma-dospjela-faktura-listaj">
+                                <i class="fa fa-table"></i> Dospjeli računi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item" ng-click='$event.preventDefault(); $root.logout();'>
+                                <i class="fa fa-sign-out"></i> Odjava
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="d-flex h-100 flex-column">
+    <div class="ng-cloak">
+        <div class="alert alert-danger mb-0 " ng-if="$root.certificate_status === 'no-certificate'">
+            <div class="container-lg">
+                Ne postoji ispravan sertifikat za potpisivanje za aktuelni period. Sertifikat možete postaviti u <a href="#" ui-sref="certificates-list-view">podešavanjima</a>.
+            </div>
+        </div>
+        <div class="alert alert-danger mb-0" ng-if="$root.certificate_status === 'invalid'">
+            <div class="container-lg">
+                Sertifikat za potpisivanje je istekao. Obnovite sertifkat kako bi omogućili fiskalizaciju. Sertifikat možete postaviti u <a href="#" ui-sref="certificates-list-view">podešavanjima</a>.
+            </div>
+        </div>
+        <div class="alert alert-danger mb-0" ng-if="$root.certificate_status === 'expires-soon'">
+            <div class="container-lg">
+                Sertifikat za potpisivanje ističe {{ $root.fisConfig.certificate_expiration_date | fisFormatDatetime:'date2' }}. Obnovite sertifkat kako fiskalizacija ne bi bila blokirana. Sertifikat možete postaviti u <a href="#" ui-sref="certificates-list-view">podešavanjima</a>.
+            </div>
+        </div>
+        <div class="alert alert-warning mb-0" ng-if="$root.certificate_status === 'expires-warning'">
+            <div class="container-lg">
+                Sertifikat za potpisivanje ističe {{ $root.fisConfig.certificate_expiration_date | fisFormatDatetime:'date2' }}. Obnovite sertifkat kako fiskalizacija ne bi bila blokirana. Sertifikat možete postaviti u <a href="#" ui-sref="certificates-list-view">podešavanjima</a>.
+            </div>
+        </div>
+        <div class="alert alert-warning mb-0" ng-if="$root.certificate_status === 'danger'">
+            <div class="container-lg">
+                {{ $root.fisConfig.certificate_expiration_date | fisFormatDatetime }}
+            </div>
+        </div>
+    </div>
+    <ui-view class="ng-cloak d-block flex-grow-1"></ui-view>
+</div>
+
+
+<!-- build:js bundle.vendor.js -->
+<script src="vendor/big.js/big.js"></script>
+<script>
+    Big.RM = Big.roundHalfUp;
+</script>
+<script src="js/moment.js"></script>
+<script src="vendor/jquery/dist/jquery.min.js"></script>
+<script src="vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="vendor/smoothscroll-polyfill/dist/smoothscroll.min.js"></script>
+<script src="vendor/simple-keyboard/build/index.js"></script>
+<!-- endbuild -->
+
+<!-- build:js bundle.ng.js -->
+<script src="vendor/angular/angular.min.js"></script>
+<script src="vendor/angular-messages/angular-messages.min.js"></script>
+<script src="vendor/angular-sanitize/angular-sanitize.min.js"></script>
+<script src="vendor/angular-animate/angular-animate.min.js"></script>
+<script src="vendor/angular-cookies/angular-cookies.min.js"></script>
+<script src="vendor/angular-touch/angular-touch.min.js"></script>
+<script src="vendor/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
+<script src="vendor/@uirouter/angularjs/release/angular-ui-router.min.js"></script>
+<script src="js/ui-bootstrap-tpls.js"></script>
+<script src="vendor/ui-select/dist/select.js"></script>
+<script src="vendor/angular-i18n/angular-locale_sr-latn-me.js"></script>
+
+
+<script src="app/app.js"></script>
+<script src="app/app.bootstrap.js"></script>
+<script src="app/app.templates.js"></script>
+
+<script src="app/config/http-interceptor.config.js"></script>
+<script src="app/config/ui-bootstrap-refresh-datepicker.config.js"></script>
+<script src="app/config/ui-router-datetime-matcher.config.js"></script>
+<script src="app/config/uib-datepicker.config.js"></script>
+<script src="app/config/uib-datepicker-popup.config.js"></script>
+<script src="app/config/uib-pagination.config.js"></script>
+<script src="app/config/uib-timepicker.config.js"></script>
+<script src="app/app.routes.js"></script>
+
+
+<script src="app/app.run.js"></script>
+
+<script src="app/filters/fis-format-datetime.filter.js"></script>
+<script src="app/filters/fis-round-half-up.filter.js"></script>
+
+<script src="app/services/api.service.js"></script>
+<script src="app/services/breakpoints.service.js"></script>
+<script src="app/services/credit-note-factory.service.js"></script>
+<script src="app/services/fis-customer-api.service.js"></script>
+<script src="app/services/fis-escpos.service.js"></script>
+<script src="app/services/fis-gui.service.js"></script>
+<script src="app/services/fis-modal.service.js"></script>
+<script src="app/services/fis-report.service.js"></script>
+<script src="app/services/invoice-factory.service.js"></script>
+<script src="app/services/stampac.service.js"></script>
+
+<script src="app/directives/blur-on-enter/blur-on-enter.directive.js"></script>
+<script src="app/directives/buyer-typeahead/buyer-typeahead.directive.js"></script>
+<script src="app/directives/country-typeahead/country-typeahead.controller.js"></script>
+<script src="app/directives/country-typeahead/country-typeahead.directive.js"></script>
+<script src="app/directives/credit-note-typeahead/credit-note-typeahead.directive.js"></script>
+<script src="app/directives/file-selection-changed/file-selection-changed.directive.js"></script>
+<script src="app/directives/fis-autofocus/fis-autofocus.directive.js"></script>
+<script src="app/directives/fis-model-match/fis-model-match.directive.js"></script>
+<script src="app/directives/fis-min-date/fis-min-date.directive.js"></script>
+<script src="app/directives/fis-on-overflow/fis-on-overflow.directive.js"></script>
+<script src="app/directives/fis-pagination/fis-pagination.directive.js"></script>
+<script src="app/directives/fis-textarea-resize/fis-textarea-resize.directive.js"></script>
+<script src="app/directives/invoice-badges/invoice-badges.directive.js"></script>
+<script src="app/directives/invoice-buyer-picker/invoice-buyer-picker.directive.js"></script>
+<script src="app/directives/invoice-card/invoice-card.directive.js"></script>
+<script src="app/directives/invoice-filter-form/invoice-filter-form.directive.js"></script>
+<script src="app/directives/invoice-item-typeahead/invoice-item-typeahead.directive.js"></script>
+<script src="app/directives/invoice-turnover-table/invoice-turnover-table.directive.js"></script>
+<script src="app/directives/numeric-keyboard/numeric-keyboard.directive.js"></script>
+<script src="app/directives/payment-method-typeahead/payment-method-typeahead.directive.js"></script>
+<script src="app/directives/typeahead-additional-options/typeahead-additional-options.directive.js"></script>
+
+<script src="app/modals/confirm-modal/confirm-modal.controller.js"></script>
+<script src="app/modals/confirm-or-cancel-modal/confirm-or-cancel-modal.controller.js"></script>
+<script src="app/modals/credit-note-external-invoice-modal/credit-note-external-invoice-modal.controller.js"></script>
+<script src="app/modals/credit-note-item-modal/credit-note-item-modal.controller.js"></script>
+<script src="app/modals/credit-note-turnover-used-modal/credit-note-turnover-used-modal.controller.js"></script>
+<script src="app/modals/due-payment-notification-modal/due-payment-notification-modal.controller.js"></script>
+<script src="app/modals/invoice-buyer-select-modal/invoice-buyer-select-modal.controller.js"></script>
+<script src="app/modals/invoice-item-edit-modal/invoice-item-edit-modal.controller.js"></script>
+<script src="app/modals/invoice-item-template-picker-modal/invoice-item-template-picker-modal.controller.js"></script>
+<script src="app/modals/invoice-price-structure-modal/invoice-price-structure-modal.controller.js"></script>
+<script src="app/modals/invoice-schedule-modal/invoice-schedule-modal.controller.js"></script>
+<script src="app/modals/komitent-izmjena-modal/komitent-izmjena-modal.controller.js"></script>
+<script src="app/modals/komitent-unos-modal/komitent-unos-modal.controller.js"></script>
+<script src="app/modals/numeric-input-modal/numeric-input-modal.controller.js"></script>
+<script src="app/modals/payment-method-select-modal/payment-method-select-modal.controller.js"></script>
+<script src="app/modals/prijemnica-stavka-modal/prijemnica-stavka-modal.controller.js"></script>
+<script src="app/modals/certificate-upload-modal/certificate-upload-modal.controller.js"></script>
+
+<script src="app/views/artikal-izmjena/artikal-izmjena.controller.js"></script>
+<script src="app/views/artikal-pregled-lista/artikal-pregled-lista.controller.js"></script>
+<script src="app/views/artikal-unos/artikal-unos.controller.js"></script>
+<script src="app/views/credit-note-create/credit-note-create.controller.js"></script>
+<script src="app/views/credit-note-view/credit-note-view.controller.js"></script>
+<script src="app/views/depozit/depozit.controller.js"></script>
+<script src="app/views/dospjela-faktura-pregled/dospjela-faktura-pregled.controller.js"></script>
+<script src="app/views/faktura-konacni-racun/faktura-konacni-racun.controller.js"></script>
+<script src="app/views/faktura-korekcija/faktura-korekcija.controller.js"></script>
+<script src="app/views/faktura-pos-unos/faktura-pos-unos.controller.js"></script>
+<script src="app/views/faktura-pregled-avansa/faktura-pregled-avansa.controller.js"></script>
+<script src="app/views/faktura-pregled-redovnih/faktura-pregled-redovnih.controller.js"></script>
+<script src="app/views/faktura-slobodan-unos-avansa/faktura-slobodan-unos-avansa.controller.js"></script>
+<script src="app/views/faktura-slobodan-unos-korekcije/faktura-slobodan-unos-korekcije.controller.js"></script>
+<script src="app/views/faktura-slobodan-unos-redovnih/faktura-slobodan-unos-redovnih.controller.js"></script>
+<script src="app/views/faktura-unos-po-grupama/faktura-unos-po-grupama.controller.js"></script>
+<script src="app/views/firma-izmjena/firma-izmjena.controller.js"></script>
+<script src="app/views/grupa-artikala-izmjena/grupa-artikala-izmjena.controller.js"></script>
+<script src="app/views/grupa-artikala-pregled-lista/grupa-artikala-pregled-lista.controller.js"></script>
+<script src="app/views/grupa-artikala-unos/grupa-artikala-unos.controller.js"></script>
+<script src="app/views/izvjestaj-dnevni-forma/izvjestaj-dnevni-forma.controller.js"></script>
+<script src="app/views/izvjestaj-periodicni-forma/izvjestaj-periodicni-forma.controller.js"></script>
+<script src="app/views/izvjestaj-po-artiklima-forma/izvjestaj-po-artiklima-forma.controller.js"></script>
+<script src="app/views/izvjestaj-po-grupama-artikala-forma/izvjestaj-po-grupama-artikala-forma.controller.js"></script>
+<script src="app/views/izvjestaj-zurnal-forma/izvjestaj-zurnal-forma.controller.js"></script>
+<script src="app/views/komitent-izmjena/komitent-izmjena.controller.js"></script>
+<script src="app/views/komitent-pregled-lista/komitent-pregled-lista.controller.js"></script>
+<script src="app/views/komitent-pregled-placanja/komitent-pregled-placanja.controller.js"></script>
+<script src="app/views/komitent-unos/komitent-unos.controller.js"></script>
+<script src="app/views/komitent-unos-placanja/komitent-unos-placanja.controller.js"></script>
+<script src="app/views/prijemnica-pregled-lista/prijemnica-pregled-lista.controller.js"></script>
+<script src="app/views/prijemnica-unos/prijemnica-unos.controller.js"></script>
+<script src="app/views/profaktura-pregled-redovnih/profaktura-pregled-redovnih.controller.js"></script>
+<script src="app/views/stanje/stanje.controller.js"></script>
+
+<script src="app/views2/certificates-list-view/certificates-list-view.controller.js"></script>
+
+<script src="app/modals/payment-method-select-modal/payment-method-select-modal.controller.js"></script>
+
+
+<!-- endbuild -->
+</body>
+</html>

@@ -1,0 +1,106 @@
+<style>
+    table td {
+        font-family: monospace;
+        vertical-align: top;
+    }
+
+    table td:first-child {
+        width: 1px;
+        white-space: nowrap;
+    }
+
+    body {
+        padding: 0;
+        margin: 0;
+        font-size: 11px;
+    }
+
+    table {
+        width: 100%;
+        max-width: 58mm;
+        margin: 0 auto;
+    }
+
+    @page {
+        margin: 4mm 0;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .text-end {
+        text-align: right;
+    }
+</style>
+<table>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin-bottom: 4px;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="text-center">Izvještaj po artiklima i uslugama</td>
+    </tr>
+    <tr>
+        <td colspan="2" class="text-center">Od: {{ data.start | fisFormatDatetime }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" class="text-center">Do: {{ data.end | fisFormatDatetime }}</td>
+    </tr>
+    <tr ng-if="data.buyer !== null">
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin-bottom: 4px;"></div>
+        </td>
+    </tr>
+    <tr ng-if="data.buyer !== null">
+        <td colspan="2">
+            Kupac: {{ data.buyer.name }}
+        </td>
+    </tr>
+    <tr ng-repeat-start="item in data.items">
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="white-space: normal;">Artikal: {{ item.item_template_description }}</td>
+    </tr>
+    <tr>
+        <td>Za uplatu:</td>
+        <td class="text-end">{{ item.total_price | fisRoundHalfUp:2 }}</td>
+    </tr>
+    <tr ng-repeat-end="">
+        <td>Količina:</td>
+        <td class="text-end">{{ item.quantity | fisRoundHalfUp:2 }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin-bottom: 4px;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">Datum dokumenta: {{ data.document_datetime | fisFormatDatetime:'date' }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">Vrijeme dokumenta: {{ data.document_datetime | fisFormatDatetime:'time' }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">Kod operatera: {{ data.operator_efi_code }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin-top: 4px;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="border-top: 1px dashed #000"></td>
+    </tr>
+</table>
+
+

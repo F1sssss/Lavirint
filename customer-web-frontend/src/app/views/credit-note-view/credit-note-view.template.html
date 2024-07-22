@@ -1,0 +1,135 @@
+<div class="mt-3"></div>
+<div class="container" ng-if="ctrl.stranica.stavke.length === 0">
+    <div class="card card-body bg-light">
+        Nije izdato nijedno knjižno odobrenje.
+    </div>
+</div>
+<div class="container" ng-if="ctrl.stranica.stavke.length > 0">
+    <fis-pagination
+        data-page-data="ctrl.stranica"
+        data-on-page-change="ctrl.onPageChange()"
+        data-current-page="ctrl.odabranaStranica">
+    </fis-pagination>
+    <div class="row g-3 mt-3">
+        <div class="col-md-4" ng-repeat="item in ctrl.stranica.stavke">
+            <div class="card" ng-if="item.type === 'credit_note'">
+                <div class="card-body">
+                    <div class="position-relative">
+                        <div>
+                            Redni broj: <span class="text-nowrap">{{ item.efi_ordinal_number }}</span>
+                        </div>
+                        <div>
+                            Interni broj: <span class="text-nowrap">{{ item.internal_ordinal_number }}</span>
+                        </div>
+                        <div>
+                            {{ item.efi_broj_fakture }}
+                        </div>
+                        <div>
+                            {{ item.datum_fiskalizacije | fisFormatDatetime }}
+                        </div>
+                        <div class="mt-1">
+                            <span class="badge" style="background: #9300ff; color: white;">
+                                knjižno odobrenje
+                            </span>
+                        </div>
+                        <a href="{{ item.efi_verify_url }}"
+                           target="_blank"
+                           class="btn btn-link text-decoration-none position-absolute lh-1 top-0 end-0">
+                            <i class="fa fa-external-link"></i><span>Provjera</span>
+                        </a>
+                    </div>
+                    <div class="mt-3">
+                        <div class="bg-light px-3 py-2 rounded">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="fw-bold">Kupac:</div>
+                                    <div>
+                                        <a href="#"
+                                           class="text-decoration-none"
+                                           ui-sref="komitent-izmjena({ id: item.komitent.id })">
+                                            {{ item.komitent.naziv }}
+                                        </a>
+                                    </div>
+                                    <div class="text-muted small"
+                                         ng-if="$root.fisConfig.user.firma.settings.smtp_active">
+                                        {{ item.komitent.email }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 bg-white">
+                        <div class="fw-bold">Struktura cijene</div>
+                        <div class="dash-info">
+                            <div class="dash-info-start"><span>Povrat</span></div>
+                            <div class="dash-info-spacing"></div>
+                            <div class="dash-info-end text-nowrap">
+                                <span>{{ -1*item.return_amount_with_tax }}</span>
+                            </div>
+                        </div>
+                        <div class="dash-info">
+                            <div class="dash-info-start"><span>Povrat</span></div>
+                            <div class="dash-info-spacing"></div>
+                            <div class="dash-info-end text-nowrap">
+                                <span>{{ -1*item.discount_amount_with_tax }}</span>
+                            </div>
+                        </div>
+                        <div class="dash-info">
+                            <div class="dash-info-start"><span>Ukupno</span></div>
+                            <div class="dash-info-spacing"></div>
+                            <div class="dash-info-end text-nowrap">
+                                <span>{{ -1*item.return_and_discount_amount_with_tax }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 bg-white">
+                        <div class="fw-bold">Računi</div>
+                        <div class="dash-info" ng-repeat="iic_ref in item.iic_refs">
+                            <div class="dash-info-start">
+                                <div>
+                                    <a href="#"
+                                       class="text-decoration-none"
+                                       ng-click="ctrl.stampac.stampajFakturu(iic_ref.invoice_id, 'a4'); $event.preventDefault();"
+                                       ng-if="iic_ref.invoice_id">
+                                        <span>{{ iic_ref.iic }}</span>
+                                    </a>
+                                    <a ng-href="{{ iic_ref.verification_url }}"
+                                       class="text-decoration-none"
+                                       ng-if="!iic_ref.invoice_id"
+                                       target="_blank">
+                                        <span>{{ iic_ref.iic }}</span>
+                                    </a>
+                                </div>
+                                <div><span class="text-muted small">{{ iic_ref.issue_datetime | fisFormatDatetime }}</span></div>
+                            </div>
+                            <div class="dash-info-spacing"></div>
+                            <div class="dash-info-end text-nowrap">
+                                <span>{{ iic_ref.amount }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <button type="button"
+                                    class="btn btn-light border w-100 px-1 lh-1 py-2"
+                                    ng-click="ctrl.stampac.stampajKnjiznoOdobrenje(item.id)">
+                                <div><i class="fa fa-print mb-1"></i></div>
+                                <div>Kopija A4</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <invoice-card invoice="item" ng-if="item.type === 'invoice'"></invoice-card>
+        </div>
+    </div>
+    <fis-pagination
+        class="mt-3"
+        data-page-data="ctrl.stranica"
+        data-on-page-change="ctrl.onPageChange()"
+        data-current-page="ctrl.odabranaStranica">
+    </fis-pagination>
+</div>
+<div class="scroll-buffer-large"></div>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Gotovinski</title>
+    <style>
+        body {
+            font-family: monospace;
+            margin: 0;
+            padding: 0;
+            font-size: 11px;
+        }
+
+        table {
+            width: 100%;
+            max-width: 58mm;
+            margin: 0 auto;
+        }
+
+        table td {
+            vertical-align: top;
+        }
+
+        .wd-1 {
+            width: 1px;
+        }
+
+        .text-end {
+            text-align: right;
+        }
+
+        .bd-1 {
+            border-top: 1px dashed #000;
+        }
+
+        .mb-1 {
+            margin-bottom: 0.25rem;
+        }
+
+        .mt-1 {
+            margin-top: 0.25rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-nowrap {
+            white-space: nowrap;
+        }
+
+        @page {
+            margin: 4mm 0;
+        }
+
+    </style>
+</head>
+<body>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="bd-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td class="text-center">Elektronski žurnal</td>
+    </tr>
+    <tr>
+        <td class="text-center">Od: {{ datum_od.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+    </tr>
+    <tr>
+        <td class="text-center">Do: {{ datum_do.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>Poreski obaveznik: {{firma.naziv}}</td>
+    </tr>
+    <tr>
+        <td>Sjedište: {{firma.adresa}}, {{firma.grad}}</td>
+    </tr>
+    <tr>
+        <td>PIB: {{firma.pib}}</td>
+    </tr>
+    <tr>
+        <td>ENU kod: {{naplatni_uredjaj.efi_kod}}</td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            Datum dokumenta: {{ datum_dokumenta.strftime('%Y:%m:%d') }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Datum dokumenta: {{ datum_dokumenta.strftime('%H:%M:%S') }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Kod operatera: {{ operater.kodoperatera }}
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+% if len(depoziti) > 0:
+<table>
+    <tr>
+        <td class="text-center">Depoziti</td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>Vrijeme</td>
+        <td class="text-end">Incijalni depozit</td>
+    </tr>
+</table>
+% for depozit in depoziti:
+<table>
+    <tr>
+        <td>{{ depozit.datum_slanja.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+        <td class="text-end">{{ '%.2f' % depozit.iznos }}</td>
+    </tr>
+</table>
+% end
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+% end
+% for faktura in fakture:
+<table>
+    <tr>
+        <td class="text-center">
+            <div>Broj računa:</div>
+            <div>{{ faktura.efi_broj_fakture }}</div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>Redni broj računa: {{ faktura.efi_ordinal_number }}</td>
+    </tr>
+    <tr>
+        <td>Vrijeme: {{ faktura.datumfakture.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+    </tr>
+    <tr>
+        <td>Operater: {{ faktura.operater.ime }}</td>
+    </tr>
+    <tr>
+        <td>Kod operatera: {{ faktura.operater.kodoperatera }}</td>
+    </tr>
+    % for payment_method in faktura.payment_methods:
+    <tr>
+        <td>Način plaćanja: {{ payment_method.payment_method_type.description }}</td>
+    </tr>
+    % end
+    <tr>
+        <td>IKOF: {{faktura.ikof}}</td>
+    </tr>
+    <tr>
+        <td>JIKR: {{faktura.jikr}}</td>
+    </tr>
+</table>
+% if faktura.komitent is not None:
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td class="text-center">
+            Kupac
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            Naziv/ime: {{ faktura.komitent.naziv }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            PIB: {{ faktura.komitent.pib }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Adresa: {{ faktura.komitent.adresa }}, {{ faktura.komitent.grad }}
+        </td>
+    </tr>
+</table>
+% end
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            Artikal
+        </td>
+        <td class="text-end">
+            Cijena
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    % for stavka in faktura.stavke:
+    <tr>
+        <td colspan="3">
+            {{ stavka.naziv }}
+        </td>
+        <td></td>
+    </tr>
+    <tr>
+        <td class="wd-1 text-nowrap">{{ '%.2f' % stavka.kolicina}}</td>
+        <td class="wd-1 text-nowrap">x</td>
+        <td>{{ '%.2f' % stavka.jedinicna_cijena_prodajna}}</td>
+        <td class="wd-1 text-end">{{ '%.2f' % stavka.ukupna_cijena_prodajna}}</td>
+    </tr>
+    % end
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td style="text-align: center;">
+            Struktura cijene
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    % for grupa_poreza in faktura.grupe_poreza:
+    <tr>
+        <td>Stopa {{ '%.0f' % grupa_poreza.porez_procenat }}%, osnovica</td>
+        <td class="text-end">{{ '%.2f' % grupa_poreza.ukupna_cijena_osnovna }}</td>
+    </tr>
+    <tr>
+        <td>Stopa {{ '%.0f' % grupa_poreza.porez_procenat }}%, porez</td>
+        <td class="text-end">{{ '%.2f' % grupa_poreza.porez_iznos }}</td>
+    </tr>
+    % end
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            Ukupna osnovica:
+        </td>
+        <td class="text-end">
+            {{ '%.2f' % faktura.ukupna_cijena_prodajna }}
+        </td>
+    </tr>
+    <tr>
+        <td>Ukupan porez</td>
+        <td class="text-end">{{ '%.2f' % faktura.porez_iznos }}</td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            Puna cijena:
+        </td>
+        <td class="text-end">
+            {{ '%.2f' % faktura.ukupna_cijena_puna }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Popust:
+        </td>
+        <td class="text-end">
+            {{ '%.2f' % faktura.rabat_iznos_prodajni }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Za uplatu:
+        </td>
+        <td class="text-end">
+            {{ '%.2f' % faktura.ukupna_cijena_prodajna }}
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td class="text-center">
+            <img style="width: 85%;" src="{{ faktura.qr_kod }}" alt="">
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1"></div>
+        </td>
+    </tr>
+</table>
+% end
+</body>
+</html>

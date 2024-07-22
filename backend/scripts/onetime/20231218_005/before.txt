@@ -1,0 +1,72 @@
++------+------------------------------------------------+---------------+------------+
+| id   | naziv                                          | pib           | je_aktivna |
++------+------------------------------------------------+---------------+------------+
+| 1153 | DARKO VUKIĆEVIĆ                                | 0112985260012 |          1 |
+|  824 | VANJA BANIĆEVIĆ                                | 0204977237011 |          1 |
+|  698 | "AMG PHARM" D.O.O. PODGORICA                   | 02445255      |          0 |
+|  451 | "NOTARIUS MB" D.O.O. BUDVA                     | 02446049      |          1 |
+|  101 | D.O.O. " PLATINUM RENT A CAR " KOTOR           | 02641534      |          1 |
+|  432 | ""ADRIATIC STROJ" BUDVA                        | 02646781      |          1 |
+|  453 | " MORE GORA 128 "D.O.O. BUDVA                  | 02665042      |          0 |
+|  458 | LEND MONT BUDVA                                | 02699451      |          1 |
+| 1070 | DOO "HUNGO COMPANY" PLAV                       | 02756161      |          1 |
+|  765 | "EPSEE MONTENEGRO" D.O.O. PODGORICA            | 02757028      |          1 |
+| 1203 | D.O.O. "PRESTIGE CAR" - BUDVA                  | 02851431      |          1 |
+|  124 | "NO 77" D.O.O. KOTOR                           | 02855356      |          1 |
+|  362 | RADENKO 2 DOO                                  | 02855399      |          1 |
+|  926 | "IKA CO" D.O.O. BUDVA                          | 02925869      |          0 |
+|  334 | "LUCKY HOME" D.O.O. BUDVA                      | 02952084      |          1 |
+|  361 | ENERGOPROJEKT OPREMA CRNA GORA DOO             | 02954753      |          1 |
+|  738 | "PRESTIGE CAR GROUP" D.O.O. - CETINJE          | 02961784      |          1 |
+|  997 | "LA MONTE" D.O.O. - PODGORICA                  | 02967189      |          1 |
+|   81 | "LA MONTE" D.O.O. - PODGORICA                  | 02967189      |          1 |
+| 1196 | DARKO MARKOVIĆ                                 | 0301993232009 |          1 |
+|  431 | "JADRAN CONSULTING" D.O.O. BUDVA               | 03103153      |          1 |
+|  167 | "INFINITY BOARD & PAPER" D.O.O. TIVAT          | 03115275      |          0 |
+|   66 | "ABEONA" D.O.O. - TIVAT                        | 03124053      |          1 |
+|  460 | "Z&Z COMPANY" - BUDVA                          | 03169707      |          1 |
+|  224 | "HIPOKRAT GROUP MNE" D.O.O. - PODGORICA        | 03180034      |          1 |
+|  643 | "EMEK LTD" D.O.O. PODGORICA                    | 03213307      |          1 |
+|  155 | "CSB" D.O.O. PODGORICA                         | 03214508      |          1 |
+|  775 | D.O.O. "LA PUREZZA" - Tivat                    | 03218406      |          1 |
+|  587 | "MANIRA" D.O.O. MOJKOVAC                       | 03237826      |          1 |
+|  975 | "ARNAZ" D.O.O. - BUDVA                         | 03238083      |          0 |
+|  758 | "MR&C MONTENEGRO" DOO KOTOR                    | 03252752      |          1 |
+|  117 | D.O.O. "ADB - SYSTEM" - BUDVA                  | 03260631      |          0 |
+|  948 | "MONTENEGRO DEVELOPMENT SERVICES" D.O.O. TIVAT | 03281434      |          1 |
+|  635 | "NOVA MAPA CRNE GORE" D.O.O. - PODGORICA       | 03291723      |          1 |
+|  245 | BALEVA ENGINEERING AND CONSULTING              | 03295095      |          1 |
+|  122 | "CG-COD" D.O.O. PODGORICA                      | 03300188      |          1 |
+| 1218 | "ADVENTURENEGRIN LTD" D.O.O. PODGORICA         | 03303365      |          1 |
+|  848 | "VIIV" DOO TIVAT                               | 03304698      |          1 |
+|  869 | DOO"NEMAMTIKAD" PODGORICA                      | 03315100      |          1 |
+|  194 | "FAST FOOD HOMER" D.O.O. CETINJE               | 03318630      |          0 |
+|  849 | "GLOBAL YACHT MANAGEMENT" D.O.O. TIVAT         | 03320430      |          1 |
+| 1245 | "PIRATE PLEASURE" D.O.O. TIVAT                 | 03327221      |          1 |
+|  575 | "UPENA" D.O.O. TIVAT                           | 03335216      |          0 |
+|  589 | "DIGIT PAY" DOO PODGORICA                      | 03340830      |          1 |
+|  931 | "PROWESSI" BUDVA                               | 03352820      |          1 |
+|  910 | "LIGAR" D.O.O. BUDVA                           | 03355560      |          1 |
+|  168 | "TOP-FORM" DOO CETINJE                         | 03356507      |          1 |
+|  427 | "ROOT" D.O.O. BUDVA                            | 03359018      |          1 |
+|  973 | "AFDN COMPANY" PODGORICA                       | 03364267      |          0 |
+|  832 | "FRIDA L&D" D.O.O. - Budva                     | 03378012      |          0 |
+|  911 | "HYDRIX" D.O.O. BUDVA                          | 03379787      |          1 |
+|  889 | "CT MOBILE PLUS" D.O.O. CETINJE                | 03388409      |          1 |
+|  860 | "BADAM IMPORT & EXPORT" D.O.O. - BUDVA         | 03390012      |          1 |
+|  904 | "INTERIOR SOLUTIONS BALKANS" BUDVA             | 03394905      |          0 |
+|  999 | D.O.O. "EGENIN" - BUDVA                        | 03395308      |          0 |
+|  935 | DOO "GASTRONOMIK" BUDVA                        | 03395987      |          1 |
+|  984 | "LADY D" D.O.O. BUDVA                          | 03420418      |          0 |
+| 1086 | DOO A COMPILER TOOLCHAIN"                      | 03421333      |          1 |
+| 1287 | D.O.O. "APIC WAYS"                             | 03423620      |          1 |
+| 1068 | "BELMARY"  Budva                               | 03437027      |          1 |
+| 1098 | JULIAS-NEST D.O.O. BERANE                      | 03460215      |          1 |
+| 1186 | "COMETA" BUDVA                                 | 03475522      |          1 |
+| 1227 | APROLIT CETINJE                                | 03487032      |          1 |
+| 1163 | "KVAD CONSULTING" DOO                          | 03491358      |          1 |
+| 1183 | DOO GRANAT LIMO-LUX                            | 03533719      |          1 |
+| 1209 | "SOLDI" D.O.O. BUDVA                           | 03534464      |          1 |
+| 1222 | "CLINIQUE BEAUTY" D.O.O. BUDVA                 | 03546705      |          1 |
+| 1019 | AUTO SLEP DJURICKOVIC                          | 2610994210025 |          1 |
++------+------------------------------------------------+---------------+------------+

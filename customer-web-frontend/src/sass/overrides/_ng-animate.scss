@@ -1,0 +1,33 @@
+.animate__animated {
+  animation-duration: 400ms;
+}
+
+.ng_animate__slide_in_down__slide_out_up {
+  &.ng-hide-remove {
+    animation: slideInDown 250ms;
+  }
+
+  &.ng-hide-add {
+    animation: slideOutUp 130ms;
+  }
+}
+
+.ng_animate__slide_in_up__slide_out_down {
+  &.ng-hide-remove {
+    animation: slideInUp 250ms;
+  }
+
+  &.ng-hide-add {
+    animation: slideOutDown 130ms;
+  }
+}
+
+.ng_animate__fade_in__fade_out {
+  &.ng-hide-remove {
+    animation: fadeIn 250ms;
+  }
+
+  &.ng-hide-add {
+    animation: fadeOut 130ms;
+  }
+}

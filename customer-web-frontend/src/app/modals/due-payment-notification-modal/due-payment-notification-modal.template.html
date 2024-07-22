@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <b>Dospjeli računi</b>
+</div>
+<div class="modal-body">
+    <p>U nastavku možete preuzeti dospjele račune:</p>
+    <p>
+        <div ng-repeat="notification in ctrl.notifications">
+            <a ng-href="{{ notification.dueInvoice.link }}">
+                {{ notification.dueInvoice.description }}
+            </a>
+        </div>
+    </p>
+    <p>Molimo Vas, izmirite dugovanja da bi izbjegli isključenje servisa.</p>
+</div>
+<div class="modal-footer">
+    <div class="w-100 text-end">
+        <button type="button" class="btn btn-primary" ng-click="ctrl.confirm()">
+            U redu
+        </button>
+    </div>
+</div>

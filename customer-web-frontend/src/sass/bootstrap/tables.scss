@@ -1,0 +1,38 @@
+.table {
+  th {
+    font-weight: $font-weight-bold;
+  }
+}
+
+.table-fit {
+  td {
+    width: 1px;
+  }
+}
+
+.table.text-nowrap {
+  td {
+    white-space: nowrap;
+  }
+}
+
+table.table.table-inset {
+  margin: 0;
+
+  tr:last-child td {
+    border-bottom-width: 0;
+  }
+
+  tr td {
+    padding-top: map-get($spacers, 3);
+    padding-bottom: map-get($spacers, 3);
+  }
+
+  tr td:first-child {
+    padding-left: map-get($spacers, 3);
+  }
+
+  tr td:last-child {
+    padding-right: map-get($spacers, 3);
+  }
+}

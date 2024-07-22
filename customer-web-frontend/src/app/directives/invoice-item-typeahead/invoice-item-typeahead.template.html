@@ -1,0 +1,68 @@
+<div class="invoice-item-input position-relative {{ inputGroupClasses }}">
+    <input
+        type="text"
+        class="form-control p-3 shadow-none border-0 rounded-start flex-grow-0 w-100 h-100"
+        style="width: 60px; z-index: 501;"
+        ng-focus="isEditingQuantity = true"
+        ng-blur="onQuantityBlur($event)"
+        ng-class="{ 'position-fixed top-100 start-100': !isEditingQuantity, 'position-absolute top-0 start-0': isEditingQuantity }"
+        ng-change="onQuantityChange($event)"
+        ng-model="podaci.kolicina">
+    <div class="input-group">
+        <div
+            class="input-group-text bg-white py-3 ps-3 pe-1"
+            ng-if="!isEditingQuantity"
+            ng-class="{ 'rounded-0': !(isRounded === undefined || isRounded) }"
+            ng-click="clearAmount()">
+            <div class="badge bg-primary">
+                {{ podaci.kolicina }} x
+            </div>
+        </div>
+        <input
+            type="text"
+            class="search-input form-control p-3 shadow-none border-0"
+            typeahead-template-url="app/directives/invoice-item-typeahead/invoice-item-typeahead-popup.template.html"
+            typeahead-additional-options="{ openOnFocus: true }"
+            typeahead-focus-first="false"
+            typeahead-loading="typeaheadIsLoading"
+            typeahead-is-open="typeaheadIsOpen"
+            typeahead-min-length="0"
+            typeahead-focus-on-select="false"
+            typeahead-popup-classes="typeaheadPopupClasses"
+            typeahead-keep-focus="true"
+            typeahead-on-select="onSelect($item, $model, $label, $eventType)"
+            typeahead-append-to="typeaheadAppendTo"
+            typeahead-has-double-click="true"
+            uib-typeahead="stavkaLagera as stavkaLagera.artikal.naziv for stavkaLagera in getZalihe($viewValue)"
+            ng-class="{ 'ps-3': podaci.kolicina === null, 'rounded-0': !(isRounded === undefined || isRounded) }"
+            ng-model="query"
+            ng-keydown="onInputKeydown($event)">
+    </div>
+    <div class="d-flex align-items-center justify-content-center"
+         style="width: 50px; height: calc(100% - 2px); position:absolute; top: 1px; right: 1px; z-index: 500;"
+         ng-if="typeaheadIsLoading">
+        <i class="fa fa-circle-o-notch fa-spin text-dark"></i>
+    </div>
+    <div class="d-flex align-items-center justify-content-center position-absolute translate-middle-y top-50 end-0 me-2"
+         style="width: 70px; height: 70px; z-index: 1000;"
+         ng-show="!typeaheadIsOpen && !typeaheadIsLoading">
+        <button
+            type="button"
+            class="btn btn-primary w-100 h-100 d-flex align-items-center justify-content-center shadow"
+            style="background-color: red; border: 1px solid red; border-radius: 50%; font-size: 1.5rem;"
+            ng-click="focusTypeahead()">
+            <i class="fa fa-plus"></i>
+        </button>
+    </div>
+    <div class="d-flex align-items-center justify-content-center position-absolute translate-middle-y top-50 end-0 me-2"
+         style="width: 70px; height: 70px; z-index: 1000;"
+         ng-show="typeaheadIsOpen || typeaheadIsLoading">
+        <button
+            type="button"
+            class="btn btn-primary w-100 h-100 d-flex align-items-center justify-content-center shadow"
+            style="border-radius: 50%; font-size: 1.5rem;"
+            ng-click="onResetButtonClick()">
+            <i class="fa fa-close"></i>
+        </button>
+    </div>
+</div>

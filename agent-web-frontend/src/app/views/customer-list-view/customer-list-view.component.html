@@ -1,0 +1,171 @@
+@if (viewStatus === 'updating') {
+  <div class="fixed top-0 start-0 w-full h-full flex items-center justify-center bg-opacity-20 bg-black z-30">
+    <div class="spinner-border"></div>
+  </div>
+}
+
+<div class="mt-4"></div>
+
+<div class="container">
+  <h4 class="mb-4">Klijenti</h4>
+
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div class="form-control-layout d-inline-block">
+      <div class="form-icon">
+        <i class="bi bi-search"></i>
+      </div>
+      <input
+        #searchInput
+        type="text"
+        class="form-control"
+        (input)="onSearchInputChange()"
+        [(ngModel)]="searchQuery">
+      <div class="form-buttons">
+        @if (searchQuery) {
+          <button
+            type="button"
+            class="btn btn-sm btn-light"
+            aria-label="Clear"
+            (click)="searchQuery=''; onSearchInputChange();">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        }
+      </div>
+    </div>
+
+    <div>
+      <button type="button" class="btn btn-primary ms-3" [routerLink]="['/', 'company', 'insert']">
+        Novi klijent
+      </button>
+    </div>
+  </div>
+
+  @if (viewStatus !== 'loading' && pagedData.totalItems > 0) {
+    <div class="card">
+      <table class="table table-flush">
+        <thead>
+          <tr>
+            <th class="text-end" style="width: 1px;">#</th>
+            <th style="width: 1px;">PIB / JMBG</th>
+            <th>Naziv</th>
+            <th style="width: 80px;">Sertifikat</th>
+            <th style="width: 1px;">Pristup</th>
+            <th style="width: 1px;">Poreski status</th>
+            <th style="width: 1px;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of pagedData.items; track item.id) {
+            <tr>
+              <td class="w-1 whitespace-nowrap !text-end">
+                {{ item.id }}
+              </td>
+              <td class="w-1 whitespace-nowrap">
+                {{ item.identificationNumber }}
+              </td>
+              <td class="whitespace-nowrap">
+                {{ item.name }}
+              </td>
+              <td style="width: 80px">
+                <customer-certificate-expiration-badge [dateString]="item.certificateExpirationDate"></customer-certificate-expiration-badge>
+              </td>
+              <td style="width: 1px;">
+                @if (item.isActive) {
+                  <span class="bg-success-subtle px-2 py-1 small rounded">Omogućen</span>
+                } @else {
+                  <span class="bg-secondary-subtle px-2 py-1 small rounded">Onemogućen</span>
+                }
+              </td>
+              <td style="width: 1px;">
+                @if (item.isTaxpayer) {
+                  <span class="bg-success-subtle px-2 py-1 small rounded">Je obveznik</span>
+                } @else {
+                  <span class="bg-secondary-subtle px-2 py-1 small rounded">Nije obveznik</span>
+                }
+              </td>
+              <td style="width: 1px;" class="td-btn">
+                <div class="dropdown">
+                  <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-three-dots"></i>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                      <a href="" class="dropdown-item" [routerLink]="['/', 'customer', item.id, 'business-units', 'all']">
+                        Poslovne jedinice
+                      </a>
+                    </li>
+                    <li>
+                      <a href="" class="dropdown-item" [routerLink]="['/', 'customer', item.id, 'certificates', 'view']">
+                        Sertifikati
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="#" (click)="toggleVatStatus(item); $event.preventDefault();">
+                        @if (item.isTaxpayer) {
+                          <span>Isključi status poreskog obveznika</span>
+                        } @else {
+                          <span>Uključi status poreskog obveznika</span>
+                        }
+                      </a>
+                    </li>
+                    <li>
+                      @if (item.isActive) {
+                        <a class="dropdown-item" href="#" (click)="toggleEnabled(item); $event.preventDefault();">
+                          <span>Onemogući pristup</span>
+                        </a>
+                      } @else {
+                        <a class="dropdown-item" href="#" (click)="toggleEnabled(item); $event.preventDefault();">
+                          <span>Omogući pristup</span>
+                        </a>
+                      }
+                    </li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="7">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="text-muted">
+                  Prikazano {{ pagedData.pageStart }}-{{ pagedData.pageEnd }} od {{ pagedData.totalItems }}
+                </div>
+                <div class="d-flex gap-2">
+                  <button type="button" class="btn btn-sm btn-light" (click)="prevPage()" [disabled]="pagedData.pageNumber === 1">
+                    <i class="bi bi-chevron-left"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-light" (click)="nextPage()" [disabled]="pagedData.pageNumber === pagedData.totalPages">
+                    <i class="bi bi-chevron-right"></i>
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  }
+
+  @if (viewStatus === 'loading') {
+    <div class="card">
+      <div class="card-body gap-3">
+        <div>
+          <div class="spinner-border spinner-border-sm me-1"></div>
+          Učitavanje u toku
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (viewStatus !== 'loading' && pagedData.totalItems === 0) {
+    <div class="card">
+      <div class="card-body">
+        <div>
+          <i class="bi bi-x-lg"></i> Nijedna stavka ne odgovara kriterijumima pretrage
+        </div>
+      </div>
+    </div>
+  }
+</div>

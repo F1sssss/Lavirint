@@ -1,0 +1,52 @@
+<div class="modal-header">
+    <div class="d-flex justify-content-between align-items-center w-100">
+        <div class="fw-bold">Struktura cijene</div>
+        <button type="button" class="btn btn-link text-decoration-none fw-bold" ng-click="$close({ isConfirmed: false })">
+            Zatvori
+        </button>
+    </div>
+</div>
+<div class="modal-body p-0 overflow-y-scroll">
+    <ul class="list-group list-group-flush border-bottom">
+        <li class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="fw-bold">Prodajna cijena</div>
+                <div class="fw-bold fs-4">{{ ctrl.invoice.ukupna_cijena_prodajna }}</div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="fw-bold">Ukupna osnovica</div>
+                <div class="fw-bold fs-4">{{ ctrl.invoice.ukupna_cijena_rabatisana }}</div>
+            </div>
+        </li>
+    </ul>
+    <ul class="list-group list-group-flush border-bottom" ng-repeat="grupa_poreza in ctrl.invoice.grupe_poreza">
+        <li class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="fw-bold">Stopa poreza {{ grupa_poreza.porez_procenat }}%, osnovica</div>
+                <div class="fw-bold fs-4">{{ grupa_poreza.ukupna_cijena_rabatisana }}</div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="fw-bold">Stopa poreza {{ grupa_poreza.porez_procenat }}%, porez</div>
+                <div class="fw-bold fs-4">{{ grupa_poreza.porez_iznos }}</div>
+            </div>
+        </li>
+    </ul>
+    <ul class="list-group list-group-flush border-bottom rounded">
+        <li class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="fw-bold">Popust</div>
+                <div class="fw-bold fs-4">{{ ctrl.invoice.rabat_iznos_prodajni }}</div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="fw-bold">Puna cijena</div>
+                <div class="fw-bold fs-4">{{ ctrl.invoice.ukupna_cijena_puna }}</div>
+            </div>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,1 @@
+DELETE FROM podesavanja_aplikacije WHERE id IN (222, 235, 237, 324, 348, 357, 600, 405, 418, 421, 432, 1057, 1289, 1577, 1578, 1580, 1588);

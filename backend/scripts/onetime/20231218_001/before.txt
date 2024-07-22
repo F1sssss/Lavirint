@@ -1,0 +1,57 @@
++------+----------------------------------------------------------------+---------------+------------+
+| id   | naziv                                                          | pib           | je_aktivna |
++------+----------------------------------------------------------------+---------------+------------+
+|  524 | Bloom Room - LELA BABAIĆ                                       | 0112985275125 |          1 |
+|  490 | D.O.O."MBV DAMJANOVIĆ" BIJELO POLJE                            | 02427788      |          1 |
+|  493 | D.O.O."MBV DAMJANOVIĆ" KAFANA BIJELO POLJE                     | 02427788      |          1 |
+|  484 | D.O.O. AUTO CENTAR RADEVIĆ BIJELO POLJE                        | 02756196      |          1 |
+|  894 | D.O.O. ELOKSIR BOŽOVIĆ BIJELO POLJE                            | 02773279      |          0 |
+|  623 | D.O.O."BELLADONNA COMPANY" BIJELO POLJE                        | 02804662      |          0 |
+|  760 | "AGRO-ANEM" EXPORT-IMPORT,D.O.O. ROŽAJE                        | 02815222      |          1 |
+|  830 | DE COMMERC - BIJELO POLJE                                      | 02864983      |          0 |
+| 1151 | "ABS" PLAV                                                     | 02930854      |          1 |
+|  591 | D.O.O. "MAGIK - MONT" - BIJELO POLJE                           | 02993104      |          1 |
+|  748 | D.O.O. "BANE - ZATON" BIJELO POLJE                             | 02995620      |          0 |
+|  477 | "ŠABOVIĆ - S" D.O.O. BIJELO POLJE                              | 03040135      |          0 |
+|  204 | "IN PLAV" D.O.O. - PLAV                                        | 03051307      |          1 |
+|  562 | "ELEKTRO - AS" D.O.O. BIJELO POLJE                             | 03060934      |          0 |
+|  594 | D.O.O. "SEKULIĆ - AP" BIJELO POLJE                             | 03090191      |          1 |
+|  391 | "CG - CITTI" D.O.O. - GUSINJE                                  | 03090434      |          1 |
+|  517 | "V&M VUL" D.O.O. BERANE                                        | 03129225      |          1 |
+|  664 | D.O.O. "ROSSONERI" ROŽAJE                                      | 03164527      |          1 |
+|  145 | D.O.O."SUPER MIX" BIJELO POLJE                                 | 03170055      |          1 |
+|  408 | "KULA GROUP" BIJELO POLJE                                      | 03183220      |          0 |
+|  875 | "AUTO - SERVIS RUJOVIĆ" D.O.O. PETNJICA                        | 03187691      |          1 |
+|  327 | "MMV TRADE" D.O.O. BIJELO POLJE                                | 03209270      |          1 |
+|  668 | "AKI GROUP" D.O.O. BIJELO POLJE                                | 03213005      |          0 |
+|  315 | "URKE ZATON" D.O.O. BIJELO POLJE                               | 03227316      |          1 |
+|  531 | "DRIJEN ZDRAVA HRANA" D.O.O. BERANE                            | 03269418      |          1 |
+|  754 | "ŠPANJEVIĆ STONE" BIJELO POLJE                                 | 03280101      |          0 |
+|  809 | D.O.O. "MIHAILOVIĆ INSTALACIJE" BIJELO POLJE                   | 03332632      |          0 |
+|  658 | "MESARA ŠKEPOVIĆ" DOO - PLAV                                   | 03351726      |          1 |
+|  516 | "H - STYLE" D.O.O. PODGORICA                                   | 03365468      |          1 |
+|  899 | "FADIL COMMERCE" PETNJICA                                      | 03389260      |          1 |
+|  969 | D.O.O. "J SHOP" BIJELO POLJE                                   | 03402908      |          1 |
+| 1051 | "ŠPANJEVIĆ STONE GROUP" D.O.O. BIJELO POLJE                    | 03439046      |          0 |
+| 1052 | "CAFFE BAR SEVDAH" D.O.O. PETNJICA                             | 03449602      |          1 |
+| 1082 | "SEDAS" D.O.O. BIJELO POLJE                                    | 03452506      |          0 |
+| 1155 | "STUDIO BEAUTY D & E" D.O.O. BERANE                            | 03477436      |          0 |
+|  907 | ISAT-TEX - ISAT SELMANOVIĆ                                     | 0408964270030 |          1 |
+| 1181 | STEFAN RABRENOVIĆ                                              | 0704993270013 |          0 |
+|  663 | Kafana Kolata - EVLIJAN BEKTEŠEVIĆ                             | 0707965274029 |          0 |
+|  657 | DIAMOND NAILS - ANĐELA BAJČETA                                 | 0910998285018 |          0 |
+| 1112 | NEVLADINA ORGANIZACIJA "ZDRAVA PIĆA I NAPICI"                  | 11064833      |          0 |
+|  863 | MERDIJA PEJČINOVIĆ                                             | 1107985274013 |          1 |
+|  853 | CAFFE BAR SANTEA - ILJIR KUKAJ                                 | 1302982274028 |          1 |
+|  870 | Servis mobilnih telefona "eXclusive - GS" - JASMINA RADONČIĆ   | 1405995277011 |          0 |
+|  563 | Poslastičara AS - DŽEVAT ABDURAHMANOVIĆ                        | 1507965954024 |          1 |
+|  883 | SUR "Orao" - VUKAJLO ĆORIĆ                                     | 1710993284999 |          0 |
+|  794 | SAMIR KASUMOVIĆ                                                | 1801973270032 |          1 |
+|  298 | RAFET BALIJAGIĆ - SUR BELAVISTA                                | 1809973280012 |          1 |
+|  871 | Zabavni salon - preduzetnik Syle Rugova                        | 2004977274020 |          1 |
+|  914 | FRIZERSKI SALON BY - Nikola Dašić                              | 2102996270038 |          0 |
+|  214 | Ferid Malezić - S.T.R Peko Shop                                | 2303967270016 |          1 |
+|  564 | Poslastičara Larisa - JAHIJA HAJDARI                           | 2403970954001 |          1 |
+| 1065 | ŽARKO NERANDŽIĆ                                                | 2603984914702 |          1 |
+|  515 | CAFFE BAR PIERRE                                               | 2611970270023 |          1 |
++------+----------------------------------------------------------------+---------------+------------+

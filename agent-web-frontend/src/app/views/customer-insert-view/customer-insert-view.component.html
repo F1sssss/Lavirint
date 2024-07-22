@@ -1,0 +1,117 @@
+@if (viewStatus === 'loading') {
+  <div class="fixed w-full h-full flex items-center justify-center z-50 bg-opacity-20 bg-black">
+    <div class="spinner-border"></div>
+  </div>
+}
+
+<div class="mt-3"></div>
+
+<div class="container">
+  <div class="mb-3">
+    <nav>
+      <ol class="breadcrumb mb-1">
+        <li class="breadcrumb-item breadcrumb-item-action" [routerLink]="['/', 'customer-list-view']">Klijenti</li>
+        <li class="breadcrumb-item">Novi klijent</li>
+      </ol>
+    </nav>
+    <h4>Novi klijent</h4>
+  </div>
+  <form [formGroup]="formGroup" (ngSubmit)="submit()" style="max-width: 600px;">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Podaci klijenta</h5>
+      </div>
+      <div class="card-body">
+        <div class="row g-4 g-md-3">
+          <div class="col-12">
+            <div class="form-control-layout">
+              <label class="form-label">Naziv</label>
+              <input #nameInput class="form-control" formControlName="name">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-control-layout">
+              <label class="form-label">PIB / JMBG</label>
+              <input class="form-control" formControlName="identificationNumber">
+              @if (formGroup.controls.identificationNumber.hasError('invalidLength')) {
+                <div class="invalid-feedback">
+                  Oznaka mora biti PIB (8 karaktera) ili JMBG (13 karaktera).
+                </div>
+              }
+              @if (formGroup.controls.identificationNumber.hasError('pattern')) {
+                <div class="invalid-feedback">
+                  Identifikaciona oznaka smije sadržati samo cifre.
+                </div>
+              }
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-control-layout">
+              <label class="form-label">PDV broj</label>
+              <input class="form-control" formControlName="taxNumber">
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-control-layout">
+              <label class="form-label">Je poreski obveznik?</label>
+              <select class="form-control" formControlName="isTaxpayer">
+                <option [value]="false">Ne</option>
+                <option [value]="true">Da</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-control-layout">
+              <label class="form-label">Je aktivan?</label>
+              <select class="form-control" formControlName="isActive">
+                <option [value]="false">Ne</option>
+                <option [value]="true">Da</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-control-layout">
+              <label class="form-label">Adresa</label>
+              <input class="form-control" formControlName="address">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-control-layout">
+              <label class="form-label">Grad</label>
+              <input class="form-control" formControlName="city">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-control-layout">
+              <label class="form-label">Država</label>
+              <select class="form-control" formControlName="countryId"></select>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-control-layout">
+              <label class="form-label">Žiro račun</label>
+              <input class="form-control" formControlName="bankAccount">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-control-layout">
+              <label class="form-label">Telefon</label>
+              <input class="form-control" formControlName="phoneNumber">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-control-layout">
+              <label class="form-label">E-mail</label>
+              <input class="form-control" formControlName="emailAddress">
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 text-end">
+          <button type="button" class="btn btn-primary mt-3">
+            Sačuvaj
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,24 @@
+.numeric-zero-button {
+  width: calc(66.66% + 5px) !important;
+}
+
+.numeric-theme.hg-theme-default.hg-layout-numeric {
+  border-radius: 0;
+}
+
+.numeric-theme.hg-theme-default.hg-layout-numeric .hg-button {
+  height: 48px;
+  box-shadow: none;
+  border: $border-width solid $border-color;
+  background-color: $light;
+  border-radius: 0;
+}
+
+.numeric-theme.hg-theme-default .hg-row .hg-button:not(:last-child) {
+  margin-right: map-get($spacers, 2);
+}
+
+
+.numeric-theme.hg-theme-default .hg-row:not(:last-child) {
+  margin-bottom: map-get($spacers, 2);
+}

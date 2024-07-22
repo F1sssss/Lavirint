@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=2.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        table td {
+            font-family: monospace;
+            vertical-align: top;
+        }
+
+        table td:first-child {
+            width: 1px;
+            white-space: nowrap;
+        }
+
+        body {
+            padding: 0;
+            margin: 0;
+            font-size: 11px;
+        }
+
+        table {
+            width: 100%;
+            max-width: 58mm;
+            margin: 0 auto;
+        }
+
+        @page {
+            margin: 4mm 0;
+        }
+
+        .text-nowrap { white-space: nowrap; }
+
+        .text-start { text-align: left; }
+        .text-center { text-align: center; }
+        .text-end { text-align: right; }
+
+        .w-auto { width: auto !important; }
+        .w-0 { width: 0; }
+        .w-50 { width: 50%; }
+        .w-100 { width: 100%; }
+    </style>
+</head>
+<body>
+<table>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin-bottom: 4px;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="text-center">{{ naslov }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" class="text-center">Od: {{ datum_od.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" class="text-center">Do: {{ datum_do.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+    </tr>
+    % if report_type in [0, 1] or len(fiscal_data) == 1:
+        % for row in fiscal_data:
+            <tr>
+                <td colspan="2" class="text-center">
+                    Fisk. dani:
+                    % if row['has_fiscal_days']:
+                        {{ row['fiscal_day_first'] }}-{{ row['fiscal_day_last'] }}
+                    % else:
+                        --
+                    % end
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="text-center">
+                    Računi:
+                    % if row['has_fiscal_numbers']:
+                        {{ row['fiscal_number_first'] }}-{{ row['fiscal_number_last'] }}
+                    % else:
+                        --
+                    % end
+                </td>
+            </tr>
+        % end
+    %else:
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <table class="w-auto" style="margin: 0 auto;">
+                <tr>
+                    <td>God.</td>
+                    <td class="text-end" style="padding: 0 1rem;">Fisk. dani</td>
+                    <td class="text-end">Računi</td>
+                </tr>
+                % for row in fiscal_data:
+                <tr>
+                    <td>{{ row['year'] }}</td>
+                    <td class="text-end text-nowrap" style="padding: 0 1rem;">
+                        % if row['has_fiscal_days']:
+                            {{ row['fiscal_day_first'] }}-{{ row['fiscal_day_last'] }}
+                        % else:
+                            --
+                        % end
+                    </td>
+                    <td class="text-end text-nowrap">
+                        % if row['has_fiscal_numbers']:
+                            {{ row['fiscal_number_first'] }}-{{ row['fiscal_number_last'] }}
+                        % else:
+                            --
+                        % end
+                    </td>
+                </tr>
+                % end
+            </table>
+        </td>
+    </tr>
+    % end
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="white-space: normal;">Poreski obveznik: {{ poreski_obaveznik }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" style="white-space: normal;">Sjedište obveznika: {{ sjediste_obaveznika }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" style="white-space: normal;">PIB: {{ pib }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" style="white-space: normal;">Kod objekta: {{ naziv_objekta }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" style="white-space: normal;">Adresa objekta: {{ adresa_objekta }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" style="white-space: normal;">ENU kod: {{enu_kod}}</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: center;">Kalkulacija gotovine</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>Inicijalni depozit:</td>
+        <td style="text-align: right">{{ '%.2f' % inicijalni_depozit }}</td>
+    </tr>
+    <tr>
+        <td>Ukupan promet:</td>
+        <td style="text-align: right">{{ '%.2f' % ukupno_prodajna_cijena }}</td>
+    </tr>
+    <tr>
+        <td>Bezgotovinski promet:</td>
+        <td style="text-align: right">{{ '%.2f' % bezgotovinski_cijena_prodajna }}</td>
+    </tr>
+    <tr>
+        <td>Got. promet novčanice:</td>
+        <td style="text-align: right">{{ '%.2f' % gotovinski_promet_novcanice }}</td>
+    </tr>
+    <tr>
+        <td>Got. promet ostalo:</td>
+        <td style="text-align: right">{{ '%.2f' % gotovinski_promet_bez_novcanica }}</td>
+    </tr>
+    <tr>
+        <td>Podignuta gotovina:</td>
+        <td style="text-align: right">{{ '%.2f' % podignuta_gotovina }}</td>
+    </tr>
+    <tr>
+        <td>Gotovina u ENU:</td>
+        <td style="text-align: right">{{ '%.2f' % gotovina_u_enu }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: center;">Gotovinski promet</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>Cijena:</td>
+        <td style="text-align: right">{{ '%.2f' % gotovinski_promet_cijena }}</td>
+    </tr>
+    <tr>
+        <td>Popust:</td>
+        <td style="text-align: right">{{ '%.2f' % gotovinski_promet_popust }}</td>
+    </tr>
+    <tr>
+        <td>Za uplatu:</td>
+        <td style="text-align: right">{{ '%.2f' % gotovinski_promet_za_uplatu }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: center;">Bezgotovinski promet</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>Cijena:</td>
+        <td style="text-align: right">{{ '%.2f' % bezgotovinski_cijena_puna }}</td>
+    </tr>
+    <tr>
+        <td>Popust:</td>
+        <td style="text-align: right">{{ '%.2f' % bezgotovinski_popust }}</td>
+    </tr>
+    <tr>
+        <td>Za uplatu:</td>
+        <td style="text-align: right">{{ '%.2f' % bezgotovinski_cijena_prodajna }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: center;">Ukupan promet</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>Cijena:</td>
+        <td style="text-align: right">{{ '%.2f' % ukupno_puna_cijena }}</td>
+    </tr>
+    <tr>
+        <td>Popust:</td>
+        <td style="text-align: right">{{ '%.2f' % ukupno_popust }}</td>
+    </tr>
+    <tr>
+        <td>Za uplatu:</td>
+        <td style="text-align: right">{{ '%.2f' % ukupno_prodajna_cijena }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: center;">Korektivni računi</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>Broj računa:</td>
+        <td style="text-align: right">{{ '%i' % korektivni_racuni_broj }}</td>
+    </tr>
+    <tr>
+        <td>Promet:</td>
+        <td style="text-align: right">{{ '%.2f' % korektivni_racuni_promet }}</td>
+    </tr>
+    <tr>
+        <td>Porez:</td>
+        <td style="text-align: right">{{ '%.2f' % korektivni_racuni_porez }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: center;">Offline računi</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>Broj računa:</td>
+        <td style="text-align: right">{{ '%i' % offline_racuni_broj }}</td>
+    </tr>
+    <tr>
+        <td>Promet:</td>
+        <td style="text-align: right">{{ '%.2f' % offline_racuni_promet }}</td>
+    </tr>
+    <tr>
+        <td>Porez:</td>
+        <td style="text-align: right">{{ '%.2f' % offline_racuni_porez }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: center;">Order računi</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>Broj računa:</td>
+        <td style="text-align: right">{{ '%i' % order_racuni_broj }}</td>
+    </tr>
+    <tr>
+        <td>Promet:</td>
+        <td style="text-align: right">{{ '%.2f' % order_racuni_promet }}</td>
+    </tr>
+    <tr>
+        <td>Porez:</td>
+        <td style="text-align: right">{{ '%.2f' % order_racuni_porez }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: center;">Poreska stopa - 21.00%</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>Osnovica:</td>
+        <td style="text-align: right">{{ '%.2f' % poreska_stopa_21_osnovica }}</td>
+    </tr>
+    <tr>
+        <td>Iznos poreza:</td>
+        <td style="text-align: right">{{ '%.2f' % poreska_stopa_21_iznos_poreza }}</td>
+    </tr>
+    <tr>
+        <td>Promet:</td>
+        <td style="text-align: right">{{ '%.2f' % poreska_stopa_21_promet }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: center;">Poreska stopa - 7.00%</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>Osnovica:</td>
+        <td style="text-align: right">{{ '%.2f' % poreska_stopa_7_osnovica }}</td>
+    </tr>
+    <tr>
+        <td>Iznos poreza:</td>
+        <td style="text-align: right">{{ '%.2f' % poreska_stopa_7_iznos_poreza }}</td>
+    </tr>
+    <tr>
+        <td>Promet:</td>
+        <td style="text-align: right">{{ '%.2f' % poreska_stopa_7_promet }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: center;">Poreska stopa - 0.00%</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>Osnovica:</td>
+        <td style="text-align: right">{{ '%.2f' % poreska_stopa_0_osnovica }}</td>
+    </tr>
+    <tr>
+        <td>Iznos poreza:</td>
+        <td style="text-align: right">{{ '%.2f' % poreska_stopa_0_iznos_poreza }}</td>
+    </tr>
+    <tr>
+        <td>Promet:</td>
+        <td style="text-align: right">{{ '%.2f' % poreska_stopa_0_promet }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: center;">Oslobođeni promet</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>Oslobođeni promet:</td>
+        <td style="text-align: right">{{ '%.2f' % oslobodjeni_promet }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: center;">Ukupno - osnovica / porez / promet</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>Osnovica:</td>
+        <td style="text-align: right">{{ '%.2f' % ukupan_porez_osnovica }}</td>
+    </tr>
+    <tr>
+        <td>Iznos poreza:</td>
+        <td style="text-align: right">{{ '%.2f' % ukupan_porez_iznos }}</td>
+    </tr>
+    <tr>
+        <td>Promet:</td>
+        <td style="text-align: right">{{ '%.2f' % ukupan_porez_promet }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: center;">Gotovinski promet</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>Novčanice i kovanice:</td>
+        <td style="text-align: right">{{ '%.2f' % gotovinski_promet_novcanice }}</td>
+    </tr>
+    <tr>
+        <td>Kreditna kartica:</td>
+        <td style="text-align: right">{{ '%.2f' % gotovinski_promet_kreditna_kartica }}</td>
+    </tr>
+    <tr>
+        <td>Order:</td>
+        <td style="text-align: right">{{ '%.2f' % gotovinski_promet_order }}</td>
+    </tr>
+    <tr>
+        <td>Ostalo:</td>
+        <td style="text-align: right">{{ '%.2f' % gotovina_cijena_prodajna_ostalo }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: center;">Bezgotovinski promet</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>Biznis kred. kartica:</td>
+        <td style="text-align: right">{{ '%.2f' % bezgotovinski_vrsta_biznis_kred_kartica }}</td>
+    </tr>
+    <tr>
+        <td>Jednokratni vaučer:</td>
+        <td style="text-align: right">{{ '%.2f' % bezgotovinski_vrsta_jednokratni_vaucer }}</td>
+    </tr>
+    <tr>
+        <td>Kartica prodavca:</td>
+        <td style="text-align: right">{{ '%.2f' % bezgotovinski_vrsta_kartica_prodavca }}</td>
+    </tr>
+    <tr>
+        <td>Order:</td>
+        <td style="text-align: right">{{ '%.2f' % bezgotovinski_vrsta_order }}</td>
+    </tr>
+    <tr>
+        <td>Avans:</td>
+        <td style="text-align: right">{{ '%.2f' % bezgotovinski_vrsta_avans }}</td>
+    </tr>
+    <tr>
+        <td>Virman:</td>
+        <td style="text-align: right">{{ '%.2f' % bezgotovinski_vrsta_virman }}</td>
+    </tr>
+    <tr>
+        <td>Faktoring:</td>
+        <td style="text-align: right">{{ '%.2f' % bezgotovinski_vrsta_faktoring }}</td>
+    </tr>
+    <tr>
+        <td>Ostalo:</td>
+        <td style="text-align: right">{{ '%.2f' % bezgotovinski_vrsta_ostalo }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin: 4px 0;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">Datum dokumenta: {{ datum_dokumenta.strftime('%Y-%m-%d') }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">Vrijeme dokumenta: {{ vrijeme_dokumenta.strftime('%H:%M:%S') }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">Kod operatera: {{ kod_operatera }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="border-top: 1px dashed #000; margin-top: 4px;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="border-top: 1px dashed #000"></td>
+    </tr>
+</table>
+</body>
+</html>
+

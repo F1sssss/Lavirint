@@ -1,0 +1,7 @@
+.card-body + .card-body {
+  border-top: 1px solid $border-color;
+}
+
+.card-footer {
+  padding: $card-spacer-y $card-spacer-x;
+}

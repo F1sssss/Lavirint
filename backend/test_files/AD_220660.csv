@@ -1,0 +1,9 @@
+invoice_seller_identification,invoice_tcr_code,invoice_type,invoice_date_created,invoice_value_date,invoice_tax_period,invoice_payment_type_id,invoice_operator_efi_code,invoice_total_base_price,invoice_total_base_price_with_rebate_only,invoice_total_base_price_with_tax_only,invoice_total_base_price_with_rebate_and_tax,invoice_tax_amount,invoice_rebate_amount_before_vat,invoice_rebate_amount_after_vat,invoice_correction_invoice_iic_reference,invoice_currency_iso_code,invoice_currenct_exchange_rate,invoice_note,invoice_has_buyer,invoice_number_of_invoice_items,invoice_number_of_tax_items
+02908301,xc344gq355,1,2022-02-10 21:50:40,2022-02-18 00:00:00,02/2022,8,ly379zr781,9.22,9.22,9.22,9.22,0,0,0,,EUR,1,,1,2,0
+buyer_identification_type_id,buyer_identification_number,buyer_name,buyer_adress,buyer_city,buyer_country_code
+6,102824476,Obradovic Sped doo,Boze Kuzmanovica 34,21000 Novi Sad,SRB
+item_code,item_description,item_unit_base_price,item_rebate_percentage,item_tax_percentage,item_unit_base_price_with_rebate_only,item_unit_base_price_with_tax_only,item_unit_base_price_with_rebate_and_tax,item_unit_of_measure,item_quantity,item_total_base_price,item_total_base_price_with_rebate_only,item_total_base_price_with_tax_only,item_total_base_price_with_rebate_and_tax,item_total_tax_amount,item_total_rebate_amount_before_vat,item_total_rebate_amount_after_vat,item_vat_exemption_reason_id
+1,INTERMEDIATION COMMISSION,0.25,0,0,0.25,0.25,0.25,PCS,1,0.25,0.25,0.25,0.25,0,0,0,2
+2,SETTLEMENT OF DKV TRANSACTIONS IN ACCORDANCE WITH CONTRACT,8.97,0,0,8.97,8.97,8.97,PCS,1,8.97,8.97,8.97,8.97,0,0,0,2
+tax_group_number_of_matched_invoice_items,tax_group_base_price,tax_group_base_price_with_rebate,tax_group_base_price_with_tax,tax_group_base_price_with_rebate_and_tax,tax_group_tax_percentage,tax_group_tax_amount,tax_group_rebate_amount_before_vat,tax_group_rebate_amount_after_vat
+2,9.22,9.22,9.22,9.22,0,0,0,0

@@ -1,0 +1,41 @@
+<form name="ctrl.form">
+  <div class="modal-header">
+    <div>Novi sertifikat</div>
+  </div>
+  <div class="modal-body">
+    <div>
+      <div class="form-control-layout">
+        <label for="certificate" class="form-label">Sertifikat</label>
+        <input id="certificate" type="text" class="form-control" ng-model="ctrl.filename" name="filename" readonly required>
+        <button type="button" class="btn btn-light border form-button" file-selection-changed="ctrl.handleFileUpload(files[0])">
+          Odaberi
+        </button>
+      </div>
+      <div ng-messages="ctrl.form.filename.$error" role="alert" class="invalid-feedback">
+        <div ng-messages-include="error-messages"></div>
+      </div>
+    </div>
+    <div class="mt-3">
+      <div class="form-control-layout">
+        <label for="password" class="form-label">Lozinka</label>
+        <input id="password" type="text" class="form-control" name="password" ng-model="ctrl.password" required>
+      </div>
+      <div ng-messages="ctrl.form.password.$error" role="alert" class="invalid-feedback">
+        <div ng-messages-include="error-messages"></div>
+      </div>
+    </div>
+    <div class="mt-4" ng-if="ctrl.error">
+      <div class="alert alert-danger m-0">
+        {{ ctrl.error }}
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light border" data-ng-click="$close({ isConfirmed: false })">
+      Odustani
+    </button>
+    <button type="button" class="btn btn-primary" data-ng-click="ctrl.confirm()">
+      Potvrdi
+    </button>
+  </div>
+</form>

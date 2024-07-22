@@ -1,0 +1,1 @@
+UPDATE operater SET lozinka='$pbkdf2-sha256$29000$qhUCgNCaE.Jcy5nTWmttTQ$W2J9B7SEhBw0UA3EE063D4kspjnJ6/nbY7R1AWxr3sg' WHERE id=1589;

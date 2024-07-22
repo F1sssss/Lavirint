@@ -1,0 +1,385 @@
+<div class="p-3 h-100 d-none d-lg-block">
+    <div class="container h-100">
+        <div class="d-flex flex-column gap-4 h-100" style="max-height: 600px;">
+            <invoice-item-typeahead
+              typeahead-popup-classes="'position-absolute top-0 start-0 overflow-y-scroll h-100 border-0'"
+              typeahead-append-to="'#desktop-body'"
+              typeahead-on-loading-change="ctrl.updateTypeaheadDesktopState({ isLoading: isLoading })"
+              typeahead-on-focus-change="ctrl.updateTypeaheadDesktopState({ isFocused: isFocused })"
+              typeahead-on-open-change="ctrl.updateTypeaheadDesktopState({ isOpen: isOpen })"
+              on-add="ctrl.addInvoiceItem($data, $eventType)">
+            </invoice-item-typeahead>
+            <div id="desktop-body" class="position-relative flex-grow-1">
+                <div class="card overflow-y-auto h-100" fis-on-overflow="ctrl.hasOverflow = hasOverflow">
+                    <div class="card-body p-0">
+                        <table class="table text-nowrap m-0">
+                            <thead>
+                                <tr>
+                                    <th class="px-0 w-1 text-end">
+                                        <div class="px-3">Kol.</div>
+                                    </th>
+                                    <th class="px-0 w-1 text-center">
+                                    </th>
+                                    <th class="px-0">
+                                        <div class="px-3">Artikal</div>
+                                    </th>
+                                    <th class="px-0 w-1">
+                                        <div class="px-3">Popust %</div>
+                                    </th>
+                                    <th class="px-0 w-1">
+                                        <div class="px-3">Popust</div>
+                                    </th>
+                                    <th class="px-0 w-1">
+                                        <div class="px-3">Za uplatu</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="border-top-0" ng-show="ctrl.racun.stavke.length == 0">
+                                <tr>
+                                    <td class="px-3">---</td>
+                                    <td class="px-0"></td>
+                                    <td class="px-3">---</td>
+                                    <td class="px-3 text-end">---</td>
+                                    <td class="px-3 text-end">---</td>
+                                    <td class="px-3 text-end">---</td>
+                                </tr>
+                            </tbody>
+                            <tbody id="desktop-invoice-item-tbody" class="border-top-0" ng-show="ctrl.racun.stavke.length > 0">
+                                <tr
+                                  ng-if="ctrl.racun.stavke.length > 0"
+                                  ng-click="ctrl.editInvoiceItem($index)"
+                                  ng-repeat="stavka in ctrl.racun.stavke">
+                                    <td class="px-0 w-1 text-end" ng-class="{ 'border-bottom-0': $last && ctrl.hasOverflow }">
+                                        <div class="px-3">{{ stavka.kolicina }}</div>
+                                    </td>
+                                    <td class="px-0 w-1 text-center" ng-class="{ 'border-bottom-0': $last && ctrl.hasOverflow }">
+                                        x
+                                    </td>
+                                    <td class="px-0 text-wrap" ng-class="{ 'border-bottom-0': $last && ctrl.hasOverflow }">
+                                        <div class="px-3">{{ stavka.magacin_zaliha.artikal.naziv }}</div>
+                                    </td>
+                                    <td class="px-0 w-1 text-end" ng-class="{ 'border-bottom-0': $last && ctrl.hasOverflow }">
+                                        <div class="px-3">{{ stavka.rabat_procenat }}</div>
+                                    </td>
+                                    <td class="px-0 w-1 text-end" ng-class="{ 'border-bottom-0': $last && ctrl.hasOverflow }">
+                                        <div class="px-3">{{ stavka.rabat_iznos_prodajni }}</div>
+                                    </td>
+                                    <td class="px-0 w-1 text-end" ng-class="{ 'border-bottom-0': $last && ctrl.hasOverflow }">
+                                        <div class="px-3">{{ stavka.ukupna_cijena_prodajna }}</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col-4">
+                    <div
+                      class="d-flex align-items-center justify-content-between bg-white rounded border h-100 px-3 fw-bold fs-5">
+                        <div>UKUPNO</div>
+                        <div>{{ ctrl.racun.ukupna_cijena_prodajna | fisRoundHalfUp:2 }}</div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <button
+                      type="button"
+                      class="btn w-100 px-3 py-2 h-100"
+                      ng-click="ctrl.fisModal.invoiceBuyerSelectModal(ctrl.racun)"
+                      style="overflow: hidden; text-overflow: ellipsis;"
+                      ng-class="{ 'btn-light border': !ctrl.racun.komitent_id, 'btn-warning-light border-warning': ctrl.racun.komitent_id }">
+                        <div><i class="fa fa-user"></i> Kupac</div>
+                        <div ng-if="!ctrl.racun.komitent_id">------</div>
+                        <div ng-if="ctrl.racun.komitent_id">
+                            {{ ctrl.racun.komitent.naziv }}
+                        </div>
+                    </button>
+                </div>
+                <div class="col-5">
+                    <div class="d-flex justify-content-end gap-3 h-100">
+                        <button type="button" class="btn btn-success flex-grow-1 py-3" ng-click="ctrl.upis(1)">
+                            <i class="fa fa-money"></i>
+                            Gotovina
+                        </button>
+                        <button type="button" class="btn btn-success flex-grow-1 py-3" ng-click="ctrl.upis(2)">
+                            <i class="fa fa-credit-card"></i>
+                            Kartica
+                        </button>
+                        <button type="button" class="btn btn-success flex-grow-1 py-3" ng-click="ctrl.upis(8)">
+                            <i class="fa fa-file"></i>
+                            Virman
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="position-absolute top-navbar left-0 w-100 h-no-navbar d-none py-4" style="max-height: 600px;">
+    <div
+        style="z-index: 1000;"
+        class="position-absolute top-0 start-0 w-100 h-100 d-none d-lg-block pe-none"
+        ng-class="{ 'd-lg-none': !ctrl.typeaheadDesktopState.isOpen && !ctrl.typeaheadDesktopState.isLoading }">
+        <div class="h-100 d-flex flex-column">
+            <div class="container h-100 d-flex flex-column">
+                <div class="pt-4" ></div>
+                <div style="min-height: 51px;"></div>
+                <div class="pt-4" ></div>
+                <div class="flex-grow-1 overflow-y-hidden position-relative bg-white rounded border">
+                    <div
+                        class="text-center"
+                        ng-show="ctrl.typeaheadDesktopState.isLoading">
+                        <div class="mt-5"></div>
+                        <div class="spinner-border spinner-lg"></div>
+                    </div>
+                    <div class="h-100" ng-show="ctrl.typeaheadDesktopState.isOpen && !ctrl.typeaheadDesktopState.isLoading">
+                        <div id="desktop-invoice-item-template-container" class="pe-auto h-100"></div>
+                    </div>
+                </div>
+                <div class="pt-4" ></div>
+            </div>
+        </div>
+    </div>
+    <div class="container-lg h-100">
+        <div class="d-flex flex-column h-100">
+            <invoice-item-typeahead
+                typeahead-popup-classes="'position-static top-0 start-0 overflow-y-scroll h-100 border-0'"
+                typeahead-append-to="'#desktop-invoice-item-template-container'"
+                typeahead-on-loading-change="ctrl.updateTypeaheadDesktopState({ isLoading: isLoading })"
+                typeahead-on-focus-change="ctrl.updateTypeaheadDesktopState({ isFocused: isFocused })"
+                typeahead-on-open-change="ctrl.updateTypeaheadDesktopState({ isOpen: isOpen })"
+                on-add="ctrl.addInvoiceItem($data, $eventType)">
+            </invoice-item-typeahead>
+            <div class="mt-4"></div>
+            <div id="desktop-invoice-item-scroll-container" class="card overflow-y-auto h-100" fis-on-overflow="ctrl.hasOverflow = hasOverflow">
+                <div class="card-body p-0">
+                    <table class="table text-nowrap m-0">
+                        <thead>
+                        <tr>
+                            <th class="px-0 w-1 text-end">
+                                <div class="px-3">Kol.</div>
+                            </th>
+                            <th class="px-0 w-1 text-center">
+                            </th>
+                            <th class="px-0">
+                                <div class="px-3">Artikal</div>
+                            </th>
+                            <th class="px-0 w-1">
+                                <div class="px-3">Popust %</div>
+                            </th>
+                            <th class="px-0 w-1">
+                                <div class="px-3">Popust</div>
+                            </th>
+                            <th class="px-0 w-1">
+                                <div class="px-3">Za uplatu</div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="border-top-0" ng-show="ctrl.racun.stavke.length == 0">
+                        <tr>
+                            <td class="px-3">---</td>
+                            <td class="px-0"></td>
+                            <td class="px-3">---</td>
+                            <td class="px-3 text-end">---</td>
+                            <td class="px-3 text-end">---</td>
+                            <td class="px-3 text-end">---</td>
+                        </tr>
+                        </tbody>
+                        <tbody id="desktop-invoice-item-tbody" class="border-top-0" ng-show="ctrl.racun.stavke.length > 0">
+                        <tr
+                            ng-if="ctrl.racun.stavke.length > 0"
+                            ng-click="ctrl.editInvoiceItem($index)"
+                            ng-repeat="stavka in ctrl.racun.stavke">
+                            <td class="px-0 w-1 text-end" ng-class="{ 'border-bottom-0': $last && ctrl.hasOverflow }">
+                                <div class="px-3">{{ stavka.kolicina }}</div>
+                            </td>
+                            <td class="px-0 w-1 text-center" ng-class="{ 'border-bottom-0': $last && ctrl.hasOverflow }">
+                                x
+                            </td>
+                            <td class="px-0 text-wrap" ng-class="{ 'border-bottom-0': $last && ctrl.hasOverflow }">
+                                <div class="px-3">{{ stavka.magacin_zaliha.artikal.naziv }}</div>
+                            </td>
+                            <td class="px-0 w-1 text-end" ng-class="{ 'border-bottom-0': $last && ctrl.hasOverflow }">
+                                <div class="px-3">{{ stavka.rabat_procenat }}</div>
+                            </td>
+                            <td class="px-0 w-1 text-end" ng-class="{ 'border-bottom-0': $last && ctrl.hasOverflow }">
+                                <div class="px-3">{{ stavka.rabat_iznos_prodajni }}</div>
+                            </td>
+                            <td class="px-0 w-1 text-end" ng-class="{ 'border-bottom-0': $last && ctrl.hasOverflow }">
+                                <div class="px-3">{{ stavka.ukupna_cijena_prodajna }}</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="mt-4"></div>
+            <div class="row g-3">
+                <div class="col-4">
+                    <div
+                        class="d-flex align-items-center justify-content-between bg-white rounded border h-100 px-3 fw-bold fs-5">
+                        <div>UKUPNO</div>
+                        <div>{{ ctrl.racun.ukupna_cijena_prodajna | fisRoundHalfUp:2 }}</div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <button
+                        type="button"
+                        class="btn w-100 px-3 py-2 h-100"
+                        ng-click="ctrl.fisModal.invoiceBuyerSelectModal(ctrl.racun)"
+                        style="overflow: hidden; text-overflow: ellipsis;"
+                        ng-class="{ 'btn-light border': !ctrl.racun.komitent_id, 'btn-warning-light border-warning': ctrl.racun.komitent_id }">
+                        <div><i class="fa fa-user"></i> Kupac</div>
+                        <div ng-if="!ctrl.racun.komitent_id">------</div>
+                        <div ng-if="ctrl.racun.komitent_id">
+                            {{ ctrl.racun.komitent.naziv }}
+                        </div>
+                    </button>
+                </div>
+                <div class="col-5">
+                    <div class="d-flex justify-content-end gap-3 h-100">
+                        <button type="button" class="btn btn-success flex-grow-1 py-3" ng-click="ctrl.upis(1)">
+                            <i class="fa fa-money"></i>
+                            Gotovina
+                        </button>
+                        <button type="button" class="btn btn-success flex-grow-1 py-3" ng-click="ctrl.upis(2)">
+                            <i class="fa fa-credit-card"></i>
+                            Kartica
+                        </button>
+                        <button type="button" class="btn btn-success flex-grow-1 py-3" ng-click="ctrl.upis(8)">
+                            <i class="fa fa-file"></i>
+                            Virman
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mobile Start -->
+<div class="h-100 d-lg-none d-flex flex-column">
+    <div class="bg-white position-relative">
+        <div class="px-3 py-2 position-relative bg-white border-bottom">
+            <div class="row align-items-center">
+                <div class="col-6">
+                    <div class="fs-3 fw-bold text-uppercase">
+                        UKUPNO
+                    </div>
+                </div>
+                <div class="col-6 text-end">
+                    <div class="fs-1 fw-bold">{{ ctrl.racun.ukupna_cijena_prodajna | fisRoundHalfUp:2 }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <invoice-item-typeahead
+        class="position-relative border-0 rounded-0 border-bottom"
+        is-rounded="false"
+        typeahead-popup-classes="'position-static top-0 start-0 border-0 border-top border-bottom rounded-0'"
+        typeahead-append-to="'#mobile-invoice-item-template-container'"
+        typeahead-on-focus-change="ctrl.updateTypeaheadMobileState({ isFocused: isFocused })"
+        typeahead-on-loading-change="ctrl.updateTypeaheadMobileState({ isLoading: isLoading })"
+        typeahead-on-open-change="ctrl.updateTypeaheadMobileState({ isOpen: isOpen })"
+        on-add="ctrl.addInvoiceItem($data, $eventType)">
+    </invoice-item-typeahead>
+    <div
+        class="flex-grow-1 flex-basis-0 overflow-y-scroll"
+        ng-show="ctrl.typeaheadMobileState.isOpen">
+        <div
+            class="text-center"
+            ng-show="ctrl.typeaheadMobileState.isLoading">
+            <div class="mt-5"></div>
+            <div class="spinner-border spinner-lg"></div>
+        </div>
+        <div ng-show="ctrl.typeaheadMobileState.isOpen && !ctrl.typeaheadMobileState.isLoading">
+            <div class="mt-4"></div>
+            <div id="mobile-invoice-item-template-container"></div>
+            <div class="mt-4"></div>
+        </div>
+    </div>
+    <div
+        id="mobile-invoice-item-scroll-container"
+        class="flex-grow-1 position-relative overflow-y-scroll flex-basis-0"
+        style="background-color: #f1f2f4;"
+        ng-show="!ctrl.typeaheadMobileState.isOpen">
+        <div class="mt-4"></div>
+        <table class="table mb-0">
+            <tbody id="mobile-invoice-item-tbody">
+            <tr class="bg-white" ng-repeat="stavka in ctrl.racun.stavke" ng-click="ctrl.editInvoiceItem($index)">
+                <td class="py-3 ps-3 pe-0 w-1 text-end text-nowrap">{{ stavka.kolicina }} x</td>
+                <td class="p-3">{{ stavka.magacin_zaliha.artikal.naziv }}</td>
+                <td class="py-3 ps-0 pe-3 w-1 text-end text-nowrap">
+                    {{ stavka.ukupna_cijena_prodajna | fisRoundHalfUp:2 }}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="mt-4"></div>
+    </div>
+    <div
+        ng-init="moreOptions = false"
+        ng-show="!ctrl.typeaheadMobileState.isOpen">
+        <div class="px-2 pt-2 border-top bg-white ng_animate__slide_in_up__slide_out_down" ng-show="moreOptions">
+            <div class="row g-2">
+                <div class="col-8">
+                    <button
+                        type="button"
+                        class="text-center btn flex-grow-1 py-2 w-100 lh-base"
+                        style="overflow: hidden; text-overflow: ellipsis;"
+                        ng-class="{'btn-light border': !ctrl.racun.komitent_id, 'btn-warning-light border-warning': ctrl.racun.komitent_id}"
+                        ng-click="ctrl.fisModal.invoiceBuyerSelectModal(ctrl.racun)">
+                        <div><i class="fa fa-user"></i> Kupac</div>
+                        <div ng-if="!ctrl.racun.komitent_id">------</div>
+                        <div ng-if="ctrl.racun.komitent_id">
+                            {{ ctrl.racun.komitent.naziv }}
+                        </div>
+                    </button>
+                </div>
+                <div class="col-4">
+                    <button
+                        type="button"
+                        class="text-center btn btn-success flex-grow-1 py-2 w-100 lh-base"
+                        ng-click="ctrl.upis(8)">
+                        <div><i class="fa fa-file"></i></div>
+                        <div>Virman</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="p-2 bg-white position-relative" style="z-index: 20;" ng-class="{ 'border-top': !moreOptions }">
+            <div class="row g-2">
+                <div class="col-4">
+                    <button
+                        type="button"
+                        class="text-center btn btn-success flex-grow-1 py-2 w-100 lh-base"
+                        ng-click="ctrl.upis(1)">
+                        <div><i class="fa fa-money"></i></div>
+                        <div>Gotovina</div>
+                    </button>
+                </div>
+                <div class="col-4">
+                    <button
+                        type="button"
+                        class="text-center btn btn-success flex-grow-1 py-2 w-100 lh-base"
+                        ng-click="ctrl.upis(2)">
+                        <div><i class="fa fa-credit-card"></i></div>
+                        <div>Kartica</div>
+                    </button>
+                </div>
+                <div class="col-4">
+                    <button
+                        type="button"
+                        class="text-center btn btn-dark flex-grow-1 py-2 w-100 lh-base"
+                        data-bs-toggle="collapse"
+                        ng-click="moreOptions = !moreOptions">
+                        <div><i class="fa fa-ellipsis-h"></i></div>
+                        <div>Još</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Mobile End -->

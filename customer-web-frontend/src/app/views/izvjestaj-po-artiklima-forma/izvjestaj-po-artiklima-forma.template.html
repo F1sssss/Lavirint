@@ -1,0 +1,84 @@
+<div class="container-lg mt-3">
+    <div class="row">
+        <div class="col-12 col-sm-10 col-md-12 col-xl-9 col-xxl-8">
+            <div class="card">
+                <div class="card-header position-sticky top-navbar">
+                    <div class="fw-bold">Izvještaj po artiklima</div>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex gap-3 flex-wrap">
+                        <div class="w-100 w-md-auto">
+                            <label for="input-format" class="form-label">
+                                Format
+                            </label>
+                            <div id="input-format" class="d-flex gap-2">
+                                <div
+                                    class="btn flex-grow-1 flex-md-grow-0"
+                                    style="min-width: 80px;"
+                                    ng-class="{ 'btn-light border': ctrl.pageFormat !== '58mm', 'btn-primary': ctrl.pageFormat === '58mm' }"
+                                    ng-click="ctrl.pageFormat = '58mm'">
+                                    58mm
+                                </div>
+                                <div
+                                    class="btn flex-grow-1 flex-md-grow-0"
+                                    style="min-width: 80px;"
+                                    ng-class="{ 'btn-light border': ctrl.pageFormat !== 'A4', 'btn-primary': ctrl.pageFormat === 'A4' }"
+                                    ng-click="ctrl.pageFormat = 'A4'">
+                                    A4
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <label for="input-format" class="form-label">
+                                Kupac
+                            </label>
+                            <buyer-typeahead
+                                keep-on-blur
+                                on-select="ctrl.buyerId = $model.id">
+                            </buyer-typeahead>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <span
+                        class="btn btn-light border"
+                        ng-click="ctrl.fetchReport(fisReportService.getMonthStartRelative(-1), fisReportService.getMonthEndRelative(-1))">
+                        prethodni mjesec
+                    </span>
+                    <span
+                        class="btn btn-light border"
+                        ng-click="ctrl.fetchReport(fisReportService.getMonthStartRelative(), fisReportService.getMonthEndRelative())">
+                        tekući mjesec
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <div class="border pb-3">
+                                <div class="p-2 text-center bg-light">Početni datum</div>
+                                <div uib-datepicker ng-model="ctrl.datumOd" datepicker-options="{ customClass: ctrl.customClass }"></div>
+                                <div uib-timepicker ng-model="ctrl.datumOd" class="mt-3 d-flex justify-content-center"></div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="border pb-3">
+                                <div class="p-2 text-center bg-light">Krajnji datum</div>
+                                <div uib-datepicker ng-model="ctrl.datumDo" datepicker-options="{ customClass: ctrl.customClass }"></div>
+                                <div uib-timepicker ng-model="ctrl.datumDo" class="mt-3 d-flex justify-content-center"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-primary d-block w-100 wd-md-100p" ng-click="ctrl.fetchReport(ctrl.datumOd, ctrl.datumDo)">
+                        <i class="fa fa-print"></i> Štampaj
+                    </button>
+                    <button class="btn btn-success d-block w-100 wd-md-100p d-none" ng-click="fisReportService.poArtiklima(ctrl.datumOd, ctrl.datumDo)">
+                        <i class="fa fa-print"></i> Štampaj
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="scroll-buffer-large"></div>

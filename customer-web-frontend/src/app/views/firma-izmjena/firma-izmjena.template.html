@@ -1,0 +1,313 @@
+<div class="py-4">
+    <div class="container-lg">
+        <div class="row">
+            <div class="col-12 col-lg-9">
+                <div class="card shadow-sm">
+                    <div class="card-header py-3">
+                        <h5 class="m-0">Logotip</h5>
+                    </div>
+                    <div class="card-body">
+                        <img ng-if="ctrl.logoUrl !== null" ng-src="{{ ctrl.logoUrl }}" alt="" class="mx-auto w-100 border rounded" style="max-width: 320px;">
+                        <div ng-if="ctrl.logoUrl === null">
+                            Logotip firme nije postavljen
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex flex-column-reverse flex-md-row">
+                            <button class="btn btn-outline-secondary" data-ng-click="ctrl.deleteLogo()">
+                                <i class="fa fa-close"></i> Ukloni
+                            </button>
+                            <div class="me-2 mt-2"></div>
+                            <button class="btn btn-outline-secondary" data-file-selection-changed="ctrl.uploadLogo(files[0])">
+                                <i class="fa fa-upload"></i> Ažuriraj
+                            </button>
+                            <div class="me-2 mt-2"></div>
+                            <button class="btn btn-primary" data-ng-click="ctrl.updateLogo()">Sačuvaj</button>
+                        </div>
+                    </div>
+                </div>
+                <form name="ctrl.forma" novalidate>
+                    <div class="card shadow-sm mt-4">
+                        <div class="card-header py-3">
+                            <h5 class="m-0">Podaci firme</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-12 col-lg-8">
+                                    <div class="form-group">
+                                        <label for="firma-naziv" class="form-label">Naziv</label>
+                                        <input type="text" class="form-control" name="naziv" id="firma-naziv" placeholder="Naziv" ng-model="ctrl.firma.naziv" required ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.naziv.$invalid }">
+                                        <div ng-messages="ctrl.forma.naziv.$error" role="alert" class="invalid-feedback">
+                                            <div ng-messages-include="error-messages"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-4">
+                                    <div class="form-group">
+                                        <label for="firma-pdvbroj" class="form-label">PDV broj</label>
+                                        <input type="text" class="form-control" name="pdvbroj" id="firma-pdvbroj" placeholder="PDV broj" ng-model="ctrl.firma.pdvbroj" ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.pdvbroj.$invalid }">
+                                        <div ng-messages="ctrl.forma.pdvbroj.$error" role="alert" class="invalid-feedback">
+                                            <div ng-messages-include="error-messages"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-xl-6">
+                                    <div class="form-group">
+                                        <label for="firma-adresa" class="form-label">Adresa</label>
+                                        <input type="text" class="form-control" name="adresa" id="firma-adresa" placeholder="Adresa" ng-model="ctrl.firma.adresa" required ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.adresa.$invalid }">
+                                        <div ng-messages="ctrl.forma.adresa.$error" role="alert" class="invalid-feedback">
+                                            <div ng-messages-include="error-messages"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-xl-3">
+                                    <div class="form-group">
+                                        <label for="firma-grad" class="form-label">Grad</label>
+                                        <input type="text" class="form-control" name="grad" id="firma-grad" placeholder="Grad" ng-model="ctrl.firma.grad" required ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.grad.$invalid }">
+                                        <div ng-messages="ctrl.forma.grad.$error" role="alert" class="invalid-feedback">
+                                            <div ng-messages-include="error-messages"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-xl-3">
+                                    <div class="form-group">
+                                        <label for="firma-drzava" class="form-label">Država</label>
+                                        <ui-select
+                                            name="drzava"
+                                            id="firma-drzava"
+                                            theme="select2"
+                                            required
+                                            ng-model="ctrl.firma.drzava"
+                                            ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.drzava.$invalid }">
+                                            <ui-select-match placeholder="Odaberite državu">
+                                                <span ng-bind="$select.selected.drzava"></span>
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="item.id as item in (ctrl.drzave | filter: $select.search) track by item.id">
+                                                <span ng-bind="item.drzava"></span>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                        <div ng-messages="ctrl.forma.drzava.$error" role="alert" class="invalid-feedback">
+                                            <div ng-messages-include="error-messages"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-4">
+                                    <div class="form-group">
+                                        <label for="firma-ziroracun" class="form-label">Žiro račun</label>
+                                        <input type="text" class="form-control" name="ziroracun" id="firma-ziroracun" placeholder="Žiro račun" ng-model="ctrl.firma.ziroracun" ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.ziroracun.$invalid }">
+                                        <div ng-messages="ctrl.forma.ziroracun.$error" role="alert" class="invalid-feedback">
+                                            <div ng-messages-include="error-messages"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-4">
+                                    <div class="form-group">
+                                        <label for="firma-telefon" class="form-label">Telefon</label>
+                                        <input type="text" class="form-control" name="telefon" id="firma-telefon" placeholder="Telefon" ng-model="ctrl.firma.telefon" ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.telefon.$invalid }">
+                                        <div ng-messages="ctrl.forma.telefon.$error" role="alert" class="invalid-feedback">
+                                            <div ng-messages-include="error-messages"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-4">
+                                    <div class="form-group">
+                                        <label for="firma-imejl" class="form-label">Imejl</label>
+                                        <input type="text" class="form-control" name="email" id="firma-imejl" placeholder="Imejl" ng-model="ctrl.firma.email" ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.email.$invalid }">
+                                        <div ng-messages="ctrl.forma.email.$error" role="alert" class="invalid-feedback">
+                                            <div ng-messages-include="error-messages"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex flex-column-reverse flex-md-row">
+                                <button class="btn btn-primary" ng-click="ctrl.updateCompanyData()">Sačuvaj</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <form name="ctrl.userForm" novalidate>
+                    <div class="card shadow-sm mt-4">
+                        <div class="card-header py-3">
+                            <h5 class="m-0">Podaci operatera</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label for="user-naziv" class="form-label">Puno ime</label>
+                                    <input
+                                        id="user-naziv"
+                                        name="naziv"
+                                        type="text"
+                                        class="form-control"
+                                        readonly
+                                        ng-model="ctrl.user.ime">
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <label for="user-lozinka" class="form-label">Lozinka</label>
+                                    <input
+                                        id="user-lozinka"
+                                        name="lozinka"
+                                        type="password"
+                                        class="form-control"
+                                        ng-model="ctrl.user.lozinka"
+                                        required
+                                        ng-minlength="4">
+                                    <div ng-messages="ctrl.userForm.lozinka.$error" role="alert" class="invalid-feedback">
+                                        <div ng-messages-include="error-messages"></div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <label for="user-lozinka-potvrda" class="form-label">Potvrdi lozinku</label>
+                                    <input
+                                        id="user-lozinka-potvrda"
+                                        name="lozinkaPotvrda"
+                                        type="password"
+                                        class="form-control"
+                                        ng-model="ctrl.user.lozinkaPotvrda"
+                                        required
+                                        ng-minlength="4"
+                                        fis-model-match="ctrl.user.lozinka">
+                                    <div ng-messages="ctrl.userForm.lozinkaPotvrda.$error" role="alert" class="invalid-feedback">
+                                        <div ng-message="confirm">
+                                            Lozinka i potvrda se ne podudaraju.
+                                        </div>
+                                        <div ng-messages-include="error-messages"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex flex-column-reverse flex-md-row gap-3">
+                                <button class="btn btn-primary" data-ng-click="ctrl.updateUser()">Sačuvaj</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <form name="ctrl.organisationalUnitForm" novalidate>
+                    <div class="card shadow-sm mt-4">
+                        <div class="card-header py-3">
+                            <h5 class="m-0">Podaci organizacione jedinice</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-12 col-lg-8">
+                                    <div class="form-group">
+                                        <label for="organizaciona-jedinica-naziv" class="form-label">Naziv</label>
+                                        <input type="text" class="form-control" name="naziv" id="organizaciona-jedinica-naziv" placeholder="Naziv" ng-model="ctrl.organizacionaJedinica.naziv" ng-class="{ 'is-invalid': ctrl.organisationalUnitForm.$submitted && ctrl.organisationalUnitForm.naziv.$invalid }">
+                                        <div ng-messages="ctrl.organisationalUnitForm.naziv.$error" role="alert" class="invalid-feedback">
+                                            <div ng-messages-include="error-messages"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-xl-6">
+                                    <div class="form-group">
+                                        <label for="organizaciona-jedinica-adresa" class="form-label">Adresa</label>
+                                        <input type="text" class="form-control" name="adresa" id="organizaciona-jedinica-adresa" placeholder="Adresa" ng-model="ctrl.organizacionaJedinica.adresa" required ng-class="{ 'is-invalid': ctrl.organisationalUnitForm.$submitted && ctrl.organisationalUnitForm.adresa.$invalid }">
+                                        <div ng-messages="ctrl.organisationalUnitForm.adresa.$error" role="alert" class="invalid-feedback">
+                                            <div ng-messages-include="error-messages"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-xl-3">
+                                    <div class="form-group">
+                                        <label for="organizaciona-jedinica-grad" class="form-label">Grad</label>
+                                        <input type="text" class="form-control" name="grad" id="organizaciona-jedinica-grad" placeholder="Grad" ng-model="ctrl.organizacionaJedinica.grad" required ng-class="{ 'is-invalid': ctrl.organisationalUnitForm.$submitted && ctrl.organisationalUnitForm.grad.$invalid }">
+                                        <div ng-messages="ctrl.organisationalUnitForm.grad.$error" role="alert" class="invalid-feedback">
+                                            <div ng-messages-include="error-messages"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-xl-3">
+                                    <div class="form-group">
+                                        <label for="organizaciona-jedinica-grad-drzava" class="form-label">Država</label>
+                                        <ui-select name="drzava" id="organizaciona-jedinica-grad-drzava" ng-model="ctrl.organizacionaJedinica.drzava_id" theme="select2" search-enabled="false" required ng-class="{ 'is-invalid': ctrl.organisationalUnitForm.$submitted && ctrl.organisationalUnitForm.drzava.$invalid }">
+                                            <ui-select-match placeholder="Odaberite državu">
+                                                <span ng-bind="$select.selected.drzava"></span>
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="item.id as item in (ctrl.drzave | filter: $select.search) track by item.id">
+                                                <span ng-bind="item.drzava"></span>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                        <div ng-messages="ctrl.organisationalUnitForm.drzava.$error" role="alert" class="invalid-feedback">
+                                            <div ng-messages-include="error-messages"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex flex-column-reverse flex-md-row">
+                                <button class="btn btn-primary" ng-click="ctrl.upisOrganizacioneJedinice()">Sačuvaj</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <form name="ctrl.mailSettingsForm" novalidate>
+                    <div class="card mt-4">
+                        <div class="card-header py-3">
+                            <h5 class="m-0">E-Mail podešavanja</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="col-12">
+                                <div>Slanje e-Mail-a po fakturi</div>
+                                <div class="form-text">
+                                    Kada je opcija uključena, na računima u pregledu računa je vidljivo dugme za slanje kopije računa na e-Mail adresu klijenta, za račune na kojima postoji kupac i za kupce kojima je definisana e-Mail adresa. Kada je opcija isključena ova dugmad nisu vidljiva. Zahtijeva ispravna SMTP podešavanja u nastavku.
+                                </div>
+                                <div class="mt-3">
+                                    <button class="btn flex-grow-0" ng-class="{ 'btn-secondary': !ctrl.mailSettings.smtp_active, 'btn-outline-secondary': ctrl.mailSettings.smtp_active }" ng-model="ctrl.mailSettings.smtp_active" uib-btn-radio="false">Isključeno</button>
+                                    <button class="btn flex-grow-0" ng-class="{ 'btn-primary': ctrl.mailSettings.smtp_active, 'btn-outline-primary': !ctrl.mailSettings.smtp_active }" ng-model="ctrl.mailSettings.smtp_active" uib-btn-radio="true">Uključeno</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body border-top">
+                            <div class="row g-3">
+                                <div class="col-12 col-md-8">
+                                    <label for="smtp_host" class="form-label">SMTP host</label>
+                                    <input id="smtp_host" name="smtp_host" type="text" class="form-control" ng-disabled="!ctrl.mailSettings.smtp_active" ng-required="ctrl.mailSettings.smtp_active" ng-model="ctrl.mailSettings.smtp_host" ng-class="{ 'is-invalid': ctrl.mailSettingsForm.$submitted && ctrl.mailSettingsForm.smtp_host.$invalid }">
+                                    <div ng-messages="ctrl.mailSettingsForm.smtp_host.$error" role="alert" class="invalid-feedback">
+                                        <div ng-messages-include="error-messages"></div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <label for="smtp_port" class="form-label">SMTP port</label>
+                                    <input id="smtp_port" name="smtp_port" type="number" class="form-control" ng-disabled="!ctrl.mailSettings.smtp_active" ng-required="ctrl.mailSettings.smtp_active" ng-model="ctrl.mailSettings.smtp_port" ng-class="{ 'is-invalid': ctrl.mailSettingsForm.$submitted && ctrl.mailSettingsForm.smtp_port.$invalid }">
+                                    <div ng-messages="ctrl.mailSettingsForm.smtp_port.$error" role="alert" class="invalid-feedback">
+                                        <div ng-messages-include="error-messages"></div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label for="smtp_mail" class="form-label">E-Mail</label>
+                                    <input id="smtp_mail" name="smtp_mail" type="text" class="form-control" ng-disabled="!ctrl.mailSettings.smtp_active" ng-required="ctrl.mailSettings.smtp_active" ng-model="ctrl.mailSettings.smtp_mail" ng-class="{ 'is-invalid': ctrl.mailSettingsForm.$submitted && ctrl.mailSettingsForm.smtp_mail.$invalid }">
+                                    <div ng-messages="ctrl.mailSettingsForm.smtp_mail.$error" role="alert" class="invalid-feedback">
+                                        <div ng-messages-include="error-messages"></div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <label for="smtp_username" class="form-label">Korisničko ime</label>
+                                    <input id="smtp_username" name="smtp_username" type="text" class="form-control" ng-disabled="!ctrl.mailSettings.smtp_active" ng-required="ctrl.mailSettings.smtp_active" ng-model="ctrl.mailSettings.smtp_username" ng-class="{ 'is-invalid': ctrl.mailSettingsForm.$submitted && ctrl.mailSettingsForm.smtp_username.$invalid }">
+                                    <div ng-messages="ctrl.mailSettingsForm.smtp_username.$error" role="alert" class="invalid-feedback">
+                                        <div ng-messages-include="error-messages"></div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <label for="smtp_password" class="form-label">Lozinka</label>
+                                    <input id="smtp_password" name="smtp_password" type="password" class="form-control" ng-disabled="!ctrl.mailSettings.smtp_active" ng-required="ctrl.mailSettings.smtp_active" ng-model="ctrl.mailSettings.smtp_password" ng-class="{ 'is-invalid': ctrl.mailSettingsForm.$submitted && ctrl.mailSettingsForm.smtp_password.$invalid }">
+                                    <div ng-messages="ctrl.mailSettingsForm.smtp_password.$error" role="alert" class="invalid-feedback">
+                                        <div ng-messages-include="error-messages"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex flex-column-reverse flex-md-row">
+                                <button type="button" class="btn btn-primary" ng-click="ctrl.saveMailSettings()">Sačuvaj</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

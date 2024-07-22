@@ -1,0 +1,34 @@
+﻿<?xml version="1.0"?>
+<RegisterInvoiceRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Id="Request" Version="1" xmlns="https://efi.tax.gov.me/fs/schema">
+  <Header UUID="6978a03f-cb01-4554-9e79-a6d5c8f727b7" SendDateTime="2021-12-28T11:12:21+01:00" />
+  <Invoice InvType="CREDIT_NOTE" TypeOfInv="NONCASH" IssueDateTime="2021-12-28T11:12:21+01:00" InvNum="xxxxxxxxxx/26/2021/yyyyyyyyyy" InvOrdNum="26" TCRCode="yyyyyyyyyy" IsIssuerInVAT="true" TotPriceWoVAT="-215.59" TotVATAmt="-45.27" TotPrice="-260.86" OperatorCode="xxxxxxxxxx" BusinUnitCode="xxxxxxxxxx" SoftCode="xxxxxxxxxx" IIC="A6GC5D402FE743BC16615CEF128CF551" IICSignature="A......................................................................." PayDeadline="2022-01-27" TaxPeriod="12/2021">
+    <PayMethods>
+      <PayMethod Type="ACCOUNT" Amt="-260.86" />
+    </PayMethods>
+    <Currency Code="EUR" ExRate="1" />
+    <Seller IDType="TIN" IDNum="12345678" Name="PRODAVAC D.O.O." Address="4. Jul" Town="Podgorica" Country="MNE" />
+    <Buyer IDType="TIN" IDNum="87654321" Name="KUPAC d.o.o." Address="Vuka Karadžića bb" Town="Bar" Country="MNE" />
+    <SameTaxes>
+      <SameTax NumOfItems="1" PriceBefVAT="-215.59" VATRate="21.00" VATAmt="-45.27" />
+    </SameTaxes>
+    <Approvals>
+      <Approval DiscountAmt="-260.86" VATRate="21.00" VATAmt="-45.27" TotalAmt="-260.86" />
+    </Approvals>
+    <IICRefs>
+      <IICRef IIC="CE017D8936E7F278540124FDF85FAAAA" IssueDateTime="2021-08-02T14:37:22+02:00" Amount="521.71" />
+    </IICRefs>
+  </Invoice>
+  <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+    <SignedInfo>
+      <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+      <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" />
+      <Reference URI="#Request">
+        <Transforms>
+          <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+          <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+        </Transforms>
+        <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+        <DigestValue>....................=</DigestValue>
+      </Reference>
+    </SignedInfo>
+    <SignatureValue>

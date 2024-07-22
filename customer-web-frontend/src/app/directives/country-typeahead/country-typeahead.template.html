@@ -1,0 +1,14 @@
+<div class="position-relative">
+    <input
+        type="text"
+        class="form-control"
+        typeahead-template-url="app/directives/country-typeahead/country-typeahead-popup.template.html"
+        typeahead-focus-first="true"
+        typeahead-min-length="0"
+        typeahead-focus-on-select="false"
+        typeahead-on-select="ctrl.onTypeaheadSelect($item, $model, $label)"
+        typeahead-wait-ms="300"
+        typeahead-additional-options="{ openOnFocus: true, clearOnFocus: true }"
+        uib-typeahead="country as country.drzava for country in ctrl.onTypeaheadInputChange($viewValue)"
+        ng-model="ctrl.query">
+</div>

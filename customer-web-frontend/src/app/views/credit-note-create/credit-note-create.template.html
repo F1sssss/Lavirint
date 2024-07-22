@@ -1,0 +1,342 @@
+<form name="ctrl.mainForm">
+    <div class="container mt-3">
+        <div class="card mt-3">
+            <div class="card-header">
+                <div class="fw-bold">Kupac</div>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label for="faktura-komitent-id" class="form-label">Pretraga kupaca</label>
+                        <buyer-typeahead
+                            id="faktura-komitent-id"
+                            name="komitent_id"
+                            required
+                            can-add
+                            on-select="ctrl.onBuyerTypeaheadSelect($model)">
+                        </buyer-typeahead>
+                    </div>
+                    <div class="col-12" ng-if="!ctrl.buyer">
+                        <div class="card"
+                             ng-class="{
+                                'border-danger text-danger bg-danger bg-opacity-10':
+                                    ctrl.mainForm.$submitted && ctrl.mainForm.komitent_id.$invalid,
+                                'bg-light':
+                                    !(ctrl.mainForm.$submitted && ctrl.mainForm.komitent_id.$invalid) }">
+                            <div class="card-body">
+                                Kupac nije odabran
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12" ng-if="ctrl.buyer">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <div class="fw-bold text-uppercase">
+                                    {{ ctrl.buyer.naziv }}
+                                </div>
+                                <div>
+                                <span class="fw-bold">
+                                    {{ ctrl.buyer.tip_identifikacione_oznake.naziv }}:
+                                </span>
+                                    {{ ctrl.buyer.identifikaciona_oznaka }}
+                                </div>
+                                <div>
+                                    <span class="fw-bold">Adresa:</span>
+                                    {{ ctrl.buyer.adresa }}
+                                </div>
+                                <div>
+                                    <span class="fw-bold">Grad:</span>
+                                    {{ ctrl.buyer.grad }}
+                                </div>
+                                <div class="d-none drzava">
+                                    <span class="fw-bold">Država:</span>
+                                    {{ ctrl.buyer.drzava }}
+                                </div>
+                            </div>
+                            <div class="card-footer p-2">
+                                <button type="button" class="btn btn-link text-decoration-none" ng-click="ctrl.removeBuyer()">
+                                    <i class="fa fa-close"></i> Poništi odabir
+                                </button>
+                                <button type="button" class="btn btn-link text-decoration-none" ng-click="ctrl.showBuyerUpdateModal()" ng-disabled="!ctrl.buyer">
+                                    <i class="fa fa-edit"></i> Izmijeni podatke
+                                </button>
+                            </div>
+                        </div>
+                        <div ng-messages="ctrl.forme.racun.komitent_id.$error" role="alert" class="invalid-feedback">
+                            <div ng-message="nepotpuno">
+                                Podaci kupca su nepotpuni.
+                            </div>
+                            <div ng-messages-include="error-messages"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-header">
+                <div class="fw-bold text-uppercase">Računi</div>
+            </div>
+            <div class="card-body">
+                <div ng-show="ctrl.isLoadingInvoices">
+                    <div class="text-center">
+                        <div class="spinner-border spinner-lg"></div>
+                    </div>
+                </div>
+                <div ng-show="!ctrl.buyer">
+                    <div class="card card-body" ng-class="{ 'border-danger text-danger bg-danger bg-opacity-10': ctrl.mainForm.$submitted && ctrl.mainForm.komitent_id.$invalid, 'bg-light': !(ctrl.mainForm.$submitted && ctrl.mainForm.komitent_id.$invalid) }">
+                        <div class="small">Morate odabrati kupca</div>
+                    </div>
+                </div>
+                <div ng-show="ctrl.buyer">
+                    <div class="mb-3" ng-class="{ 'd-none': ctrl.invoiceSelectMode }">
+                        <button class="btn btn-primary" ng-click="ctrl.invoiceSelectMode = !ctrl.invoiceSelectMode">
+                            Dodaj račun
+                        </button>
+                        <button class="btn btn-primary" ng-click="ctrl.addExternalInvoices()">
+                            Dodaj eksterni račun
+                        </button>
+                    </div>
+                    <div class="mb-3" ng-class="{ 'd-none': !ctrl.invoiceSelectMode }">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <button class="btn btn-primary" ng-click="ctrl.invoiceSelectMode = false">
+                                    <i class="fa fa-arrow-left"></i> Nazad
+                                </button>
+                            </div>
+
+                            <fis-pagination
+                                data-page-data="ctrl.stranica"
+                                data-current-page="ctrl.filters.broj_stranice"
+                                data-on-page-change="ctrl.onInvoicePageChange()"
+                                data-ng-class="{ 'pe-none': ctrl.isLoadingInvoices }">
+                            </fis-pagination>
+                        </div>
+                    </div>
+
+                    <div class="card card-body bg-light" ng-class="{ 'd-none': ctrl.invoiceSelectMode || ctrl.creditNote.iic_refs.length > 0 }">
+                        Nema definisanih računa za knjižno odobrenje.
+                    </div>
+
+                    <table class="table" ng-class="{ 'd-none': ctrl.invoiceSelectMode || ctrl.creditNote.iic_refs.length === 0 }">
+                        <thead>
+                            <tr>
+                                <th>Račun</th>
+                                <th>Stopa 21%</th>
+                                <th>Stopa 7%</th>
+                                <th>Stopa 0%</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="ref in ctrl.creditNote.iic_refs">
+                                <td>
+                                    <div>{{ ref.iic }}</div>
+                                    <div><small>{{ ref.issue_datetime }}</small></div>
+                                </td>
+                                <td>
+                                    {{ ref.amount_21 }}
+                                </td>
+                                <td>
+                                    {{ ref.amount_7 }}
+                                </td>
+                                <td>
+                                    {{ ref.amount_0 }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <invoice-turnover-table
+                        data-credit-note="ctrl.creditNote"
+                        data-invoices="ctrl.stranica.stavke"
+                        data-selected-invoices="ctrl.creditNote.fakture"
+                        data-selection-changed="ctrl.onInvoiceSelect(action, invoice, event)"
+                        ng-class="{ 'd-none': !ctrl.invoiceSelectMode }">
+                    </invoice-turnover-table>
+                    <div class="table-responsive d-none">
+                        <table class="table text-nowrap">
+                            <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td class="text-end" style="min-width: 150px; width: 150px;">{{ ctrl.creditNote.fakture_credit_note_turnover_used }}</td>
+                                <td class="text-end" style="min-width: 150px; width: 150px;">{{ ctrl.creditNote.fakture_credit_note_turnover_used_21 }}</td>
+                                <td class="text-end" style="min-width: 150px; width: 150px;">{{ ctrl.creditNote.fakture_credit_note_turnover_used_7 }}</td>
+                                <td class="text-end" style="min-width: 150px; width: 150px;">{{ ctrl.creditNote.fakture_credit_note_turnover_used_0 }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div ng-if="ctrl.buyer && ctrl.mainForm.$error.turnover">
+                        <div class="card card-body border-danger text-danger bg-danger bg-opacity-10" ng-if="ctrl.mainForm.$error.turnover">
+                            <div class="small" ng-if="ctrl.mainForm.$error.noInvoices">Nije odabran nijedan račun.</div>
+                            <div class="small" ng-if="ctrl.mainForm.$error.notEnoughTurnover21">Nedovoljno prometa po stopi 21%. Potrebno je još {{ ctrl.creditNote.return_and_discount_amount_with_tax_21 - ctrl.creditNote.fakture_credit_note_turnover_remaining_21 }}</div>
+                            <div class="small" ng-if="ctrl.mainForm.$error.notEnoughTurnover7">Nedovoljno prometa po stopi 7%. Potrebno je još {{ ctrl.creditNote.return_and_discount_amount_with_tax_7 - ctrl.creditNote.fakture_credit_note_turnover_remaining_7 }}</div>
+                            <div class="small" ng-if="ctrl.mainForm.$error.notEnoughTurnover0">Nedovoljno prometa po stopi 0%. Potrebno je još {{ ctrl.creditNote.return_and_discount_amount_with_tax_0 - ctrl.creditNote.fakture_credit_note_turnover_remaining_0 }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="fw-bold text-uppercase">Stavke povrata</div>
+                </div>
+            </div>
+            <div class="card-body" ng-if="ctrl.creditNote.stavkePovrata.length === 0">
+                <div class="card card-body" ng-class="{ 'border-danger text-danger bg-danger bg-opacity-10': ctrl.mainForm.$error.noReturnAndDiscount, 'bg-light': !ctrl.mainForm.$error.noReturnAndDiscount }">
+                    <div class="small">Nema stavki povrata</div>
+                </div>
+            </div>
+            <div class="card-body card-body-table" ng-if="ctrl.creditNote.stavkePovrata.length > 0">
+                <div class="table-responsive">
+                    <table class="table table-hover text-nowrap">
+                        <thead>
+                        <tr>
+                            <th class="w-1">#</th>
+                            <th class="w-auto">Opis</th>
+                            <th>Stopa</th>
+                            <th>Povrat</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="creditNoteItem in ctrl.creditNote.stavkePovrata track by $index"
+                            ng-click="ctrl.showReturnItemModal(creditNoteItem, $index)">
+                            <td class="w-1">{{ $index + 1 }}</td>
+                            <td class="w-auto text-wrap">{{ creditNoteItem.description }}</td>
+                            <td>{{ creditNoteItem.tax_rate }}%</td>
+                            <td>{{ creditNoteItem.return_amount_with_tax }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="text-end">
+                    <button type="button"
+                            class="btn btn-primary"
+                            ng-click="ctrl.showReturnItemModal()">
+                        <i class="fa fa-plus"></i> Dodaj povrat
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="fw-bold text-uppercase">Stavke popusta</div>
+                </div>
+            </div>
+            <div class="card-body" ng-if="ctrl.creditNote.stavkePopusta.length === 0">
+                <div class="card card-body"
+                     ng-class="{
+                        'border-danger text-danger bg-danger bg-opacity-10': ctrl.mainForm.$error.noReturnAndDiscount,
+                        'bg-light': !ctrl.mainForm.$error.noReturnAndDiscount }">
+                    <div class="small">Nema stavki popusta</div>
+                </div>
+            </div>
+            <div class="card-body" ng-if="ctrl.creditNote.stavkePopusta.length > 0">
+                <div class="table-responsive">
+                    <table class="table table-hover text-nowrap">
+                        <thead>
+                        <tr>
+                            <th class="w-1">#</th>
+                            <th class="w-auto">Opis</th>
+                            <th>Stopa</th>
+                            <th>Popust</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="creditNoteItem in ctrl.creditNote.stavkePopusta track by $index"
+                            ng-click="ctrl.showDiscountItemModal(creditNoteItem, $index);">
+                            <td class="w-1">{{ $index + 1 }}</td>
+                            <td class="w-auto text-wrap">{{ creditNoteItem.description }}</td>
+                            <td>{{ creditNoteItem.tax_rate }}%</td>
+                            <td>{{ creditNoteItem.discount_amount_with_tax }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="text-end">
+                    <button type="button" class="btn btn-primary" ng-click="ctrl.showDiscountItemModal()">
+                        <i class="fa fa-plus"></i> Dodaj popust
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-header">
+                <div class="fw-bold text-uppercase">Pregled</div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th class="text-end" style="min-width: 150px; width: 150px;">Ukupno</th>
+                            <th class="text-end" style="min-width: 150px; width: 150px;">Stopa 21%</th>
+                            <th class="text-end" style="min-width: 150px; width: 150px;">Stopa 7%</th>
+                            <th class="text-end" style="min-width: 150px; width: 150px;">Stopa 0%</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Promet računa</td>
+                            <td class="text-end" style="min-width: 150px; width: 150px;">{{ ctrl.creditNote.fakture_credit_note_turnover_used }}</td>
+                            <td class="text-end" style="min-width: 150px; width: 150px;">{{ ctrl.creditNote.fakture_credit_note_turnover_used_21 }}</td>
+                            <td class="text-end" style="min-width: 150px; width: 150px;">{{ ctrl.creditNote.fakture_credit_note_turnover_used_7 }}</td>
+                            <td class="text-end" style="min-width: 150px; width: 150px;">{{ ctrl.creditNote.fakture_credit_note_turnover_used_0 }}</td>
+                        </tr>
+                        <tr>
+                            <td>Povrat</td>
+                            <td class="text-end" style="min-width: 150px; width: 150px;">{{ ctrl.creditNote.return_amount_with_tax }}</td>
+                            <td class="text-end" style="min-width: 150px; width: 150px;">{{ ctrl.creditNote.return_amount_with_tax_21 }}</td>
+                            <td class="text-end" style="min-width: 150px; width: 150px;">{{ ctrl.creditNote.return_amount_with_tax_7 }}</td>
+                            <td class="text-end" style="min-width: 150px; width: 150px;">{{ ctrl.creditNote.return_amount_with_tax_0 }}</td>
+                        </tr>
+                        <tr>
+                            <td>Popust</td>
+                            <td class="text-end" style="min-width: 150px; width: 150px;">{{ ctrl.creditNote.discount_amount_with_tax }}</td>
+                            <td class="text-end" style="min-width: 150px; width: 150px;">{{ ctrl.creditNote.discount_amount_with_tax_21 }}</td>
+                            <td class="text-end" style="min-width: 150px; width: 150px;">{{ ctrl.creditNote.discount_amount_with_tax_7 }}</td>
+                            <td class="text-end" style="min-width: 150px; width: 150px;">{{ ctrl.creditNote.discount_amount_with_tax_0 }}</td>
+                        </tr>
+                        <tr>
+                            <td>Povrat i popust</td>
+                            <td class="text-end" style="min-width: 150px; width: 150px;">{{ ctrl.creditNote.return_and_discount_amount_with_tax }}</td>
+                            <td class="text-end" style="min-width: 150px; width: 150px;">{{ ctrl.creditNote.return_and_discount_amount_with_tax_21 }}</td>
+                            <td class="text-end" style="min-width: 150px; width: 150px;">{{ ctrl.creditNote.return_and_discount_amount_with_tax_7 }}</td>
+                            <td class="text-end" style="min-width: 150px; width: 150px;">{{ ctrl.creditNote.return_and_discount_amount_with_tax_0 }}</td>
+                        </tr>
+                        <tr>
+                            <td>Preostali promet</td>
+                            <td class="text-end" style="min-width: 150px; width: 150px;" ng-class="{ 'text-danger': ctrl.creditNote.fakture_credit_note_turnover_remaining < 0 }">
+                                {{ ctrl.creditNote.fakture_credit_note_turnover_remaining }}
+                            </td>
+                            <td class="text-end" style="min-width: 150px; width: 150px;" ng-class="{ 'text-danger': ctrl.creditNote.fakture_credit_note_turnover_remaining_21 < 0 }">
+                                {{ ctrl.creditNote.fakture_credit_note_turnover_remaining_21 }}
+                            </td>
+                            <td class="text-end" style="min-width: 150px; width: 150px;" ng-class="{ 'text-danger': ctrl.creditNote.fakture_credit_note_turnover_remaining_7 < 0 }">
+                                {{ ctrl.creditNote.fakture_credit_note_turnover_remaining_7 }}
+                            </td>
+                            <td class="text-end" style="min-width: 150px; width: 150px;" ng-class="{ 'text-danger': ctrl.creditNote.fakture_credit_note_turnover_remaining_0 < 0 }">
+                                {{ ctrl.creditNote.fakture_credit_note_turnover_remaining_0 }}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card card-body mt-3">
+            <div class="text-end">
+                <button type="button" class="btn btn-primary" ng-click="ctrl.onSubmitButton()">
+                    Fiskalizuj
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="scroll-buffer-large"></div>
+</form>

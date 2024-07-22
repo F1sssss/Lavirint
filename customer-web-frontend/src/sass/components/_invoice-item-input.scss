@@ -1,0 +1,55 @@
+.invoice-item-input {
+  border: $border-width solid $border-color;
+  border-radius: $border-radius;
+
+  &.rounded-0 {
+    border-radius: 0;
+    .input-group-text {
+      border-radius: 0;
+    }
+
+    .search-input {
+      border-radius: 0;
+    }
+  }
+
+  .input-group-text {
+    border: 0;
+  }
+
+  .search-input:not(.rounded-0) {
+    border-bottom-right-radius: $border-radius !important;
+    border-top-right-radius: $border-radius !important;
+  }
+
+  .dropdown-menu {
+    display: block;
+    height: calc(100vh - 135px);
+    margin-top: -2px;
+    padding: 0 0 100px;
+
+    left: 0 !important;
+    overflow: auto;
+
+    border-radius: 0;
+    box-shadow: $box-shadow-sm;
+    background-color: $border-color;
+
+    li {
+      .dropdown-item {
+        padding: 12px;
+        background-color: $white;
+      }
+
+      &.active .dropdown-item {
+        color: $white;
+        text-decoration: none;
+        background-color: $primary;
+      }
+
+      &:not(:first-child) .dropdown-item {
+        border-top: 1px solid $border-color;
+      }
+    }
+  }
+}

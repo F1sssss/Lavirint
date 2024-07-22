@@ -1,0 +1,26 @@
+<div class="py-5">
+    <div class="container-lg">
+        <div class="row g-3">
+            <div class="col-12 col-md-4" ng-repeat="grupaArtikala in ctrl.grupeArtikala">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between">
+                            <b>{{ grupaArtikala.naziv }}</b>
+                            <span
+                                class="rounded-circle top-0 end-0 shadow-sm align-self-start mt-1"
+                                style="padding-top: 1rem; padding-left: 1rem;"
+                                ng-style="{ backgroundColor: grupaArtikala.boja }"
+                                ng-if="grupaArtikala.boja !== undefined && grupaArtikala.boja !== null">
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body text-end">
+                        <button class="btn" ui-sref="grupa-artikala-izmjena({ id: grupaArtikala.id })" tabindex="{{ $index + 1 }}">
+                            <i class="fa fa-edit"></i> Izmijeni
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

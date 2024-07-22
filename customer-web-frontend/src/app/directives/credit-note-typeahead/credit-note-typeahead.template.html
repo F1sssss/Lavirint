@@ -1,0 +1,13 @@
+<div class="position-relative">
+    <input type="text"
+           class="form-control"
+           typeahead-template-url="app/directives/credit-note-typeahead/credit-note-typeahead-popup.template.html"
+           typeahead-focus-first="false"
+           typeahead-min-length="0"
+           typeahead-focus-on-select="false"
+           typeahead-on-select="ctrl.onTypeaheadSelect($item, $model, $label)"
+           typeahead-wait-ms="300"
+           uib-typeahead="creditNote as creditNote.fiscalizationDate for buyer in ctrl.onTypeaheadInputChange($viewValue)"
+           ng-blur="ctrl.query = ''"
+           ng-model="ctrl.query">
+</div>

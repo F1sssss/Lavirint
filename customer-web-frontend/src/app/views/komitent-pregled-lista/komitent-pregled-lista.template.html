@@ -1,0 +1,106 @@
+<div class="py-5">
+    <div class="container-lg">
+        <h4 class="mb-3">Pregled partnera</h4>
+        <div class="row g-3">
+            <div class="col-12 col-md-6 col-lg-4">
+                <input type="text" class="form-control" id="pretraga-pojam  " placeholder="Pretraga" ng-model="ctrl.upit_za_pretragu">
+            </div>
+            <div class="col-12 col-md-6 col-lg-8">
+                <button type="button" class="btn btn-dark me-2" ng-click="ctrl.naPromjenuStranice()">
+                    <i class="fa fa-search"></i> Pretraži
+                </button>
+                <button type="button" class="btn btn-success" ui-sref="komitent-unos">
+                    <i class="fa fa-plus"></i> Dodaj partnera
+                </button>
+            </div>
+        </div>
+
+        <div class="card card-body mt-4" ng-show="ctrl.strana.ukupan_broj_stavki === 0">
+            Nema partnera koji odgovara pojmu pretrage.
+        </div>
+
+        <ul boundary-link-numbers="true" class="mt-3" direction-links="false" force-ellipses="true"
+            items-per-page="ctrl.strana.broj_stavki_po_stranici" max-size="4" ng-change="ctrl.naPromjenuStranice()" ng-model="ctrl.broj_stranice"
+            ng-show="ctrl.strana.ukupan_broj_stavki > 0" rotate="true" total-items="ctrl.strana.ukupan_broj_stavki"
+            uib-pagination></ul>
+
+        <div class="row g-4">
+            <div class="col-12 col-md-6 col-xl-4" ng-repeat="komitent in ctrl.strana.stavke">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <b>{{ komitent.naziv }}</b>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <div class="list-group-item">
+                            <div class="row">
+                                <div class="col-md-auto"><small class="fw-bold">Identifikacija</small></div>
+                                <div class="col-md-8">
+                                    <span ng-if="komitent.tip_identifikacione_oznake_id">
+                                        <span class="user-select-none pe-none">{{ komitent.tip_identifikacione_oznake.naziv }} |</span><span class="ms-1">{{ komitent.identifikaciona_oznaka }}</span>
+                                    </span>
+                                    <span class="text-muted" ng-if="!komitent.tip_identifikacione_oznake_id">
+                                        <div>--------</div>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="row">
+                                <div class="col-md-auto"><small class="fw-bold">Grad</small></div>
+                                <div class="col-md-8">{{ komitent.grad }}</div>
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="row">
+                                <div class="col-md-auto"><small class="fw-bold">Adresa</small></div>
+                                <div class="col-md-8">{{ komitent.adresa }}</div>
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="row">
+                                <div class="col-md-auto"><small class="fw-bold">Telefon</small></div>
+                                <div class="col-md-8">{{ komitent.telefon }}</div>
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="row">
+                                <div class="col-md-auto"><small class="fw-bold">Fakturisani iznos</small></div>
+                                <div class="col-md-8">{{ komitent.fiscalized_debt + komitent.previous_debt }}</div>
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="row">
+                                <div class="col-md-auto"><small class="fw-bold">Uplaćeni iznos</small></div>
+                                <div class="col-md-8">{{ komitent.total_payments }}</div>
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="row">
+                                <div class="col-md-auto"><small class="fw-bold">Saldo</small></div>
+                                <div class="col-md-8">{{ komitent.total_payments - komitent.fiscalized_debt - komitent.previous_debt  }}</div>
+                            </div>
+                        </div>
+                    </ul>
+                    <div class="card-footer text-end">
+                        <div class="d-flex flex-wrap">
+                            <button type="button" class="btn d-flex flex-column align-items-center me-auto me-sm-0" ui-sref="komitent-pregled-placanja({ id: komitent.id })">
+                                <i class="fa fa-table"></i> <span>Pregled plaćanja</span>
+                            </button>
+                            <button type="button" class="btn d-flex flex-column align-items-center me-auto me-sm-0" ui-sref="komitent-izmjena({ id: komitent.id })">
+                                <i class="fa fa-edit"></i> <span>Izmijeni</span>
+                            </button>
+                            <button type="button" class="btn d-flex flex-column align-items-center me-auto me-sm-0" ng-click="ctrl.stampajKarticuKupca(komitent.id)">
+                                <i class="fa fa-print"></i> <span>Kartica kupca</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ul boundary-link-numbers="true" class="mt-3" direction-links="false" force-ellipses="true"
+            items-per-page="ctrl.strana.broj_stavki_po_stranici" max-size="4" ng-change="ctrl.naPromjenuStranice()" ng-model="ctrl.broj_stranice"
+            ng-show="ctrl.strana.ukupan_broj_stavki > 0" rotate="true" total-items="ctrl.strana.ukupan_broj_stavki"
+            uib-pagination></ul>
+    </div>
+</div>

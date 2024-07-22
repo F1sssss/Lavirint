@@ -1,0 +1,17 @@
+<div class="position-relative" ng-class="{ 'input-group': ctrl.canAdd }">
+    <input type="text"
+           class="form-control"
+           uib-typeahead="buyer as buyer.naziv for buyer in ctrl.onTypeaheadSearch($viewValue)"
+           typeahead-template-url="app/directives/buyer-typeahead/buyer-typeahead-popup.template.html"
+           typeahead-focus-first="false"
+           typeahead-min-length="0"
+           typeahead-focus-on-select="false"
+           typeahead-on-select="ctrl.onTypeaheadSelect($item, $model, $label)"
+           typeahead-wait-ms="600"
+           ng-focus="ctrl.onTypeaheadFocus()"
+           ng-blur="ctrl.onTypeaheadBlur()"
+           ng-model="ctrl.query">
+    <button type="button" class="btn btn-light border" ng-click="ctrl.onAddButtonClick()" ng-if="ctrl.canAdd">
+        <i class="fa fa-plus"></i>
+    </button>
+</div>

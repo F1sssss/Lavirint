@@ -1,0 +1,3 @@
+SELECT id, status, credit_note_turnover_used, credit_note_turnover_remaining FROM faktura ORDER BY id DESC;
+SELECT id, credit_note_turnover_used, credit_note_turnover_remaining FROM faktura_stavka WHERE id=(SELECT id FROM faktura ORDER BY id DESC LIMIT 1) ORDER BY id DESC;
+SELECT id, credit_note_turnover_used, credit_note_turnover_remaining FROM faktura_grupa_poreza WHERE id=(SELECT id FROM faktura ORDER BY id DESC LIMIT 1) ORDER BY id DESC;

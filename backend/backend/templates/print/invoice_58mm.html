@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Gotovinski</title>
+
+    <style>
+        @font-face {
+            font-family: 'Print Font Regular';
+            src: url({{ font_regular_url }}) format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Print Font Light';
+            src: url({{ font_light_url }}) format('truetype');
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+
+            % if faktura.naplatni_uredjaj.tip_naplatnog_uredjaja_id == 3:
+                font-family: 'Print Font Light', monospace;
+                font-size: 14px;
+            % else:
+                font-family: 'Print Font Regular', monospace;
+                font-size: 14px;
+                font-weight: bold;
+            % end
+        }
+
+        .text-lg {
+            font-size: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            max-width: 58mm;
+            margin: 0 auto;
+        }
+
+        table td {
+            vertical-align: top;
+        }
+
+        .wd-1 {
+            width: 1px;
+        }
+
+        .text-end {
+            text-align: right;
+        }
+
+        .bd-1 {
+            border-top: 1px dashed #000;
+        }
+
+        .mb-1 {
+            margin-bottom: 0.25rem;
+        }
+
+        .mt-1 {
+            margin-top: 0.25rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-nowrap {
+            white-space: nowrap;
+        }
+
+        @page {
+            % if faktura.naplatni_uredjaj.tip_naplatnog_uredjaja_id == 2:
+                size: A4;
+            % end
+
+            % if faktura.naplatni_uredjaj.tip_naplatnog_uredjaja_id == 3:
+                margin: 10mm 10mm 0;
+            % else:
+                margin: 4mm 0;
+            % end
+        }
+
+        .break-word {
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="bd-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td class="text-center break-word">
+            <div>{{faktura.firma.naziv}}</div>
+            % if faktura.naplatni_uredjaj.organizaciona_jedinica.naziv is not None:
+            <div>{{ faktura.naplatni_uredjaj.organizaciona_jedinica.naziv }}</div>
+            % end
+            <div>PIB: {{faktura.firma.pib}}</div>
+            <div>{{ faktura.naplatni_uredjaj.organizaciona_jedinica.adresa }}</div>
+            <div>{{ faktura.naplatni_uredjaj.organizaciona_jedinica.grad }}</div>
+            % if faktura.firma.ziroracun is not None and len(faktura.firma.ziroracun.strip()) > 0:
+            <div>
+                Žiro račun: {{ faktura.firma.ziroracun }}
+            </div>
+            % end
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <tr>
+            <td>
+                <div class="bd-1 mt-1"></div>
+            </td>
+        </tr>
+    </tr>
+</table>
+<table class="break-word" style="font-size: 11px;">
+    <tr>
+        <td>Redni broj računa: {{ faktura.efi_ordinal_number }}</td>
+    </tr>
+    <tr>
+        <td>Fisk. br: {{ faktura.efi_broj_fakture }}</td>
+    </tr>
+    <tr>
+        <td>Vrijeme: {{ faktura.datumfakture.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+    </tr>
+    <tr>
+        <td>Operater: {{ faktura.operater.ime }}</td>
+    </tr>
+    <tr>
+        <td>Kod operatera: {{ faktura.operater.kodoperatera }}</td>
+    </tr>
+    % for index, payment_method in enumerate(faktura.payment_methods):
+    <tr>
+        <td>Način plaćanja: {{ payment_method.payment_method_type.description }}</td>
+    </tr>
+    % end
+    <tr>
+        <td>IKOF: {{faktura.ikof}}</td>
+    </tr>
+    <tr>
+        <td>JIKR: {{faktura.jikr}}</td>
+    </tr>
+</table>
+% if faktura.komitent is not None:
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            Kupac: {{ faktura.komitent.naziv }}
+        </td>
+    </tr>
+    % if faktura.komitent.tip_identifikacione_oznake_id == 2:
+    <tr>
+        <td>
+            PIB: {{ faktura.komitent.identifikaciona_oznaka }}
+        </td>
+    </tr>
+    % elif faktura.komitent.tip_identifikacione_oznake_id == 1:
+    <tr>
+        <td>
+            JMB: {{ faktura.komitent.identifikaciona_oznaka }}
+        </td>
+    </tr>
+    % end
+    <tr>
+        <td>
+            Adresa: {{ faktura.komitent.adresa }}, {{ faktura.komitent.grad }}
+        </td>
+    </tr>
+</table>
+% end
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    % for stavka in faktura.stavke:
+    <tr>
+        <td colspan="3">
+            {{ stavka.naziv }}
+        </td>
+        <td></td>
+    </tr>
+    <tr>
+        <td class="wd-1 text-nowrap">{{ format_number(stavka.kolicina, 2, 3)}}</td>
+        <td class="wd-1 text-nowrap">x</td>
+        % if stavka.tax_exemption_reason_id is not None:
+            <td>{{ format_number(stavka.jedinicna_cijena_prodajna, 2, 4)}} (0% O{{ stavka.tax_exemption_reason_id }})</td>
+        % else:
+            <td>{{ format_number(stavka.jedinicna_cijena_prodajna, 2, 4)}} ({{ format_number(stavka.porez_procenat, 0, 0) }}%)</td>
+        %end
+        <td class="wd-1 text-end">{{ format_number(stavka.ukupna_cijena_prodajna, 2, 4)}}</td>
+    </tr>
+    % end
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    % for grupa_poreza in faktura.grupe_poreza:
+        % if grupa_poreza.tax_exemption_reason_id is not None:
+            <tr>
+                <td>
+                    O{{ grupa_poreza.tax_exemption_reason_id }}. {{ grupa_poreza.tax_exemption_reason.description }}
+                </td>
+                <td class="text-end">{{ format_number(grupa_poreza.tax_exemption_amount, 2, 2) }}</td>
+            </tr>
+        % else:
+            <tr>
+                <td>Stopa {{ format_number(grupa_poreza.porez_procenat, 0, 0) }}%, osnovica</td>
+                <td class="text-end">{{ format_number(grupa_poreza.ukupna_cijena_rabatisana, 2, 2) }}</td>
+            </tr>
+            <tr>
+                <td>Stopa {{ format_number(grupa_poreza.porez_procenat, 0, 0) }}%, porez</td>
+                <td class="text-end">{{ format_number(grupa_poreza.porez_iznos, 2, 2) }}</td>
+            </tr>
+        % end
+    % end
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            Ukupna osnovica:
+        </td>
+        <td class="text-end">
+            {{ format_number(faktura.ukupna_cijena_rabatisana, 2, 2) }}
+        </td>
+    </tr>
+    <tr>
+        <td>Ukupan porez</td>
+        <td class="text-end">{{ format_number(faktura.porez_iznos, 2, 2) }}</td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            Puna cijena:
+        </td>
+        <td class="text-end">
+            {{ format_number(faktura.ukupna_cijena_puna, 2, 4) }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Popust:
+        </td>
+        <td class="text-end">
+            {{ format_number(faktura.rabat_iznos_prodajni, 2, 2) }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <b class="text-lg">Ukupno:</b>
+        </td>
+        <td class="text-end">
+            <b class="text-lg">{{ format_number(faktura.ukupna_cijena_prodajna, 2, 2) }}</b>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1 mb-1"></div>
+        </td>
+    </tr>
+</table>
+<div>&nbsp;</div>
+<table>
+    <tr>
+        <td class="text-center">
+            <img style="width: 65%;" src="{{ qr_code }}" alt="">
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1 mt-1"></div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="bd-1"></div>
+        </td>
+    </tr>
+</table>
+% if faktura.naplatni_uredjaj.tip_naplatnog_uredjaja_id == 2:
+<table>
+    <tr>
+        <td>EFIKOD</td>
+    </tr>
+    <tr>
+        <td>
+            {{ faktura.efi_verify_url }}
+        </td>
+    </tr>
+</table>
+% end
+% if faktura.naplatni_uredjaj.tip_naplatnog_uredjaja_id == 3:
+<div style="margin-top: 10mm;"></div>
+% end
+</body>
+</html>

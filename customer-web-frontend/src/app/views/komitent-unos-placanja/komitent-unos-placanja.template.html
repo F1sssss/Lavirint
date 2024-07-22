@@ -1,0 +1,83 @@
+<div class="py-3 py-lg-5 bg-white border-bottom">
+    <div class="container-lg">
+        <form name="ctrl.forma">
+            <div class="row">
+                <div class="col-3">
+                    <label for="placanje-datum-placanja" class="form-label">
+                        Datum plaćanja
+                    </label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="datum_placanja" id="placanje-datum-placanja" ng-model="ctrl.placanje.datum_placanja" uib-datepicker-popup="" required is-open="ctrl.odOpen" ng-class="{ 'is-invalid': (ctrl.forma.$submitted || ctrl.forma.datum_placanja.$dirty) && ctrl.forma.datum_placanja.$invalid }">
+                        <button type="button" class="btn btn-dark" ng-click="ctrl.odOpen = !ctrl.odOpen">
+                            <i class="fa fa-calendar"></i>
+                        </button>
+                    </div>
+                    <div ng-messages="ctrl.forma.datum_placanja.$error" role="alert" class="invalid-feedback" ng-class="{ 'd-block': (ctrl.forma.$submitted || ctrl.forma.datum_placanja.$dirty) && ctrl.forma.datum_placanja.$invalid }">
+                        <div ng-messages-include="error-messages"></div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label for="placanje-komitent-id" class="form-label">Kupac</label>
+                    <ui-select id="placanje-komitent-id" name="komitent" ng-model="ctrl.placanje.komitent" theme="select2" search-enabled="true" required ng-class="{ 'is-invalid': (ctrl.forma.$submitted || ctrl.forma.komitent.$dirty) && ctrl.forma.komitent.$invalid }">
+                        <ui-select-match allow-clear="true" placeholder="Odaberite kupca">
+                            <span ng-bind="$select.selected.naziv"></span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in (ctrl.komitenti | filter: $select.search) track by item.id">
+                            <span ng-bind="item.naziv"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                    <div ng-messages="ctrl.forma.komitent.$error" role="alert" class="invalid-feedback">
+                        <div ng-messages-include="error-messages"></div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label for="placanje-iznos" class="form-label">Iznos</label>
+                    <input type="number" class="form-control" id="placanje-iznos" name="iznos" ng-model="ctrl.placanje.iznos" required ng-class="{ 'is-invalid': (ctrl.forma.$submitted || ctrl.forma.iznos.$dirty) && ctrl.forma.iznos.$invalid }">
+                    <div ng-messages="ctrl.forma.iznos.$error" role="alert" class="invalid-feedback">
+                        <div ng-messages-include="error-messages"></div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <button type="button" class="btn btn-dark w-100 btn-form-offset-md" ng-click="ctrl.dodaj()">
+                        <i class="fa fa-plus"></i> Dodaj
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="border-bottom bg-light" ng-repeat="placanje in ctrl.placanja">
+    <div class="container-lg py-3">
+        <div class="row">
+            <div class="col-9">
+                <div>
+                    <b>Komitent:</b> {{ placanje.komitent.naziv }}
+                </div>
+                <div>
+                    <b>Datum:</b> {{ placanje.datum_placanja }}
+                </div>
+                <div>
+                    <b>Iznos:</b> {{ placanje.iznos }}
+                </div>
+            </div>
+            <div class="col-3">
+                <button type="button" class="btn btn-danger w-100" ng-click="ctrl.obrisi($index)">
+                    <i class="fa fa-trash"></i> Obriši
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="border-bottom bg-white" ng-if="ctrl.placanja.length > 0">
+    <div class="container-lg py-3">
+        <div class="row">
+            <div class="col-3 offset-9">
+                <button type="button" class="btn btn-success w-100" ng-click="ctrl.upis()">
+                    Potvrdi upis
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

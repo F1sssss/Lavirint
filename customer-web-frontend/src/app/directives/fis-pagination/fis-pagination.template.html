@@ -1,0 +1,16 @@
+<div>
+    <ul class="m-0"
+        ng-change="onPageChangeWrapper()"
+        ng-model="currentPage"
+        ng-class="{ 'invisible pe-none': pageData.ukupan_broj_stavki === 0 }"
+        data-uib-pagination
+        data-boundary-link-numbers="true"
+        data-direction-links="false"
+        data-force-ellipses="true"
+        data-items-per-page="pageData.broj_stavki_po_stranici"
+        data-max-size="4"
+        data-rotate="false"
+        template-url="app/directives/fis-pagination/fis-pagination-item.template.html"
+        data-total-items="pageData.ukupan_broj_stavki">
+    </ul>
+</div>

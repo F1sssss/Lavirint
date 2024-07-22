@@ -1,0 +1,213 @@
+$input-bg: #{var(--input-bg)};
+$border-color: #ddd;
+
+
+@import "bootstrap-icons/font/bootstrap-icons";
+
+@import "bootstrap/scss/mixins/banner";
+@include bsBanner("");
+
+
+// scss-docs-start import-stack
+// Configuration
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/utilities";
+
+@mixin form-validation-state-selector($state) {
+  @if ($state == "invalid") {
+    .ng-submitted #{if(&, "&", "")}.ng-#{$state} {
+      @content;
+    }
+  }
+}
+
+// Layout & components
+@import "bootstrap/scss/root";
+@import "bootstrap/scss/reboot";
+@import "bootstrap/scss/type";
+@import "bootstrap/scss/images";
+@import "bootstrap/scss/containers";
+@import "bootstrap/scss/grid";
+@import "bootstrap/scss/tables";
+@import "bootstrap/scss/forms";
+@import "bootstrap/scss/buttons";
+@import "bootstrap/scss/transitions";
+@import "bootstrap/scss/dropdown";
+@import "bootstrap/scss/button-group";
+@import "bootstrap/scss/nav";
+@import "bootstrap/scss/navbar";
+@import "bootstrap/scss/card";
+@import "bootstrap/scss/accordion";
+@import "bootstrap/scss/breadcrumb";
+@import "bootstrap/scss/pagination";
+@import "bootstrap/scss/badge";
+@import "bootstrap/scss/alert";
+@import "bootstrap/scss/progress";
+@import "bootstrap/scss/list-group";
+@import "bootstrap/scss/close";
+@import "bootstrap/scss/toasts";
+@import "bootstrap/scss/modal";
+@import "bootstrap/scss/tooltip";
+@import "bootstrap/scss/popover";
+@import "bootstrap/scss/carousel";
+@import "bootstrap/scss/spinners";
+@import "bootstrap/scss/offcanvas";
+@import "bootstrap/scss/placeholders";
+
+// Helpers
+@import "bootstrap/scss/helpers";
+
+// Utilities
+@import "bootstrap/scss/utilities/api";
+// scss-docs-end import-stack
+
+:root {
+  --bs-body-bg: #f9f9f9;
+  --input-bg: #fff;
+  --bs-card-bg: #fff;
+  --bs-dropdown-bg: #fff;
+}
+
+.card {
+  background-color: #fff;
+  --bs-card-border-color: #ddd;
+}
+
+.dropdown-menu {
+  background-color: #fff;
+}
+
+.breadcrumb-item {
+  &.breadcrumb-item-action:hover {
+    cursor: pointer;
+    color: $primary;
+  }
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.form-control-layout {
+  position: relative;
+
+  .form-label {
+    position: absolute;
+    top: .5rem;
+    left: .75rem;
+    @extend small;
+    color: #666;
+  }
+
+  .form-buttons {
+    position: absolute;
+    bottom: .375rem;
+    right: .375rem;
+  }
+
+  .form-icon {
+    position: absolute;
+    left: .75rem;
+    bottom: .375rem;
+  }
+
+  .form-label ~ .form-control {
+    padding-top: 1.75rem;
+  }
+
+  .form-icon ~ .form-control {
+    padding-left: 2.25rem;
+  }
+
+  .btn {
+    padding-top: .125rem;
+    padding-bottom: .125rem;
+  }
+}
+
+.btn-light {
+  border-color: $border-color;
+}
+
+.table th {
+  font-weight: 500;
+  @extend small;
+}
+
+.table.table-flush {
+  margin-bottom: 0;
+
+  & > *:first-child > tr:first-child th:first-child,
+  & > *:first-child > tr:first-child td:first-child {
+    border-top-left-radius: $border-radius;
+  }
+
+  & > *:first-child > tr:first-child th:last-child,
+  & > *:first-child > tr:first-child td:last-child {
+    border-top-right-radius: $border-radius;
+  }
+
+  & > *:last-child > tr:last-child th:first-child,
+  & > *:last-child > tr:last-child td:first-child {
+    border-bottom-left-radius: $border-radius;
+  }
+
+  & > *:last-child > tr:last-child th:last-child,
+  & > *:last-child > tr:last-child td:last-child {
+    border-bottom-right-radius: $border-radius;
+  }
+
+  & > *:first-child > tr:first-child th,
+  & > *:first-child > tr:first-child td {
+    border-top-color: transparent;
+  }
+
+  & > *:last-child > tr:last-child th,
+  & > *:last-child > tr:last-child td {
+    border-bottom-color: transparent;
+  }
+}
+
+.card-header {
+  padding: 1rem;
+  background-color: $white;
+}
+
+.table > :not(caption) > * > * {
+  background-color: #fff;
+}
+
+.table td,
+.table th {
+  padding: 1rem;
+}
+
+.pagination {
+  margin-bottom: 0;
+}
+
+.table td.td-btn {
+  padding-top: .75rem;
+  padding-bottom: .75rem;
+}
+
+.table {
+  white-space: nowrap;
+}
+
+.ng-submitted .form-control.ng-invalid {
+  background-image: none;
+}
+
+.w-1 {
+  width: 1px;
+}

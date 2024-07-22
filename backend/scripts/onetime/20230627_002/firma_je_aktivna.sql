@@ -1,0 +1,1 @@
+UPDATE firma SET je_aktivna=1 WHERE id=963;

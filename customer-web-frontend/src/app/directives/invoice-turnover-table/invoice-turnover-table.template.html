@@ -1,0 +1,27 @@
+<div class="table-responsive">
+    <table class="table table-hover text-nowrap table-hover">
+        <thead>
+        <tr>
+            <td>Račun</td>
+            <td class="text-end" style="min-width: 150px; width: 150px;">Ukupno</td>
+            <td class="text-end" style="min-width: 150px; width: 150px;">Stopa 21%</td>
+            <td class="text-end" style="min-width: 150px; width: 150px;">Stopa 7%</td>
+            <td class="text-end" style="min-width: 150px; width: 150px;">Stopa 0%</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="faktura in viewInvoices" ng-click="toggle(faktura)" ng-class="{ 'bg-primary-light': selectedIds.indexOf(faktura.id) >= 0  }">
+            <td class="w-auto">
+                <div>{{ faktura.efi_ordinal_number }}</div>
+                <div class="text-muted">
+                    <small>{{ faktura.datumfakture | fisFormatDatetime }}</small>
+                </div>
+            </td>
+            <td class="text-end" style="min-width: 150px; width: 150px;">{{ faktura.credit_note_turnover_remaining }}</td>
+            <td class="text-end" style="min-width: 150px; width: 150px;">{{ faktura.porez_21 !== null ? faktura.porez_21.credit_note_turnover_remaining : '---'  }}</td>
+            <td class="text-end" style="min-width: 150px; width: 150px;">{{ faktura.porez_7 !== null ? faktura.porez_7.credit_note_turnover_remaining : '---'  }}</td>
+            <td class="text-end" style="min-width: 150px; width: 150px;">{{ faktura.porez_0 !== null ? faktura.porez_0.credit_note_turnover_remaining : '---'  }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,10 @@
+openssl req -x509 -out customer.pos.local.crt -keyout customer.pos.local.key -newkey rsa:2048 -nodes -sha256 -subj '/CN=customer.pos.local' -extensions EXT -config infile.txt
+
+[dn]
+CN=customer.pos.local
+[req]
+distinguished_name = dn
+[EXT]
+subjectAltName=DNS:customer.pos.local
+keyUsage=digitalSignature
+extendedKeyUsage=serverAuth

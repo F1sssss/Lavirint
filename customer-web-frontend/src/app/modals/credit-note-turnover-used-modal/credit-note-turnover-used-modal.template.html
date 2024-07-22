@@ -1,0 +1,141 @@
+<div class="modal-header">
+    Iskorišćeni promet
+</div>
+<div class="modal-body">
+    <form name="ctrl.form">
+        <div class="row g-3">
+            <div class="col-6">
+                <label for="amount_21" class="form-label">Iznos 21%</label>
+                <input
+                    id="amount_21"
+                    type="number"
+                    class="form-control"
+                    name="amount_21"
+                    data-ng-model="ctrl.data.amount_21"
+                    data-ng-class="{ 'is-invalid': ctrl.form.$submitted && ctrl.form.amount_21.$invalid }"
+                    ng-disabled="ctrl.data.total_21 === 0"
+                    ng-max="ctrl.data.total_21">
+                <div ng-messages="ctrl.form.amount_21.$error" role="alert" class="invalid-feedback">
+                    <div ng-messages-include="error-messages"></div>
+                </div>
+            </div>
+            <div class="col-6">
+                <label for="total_21" class="form-label">Promet 21%</label>
+                <input
+                    id="total_21"
+                    type="number"
+                    class="form-control"
+                    name="total_21"
+                    data-ng-model="ctrl.data.total_21"
+                    data-ng-class="{ 'is-invalid': ctrl.form.$submitted && ctrl.form.total_21.$invalid }"
+                    disabled>
+                <div ng-messages="ctrl.form.total_21.$error" role="alert" class="invalid-feedback">
+                    <div ng-messages-include="error-messages"></div>
+                </div>
+            </div>
+            <div class="col-6">
+                <label for="amount_7" class="form-label">Iznos 7%</label>
+                <input
+                    id="amount_7"
+                    type="number"
+                    class="form-control"
+                    name="amount_7"
+                    data-ng-model="ctrl.data.amount_7"
+                    data-ng-class="{ 'is-invalid': ctrl.form.$submitted && ctrl.form.amount_7.$invalid }"
+                    ng-disabled="ctrl.data.total_7 === 0"
+                    ng-max="ctrl.data.total_7">
+                <div ng-messages="ctrl.form.amount_7.$error" role="alert" class="invalid-feedback">
+                    <div ng-messages-include="error-messages"></div>
+                </div>
+            </div>
+            <div class="col-6">
+                <label for="total_7" class="form-label">Promet 7%</label>
+                <input
+                    id="total_7"
+                    type="number"
+                    class="form-control"
+                    name="total_7"
+                    data-ng-model="ctrl.data.total_7"
+                    data-ng-class="{ 'is-invalid': ctrl.form.$submitted && ctrl.form.total_7.$invalid }"
+                    disabled>
+                <div ng-messages="ctrl.form.total_7.$error" role="alert" class="invalid-feedback">
+                    <div ng-messages-include="error-messages"></div>
+                </div>
+            </div>
+            <div class="col-6">
+                <label for="amount_0" class="form-label">Iznos 0%</label>
+                <input
+                    id="amount_0"
+                    type="number"
+                    class="form-control"
+                    name="amount_0"
+                    data-ng-model="ctrl.data.amount_0"
+                    data-ng-class="{ 'is-invalid': ctrl.form.$submitted && ctrl.form.amount_0.$invalid }"
+                    ng-disabled="ctrl.data.total_0 === 0"
+                    ng-max="ctrl.data.total_0">
+                <div ng-messages="ctrl.form.amount_0.$error" role="alert" class="invalid-feedback">
+                    <div ng-messages-include="error-messages"></div>
+                </div>
+            </div>
+            <div class="col-6">
+                <label for="amount_0" class="form-label">Iznos 0%</label>
+                <input
+                    id="total_0"
+                    type="number"
+                    class="form-control"
+                    name="total_0"
+                    data-ng-model="ctrl.data.total_0"
+                    data-ng-class="{ 'is-invalid': ctrl.form.$submitted && ctrl.form.total_0.$invalid }"
+                    disabled>
+                <div ng-messages="ctrl.form.total_0.$error" role="alert" class="invalid-feedback">
+                    <div ng-messages-include="error-messages"></div>
+                </div>
+            </div>
+            <div class="col-6">
+                <label for="amount_exempt" class="form-label">Iznos oslobođen poreza</label>
+                <input
+                    id="amount_exempt"
+                    type="number"
+                    class="form-control"
+                    name="amount_exempt"
+                    data-ng-model="ctrl.data.amount_exempt"
+                    data-ng-class="{ 'is-invalid': ctrl.form.$submitted && ctrl.form.amount_exempt.$invalid }"
+                    ng-disabled="ctrl.data.total_exempt === 0"
+                    ng-max="ctrl.data.total_exempt">
+                <div ng-messages="ctrl.form.amount_exempt.$error" role="alert" class="invalid-feedback">
+                    <div ng-messages-include="error-messages"></div>
+                </div>
+            </div>
+            <div class="col-6">
+                <label for="total_exempt" class="form-label">Iznos oslobođen poreza</label>
+                <input
+                    id="total_exempt"
+                    type="number"
+                    class="form-control"
+                    name="total_exempt"
+                    data-ng-model="ctrl.data.total_exempt"
+                    data-ng-class="{ 'is-invalid': ctrl.form.$submitted && ctrl.form.total_exempt.$invalid }"
+                    disabled>
+                <div ng-messages="ctrl.form.total_exempt.$error" role="alert" class="invalid-feedback">
+                    <div ng-messages-include="error-messages"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <div class="w-100 text-end">
+        <button
+            type="button"
+            class="btn btn-light border"
+            ng-click="$close({ action: 'cancel' });">
+            Odustani
+        </button>
+        <button
+            type="button"
+            class="btn btn-primary"
+            ng-click="ctrl.confirm();">
+            Sačuvaj
+        </button>
+    </div>
+</div>

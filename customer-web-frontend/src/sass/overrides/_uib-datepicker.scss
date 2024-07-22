@@ -1,0 +1,42 @@
+.uib-daypicker table,
+.uib-monthpicker table,
+.uib-yearpicker table {
+  min-width: 100%;
+}
+
+@include media-breakpoint-down(sm) {
+  .uib-datepicker-popup.dropdown-menu,
+  .uib-daypicker,
+  .uib-monthpicker,
+  .uib-yearpicker {
+    min-width: 100%;
+  }
+}
+
+.uib-day.active {
+  .btn {
+    @extend .btn-secondary;
+  }
+
+  .btn.btn-primary {
+    @extend .btn-primary;
+  }
+}
+
+.uib-day.invalid {
+  .btn {
+    @extend .btn-danger;
+  }
+
+  .btn.btn-primary {
+    @extend .btn-primary;
+  }
+}
+
+.uib-datepicker {
+  .btn {
+    line-height: $btn-line-height;
+    padding-left: $btn-padding-x;
+    padding-right: $btn-padding-x;
+  }
+}

@@ -1,0 +1,12 @@
+.nav-tabs.nav-tabs-underline {
+  .nav-link {
+    border-color: transparent;
+    border-bottom: 2px solid transparent;
+  }
+
+  .nav-link.active {
+    background: transparent;
+    border-bottom-color: $primary;
+    border-radius: 0;
+  }
+}

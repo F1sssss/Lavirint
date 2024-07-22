@@ -1,0 +1,33 @@
+.mobile-navbar {
+  width: 100vw;
+  height: 100vh;
+  z-index: 2001;
+  position: fixed;
+  top: 0;
+  right: 0;
+
+  .navbar {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: normal;
+  }
+}
+
+.mobile-navbar-backdrop {
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, .6);
+  overflow: hidden;
+}
+
+.navbar-light .navbar-nav .nav-link {
+  color: $black;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: $white;
+}

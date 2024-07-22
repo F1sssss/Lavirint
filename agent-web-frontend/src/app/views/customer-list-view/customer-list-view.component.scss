@@ -1,0 +1,13 @@
+.search-input {
+  background-color: var(--mdc-filled-text-field-container-color)
+}
+
+tr.inactive {
+  background-color: #f4f4f4;
+}
+
+tr.inactive td:nth-child(1),
+tr.inactive td:nth-child(2),
+tr.inactive td:nth-child(3) {
+  color: #888;
+}

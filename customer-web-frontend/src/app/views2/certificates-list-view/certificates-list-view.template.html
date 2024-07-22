@@ -1,0 +1,41 @@
+<div class="p-3">
+  <div class="container">
+    <div class="card shadow-sm">
+      <div class="card-header">
+        Sertifikati
+      </div>
+      <div class="card-body" ng-if="ctrl.certificates.length === 0">
+        Nema nijednog sertifikata.
+      </div>
+      <div class="table-responsive">
+        <table class="table table-flush" ng-if="ctrl.certificates.length > 0">
+          <thead>
+            <tr>
+              <th style="width: auto;">Identifikator</th>
+              <th class="text-nowrap" style="width: 1px;">Važi od</th>
+              <th class="text-nowrap" style="width: 1px;">Važi do</th>
+              <th class="text-nowrap" style="width: 1px;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="certificate in ctrl.certificates">
+              <td style="width: auto;">{{ certificate.fingerprint }}</td>
+              <td class="text-nowrap" style="width: 1px;">{{ certificate.not_valid_before | fisFormatDatetime }}</td>
+              <td class="text-nowrap" style="width: 1px;">{{ certificate.not_valid_after | fisFormatDatetime }}</td>
+              <td class="text-nowrap py-2" style="width: 1px;" data-ng-click="ctrl.openConfirmDeletionModal(certificate.id)">
+                <button type="button" class="btn btn-light border">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card-footer">
+        <button type="button" class="btn btn-primary" ng-click="ctrl.openCertificateUploadModal()">
+          <i class="fa fa-plus"></i> Novi sertifikat
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,26 @@
+<a class="dropdown-item py-2">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <div>
+                <span ng-bind-html="match.model.naziv | uibTypeaheadHighlight:query"></span>
+            </div>
+            <div>
+                <small>
+                    <span class="fw-bold">
+                        {{ match.model.tip_identifikacione_oznake.naziv }}:
+                    </span>
+                    {{ match.model.identifikaciona_oznaka }}
+                </small>
+            </div>
+            <div>
+                <small ng-if="match.model.artikal.barkod">
+                    <span class="fw-bold">Barkod:</span>
+                    <span ng-bind-html="match.model.artikal.barkod | uibTypeaheadHighlight:query"></span>
+                </small>
+            </div>
+        </div>
+        <div class="ms-auto px-3 fs-4">
+            <span>{{ match.model.jedinicna_cijena_puna }}</span>
+        </div>
+    </div>
+</a>

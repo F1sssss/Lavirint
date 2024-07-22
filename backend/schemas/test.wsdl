@@ -1,0 +1,870 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://testpos.e-lavirint.com"
+    xmlns:fs="http://testpos.e-lavirint.com"
+    xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+    xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+    xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <wsdl:types>
+        <xs:schema targetNamespace="http://testpos.e-lavirint.com">
+            <xs:simpleType name="UTCSType">
+                <xs:restriction base="xs:dateTime">
+                    <xs:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}([+-][0-9]{2}:[0-9]{2}|Z)"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="TaxPeriodSType">
+                <xs:annotation>
+                    <xs:documentation>Tax period composed of month and year for which it is applied, in the format MM/YYYY.</xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="((0[1-9])|(1[0-2]))\/(\d{4})"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="RegistrationCodeSType">
+                <xs:annotation>
+                    <xs:documentation>Registration code in two letters - three numbers - two letters - three number format.</xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="[a-z]{2}[0-9]{3}[a-z]{2}[0-9]{3}"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="DecimalNegSType">
+                <xs:annotation>
+                    <xs:documentation>Positive double.</xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:decimal">
+                    <xs:pattern value="-?([1-9][0-9]*|0)\.[0-9]{2}|0"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="DoubleSType">
+                <xs:restriction base="xs:double">
+                    <xs:minExclusive value="0"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="Decimal4SType">
+                <xs:annotation>
+                    <xs:documentation>Decimal number with two to four numbers after decimal point.</xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:decimal">
+                    <xs:pattern value="([1-9][0-9]*|0)\.[0-9]{2,4}|0"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="String20SType">
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"/>
+                    <xs:maxLength value="20"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="String50SType">
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"/>
+                    <xs:maxLength value="50"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="String100SType">
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"/>
+                    <xs:maxLength value="100"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="String200SType">
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"/>
+                    <xs:maxLength value="200"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="DoubleNegForQuantitySType">
+                <xs:annotation>
+                    <xs:documentation>Double number for quantity fields that can be written as negative number.</xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:double">
+                    <xs:pattern value="-?([1-9][0-9]*|0)(\.[0-9]{1,3})?"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="CountryCodeSType">
+                <xs:annotation>
+                    <xs:documentation>Country codes from ISO 3166-1 alpha3 standard</xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="ABW"><xs:annotation><xs:documentation>Aruba</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="AFG"><xs:annotation><xs:documentation>Afghanistan</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="AGO"><xs:annotation><xs:documentation>Angola</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="AIA"><xs:annotation><xs:documentation>Anguilla</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="ALA"><xs:annotation><xs:documentation>Aland Islands</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="ALB"><xs:annotation><xs:documentation>Albania</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="AND"><xs:annotation><xs:documentation>Andorra</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="ARE"><xs:annotation><xs:documentation>United Arab Emirates</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="ARG"><xs:annotation><xs:documentation>Argentina</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="ARM"><xs:annotation><xs:documentation>Armenia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="ASM"><xs:annotation><xs:documentation>American Samoa</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="ATA"><xs:annotation><xs:documentation>Antarctica</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="ATF"><xs:annotation><xs:documentation>French Southern Territories</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="ATG"><xs:annotation><xs:documentation>Antigua and Barbuda</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="AUS"><xs:annotation><xs:documentation>Australia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="AUT"><xs:annotation><xs:documentation>Austria</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="AZE"><xs:annotation><xs:documentation>Azerbaijan</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="BDI"><xs:annotation><xs:documentation>Burundi</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="BEL"><xs:annotation><xs:documentation>Belgium</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="BEN"><xs:annotation><xs:documentation>Benin</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="BES"><xs:annotation><xs:documentation>Bonaire, Sint Eustatius and Saba</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="BFA"><xs:annotation><xs:documentation>Burkina Faso</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="BGD"><xs:annotation><xs:documentation>Bangladesh</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="BGR"><xs:annotation><xs:documentation>Bulgaria</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="BHR"><xs:annotation><xs:documentation>Bahrain</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="BHS"><xs:annotation><xs:documentation>Bahamas</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="BIH"><xs:annotation><xs:documentation>Bosnia and Herzegovina</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="BLM"><xs:annotation><xs:documentation>Saint Barthelemy</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="BLR"><xs:annotation><xs:documentation>Belarus</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="BLZ"><xs:annotation><xs:documentation>Belize</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="BMU"><xs:annotation><xs:documentation>Bermuda</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="BOL"><xs:annotation><xs:documentation>Bolivia (Plurinational State of)</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="BRA"><xs:annotation><xs:documentation>Brazil</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="BRB"><xs:annotation><xs:documentation>Barbados</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="BRN"><xs:annotation><xs:documentation>Brunei Darussalam</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="BTN"><xs:annotation><xs:documentation>Bhutan</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="BVT"><xs:annotation><xs:documentation>Bouvet Island</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="BWA"><xs:annotation><xs:documentation>Botswana</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="CAF"><xs:annotation><xs:documentation>Central African Republic</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="CAN"><xs:annotation><xs:documentation>Canada</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="CCK"><xs:annotation><xs:documentation>Cocos (Keeling) Islands</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="CHE"><xs:annotation><xs:documentation>Switzerland</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="CHL"><xs:annotation><xs:documentation>Chile</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="CHN"><xs:annotation><xs:documentation>China</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="CIV"><xs:annotation><xs:documentation>Cote d'Ivoire</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="CMR"><xs:annotation><xs:documentation>Cameroon</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="COD"><xs:annotation><xs:documentation>Congo, Democratic Republic of the</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="COG"><xs:annotation><xs:documentation>Congo</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="COK"><xs:annotation><xs:documentation>Cook Islands</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="COL"><xs:annotation><xs:documentation>Colombia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="COM"><xs:annotation><xs:documentation>Comoros</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="CPV"><xs:annotation><xs:documentation>Cabo Verde</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="CRI"><xs:annotation><xs:documentation>Costa Rica</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="CUB"><xs:annotation><xs:documentation>Cuba</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="CUW"><xs:annotation><xs:documentation>Curacao</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="CXR"><xs:annotation><xs:documentation>Christmas Island</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="CYM"><xs:annotation><xs:documentation>Cayman Islands</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="CYP"><xs:annotation><xs:documentation>Cyprus</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="CZE"><xs:annotation><xs:documentation>Czechia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="DEU"><xs:annotation><xs:documentation>Germany</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="DJI"><xs:annotation><xs:documentation>Djibouti</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="DMA"><xs:annotation><xs:documentation>Dominica</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="DNK"><xs:annotation><xs:documentation>Denmark</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="DOM"><xs:annotation><xs:documentation>Dominican Republic</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="DZA"><xs:annotation><xs:documentation>Algeria</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="ECU"><xs:annotation><xs:documentation>Ecuador</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="EGY"><xs:annotation><xs:documentation>Egypt</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="ERI"><xs:annotation><xs:documentation>Eritrea</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="ESH"><xs:annotation><xs:documentation>Western Sahara</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="ESP"><xs:annotation><xs:documentation>Spain</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="EST"><xs:annotation><xs:documentation>Estonia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="ETH"><xs:annotation><xs:documentation>Ethiopia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="FIN"><xs:annotation><xs:documentation>Finland</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="FJI"><xs:annotation><xs:documentation>Fiji</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="FLK"><xs:annotation><xs:documentation>Falkland Islands (Malvinas)</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="FRA"><xs:annotation><xs:documentation>France</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="FRO"><xs:annotation><xs:documentation>Faroe Islands</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="FSM"><xs:annotation><xs:documentation>Micronesia (Federated States of)</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="GAB"><xs:annotation><xs:documentation>Gabon</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="GBR"><xs:annotation><xs:documentation>United Kingdom of Great Britain and Northern Ireland</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="GEO"><xs:annotation><xs:documentation>Georgia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="GGY"><xs:annotation><xs:documentation>Guernsey</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="GHA"><xs:annotation><xs:documentation>Ghana</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="GIB"><xs:annotation><xs:documentation>Gibraltar</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="GIN"><xs:annotation><xs:documentation>Guinea</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="GLP"><xs:annotation><xs:documentation>Guadeloupe</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="GMB"><xs:annotation><xs:documentation>Gambia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="GNB"><xs:annotation><xs:documentation>Guinea-Bissau</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="GNQ"><xs:annotation><xs:documentation>Equatorial Guinea</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="GRC"><xs:annotation><xs:documentation>Greece</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="GRD"><xs:annotation><xs:documentation>Grenada</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="GRL"><xs:annotation><xs:documentation>Greenland</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="GTM"><xs:annotation><xs:documentation>Guatemala</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="GUF"><xs:annotation><xs:documentation>French Guiana</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="GUM"><xs:annotation><xs:documentation>Guam</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="GUY"><xs:annotation><xs:documentation>Guyana</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="HKG"><xs:annotation><xs:documentation>Hong Kong</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="HMD"><xs:annotation><xs:documentation>Heard Island and McDonald Islands</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="HND"><xs:annotation><xs:documentation>Honduras</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="HRV"><xs:annotation><xs:documentation>Croatia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="HTI"><xs:annotation><xs:documentation>Haiti</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="HUN"><xs:annotation><xs:documentation>Hungary</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="IDN"><xs:annotation><xs:documentation>Indonesia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="IMN"><xs:annotation><xs:documentation>Isle of Man</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="IND"><xs:annotation><xs:documentation>India</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="IOT"><xs:annotation><xs:documentation>British Indian Ocean Territory</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="IRL"><xs:annotation><xs:documentation>Ireland</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="IRN"><xs:annotation><xs:documentation>Iran (Islamic Republic of)</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="IRQ"><xs:annotation><xs:documentation>Iraq</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="ISL"><xs:annotation><xs:documentation>Iceland</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="ISR"><xs:annotation><xs:documentation>Israel</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="ITA"><xs:annotation><xs:documentation>Italy</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="JAM"><xs:annotation><xs:documentation>Jamaica</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="JEY"><xs:annotation><xs:documentation>Jersey</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="JOR"><xs:annotation><xs:documentation>Jordan</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="JPN"><xs:annotation><xs:documentation>Japan</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="KAZ"><xs:annotation><xs:documentation>Kazakhstan</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="KEN"><xs:annotation><xs:documentation>Kenya</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="KGZ"><xs:annotation><xs:documentation>Kyrgyzstan</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="KHM"><xs:annotation><xs:documentation>Cambodia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="KIR"><xs:annotation><xs:documentation>Kiribati</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="KNA"><xs:annotation><xs:documentation>Saint Kitts and Nevis</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="KOR"><xs:annotation><xs:documentation>Korea, Republic of</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="KWT"><xs:annotation><xs:documentation>Kuwait</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="LAO"><xs:annotation><xs:documentation>Lao People's Democratic Republic</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="LBN"><xs:annotation><xs:documentation>Lebanon</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="LBR"><xs:annotation><xs:documentation>Liberia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="LBY"><xs:annotation><xs:documentation>Libya</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="LCA"><xs:annotation><xs:documentation>Saint Lucia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="LIE"><xs:annotation><xs:documentation>Liechtenstein</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="LKA"><xs:annotation><xs:documentation>Sri Lanka</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="LSO"><xs:annotation><xs:documentation>Lesotho</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="LTU"><xs:annotation><xs:documentation>Lithuania</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="LUX"><xs:annotation><xs:documentation>Luxembourg</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="LVA"><xs:annotation><xs:documentation>Latvia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MAC"><xs:annotation><xs:documentation>Macao</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MAF"><xs:annotation><xs:documentation>Saint Martin (French part)</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MAR"><xs:annotation><xs:documentation>Morocco</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MCO"><xs:annotation><xs:documentation>Monaco</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MDA"><xs:annotation><xs:documentation>Moldova, Republic of</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MDG"><xs:annotation><xs:documentation>Madagascar</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MDV"><xs:annotation><xs:documentation>Maldives</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MEX"><xs:annotation><xs:documentation>Mexico</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MHL"><xs:annotation><xs:documentation>Marshall Islands</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MKD"><xs:annotation><xs:documentation>North Macedonia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MLI"><xs:annotation><xs:documentation>Mali</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MLT"><xs:annotation><xs:documentation>Malta</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MMR"><xs:annotation><xs:documentation>Myanmar</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MNE"><xs:annotation><xs:documentation>Montenegro</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MNG"><xs:annotation><xs:documentation>Mongolia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MNP"><xs:annotation><xs:documentation>Northern Mariana Islands</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MOZ"><xs:annotation><xs:documentation>Mozambique</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MRT"><xs:annotation><xs:documentation>Mauritania</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MSR"><xs:annotation><xs:documentation>Montserrat</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MTQ"><xs:annotation><xs:documentation>Martinique</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MUS"><xs:annotation><xs:documentation>Mauritius</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MWI"><xs:annotation><xs:documentation>Malawi</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MYS"><xs:annotation><xs:documentation>Malaysia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="MYT"><xs:annotation><xs:documentation>Mayotte</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="NAM"><xs:annotation><xs:documentation>Namibia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="NCL"><xs:annotation><xs:documentation>New Caledonia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="NER"><xs:annotation><xs:documentation>Niger</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="NFK"><xs:annotation><xs:documentation>Norfolk Island</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="NGA"><xs:annotation><xs:documentation>Nigeria</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="NIC"><xs:annotation><xs:documentation>Nicaragua</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="NIU"><xs:annotation><xs:documentation>Niue</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="NLD"><xs:annotation><xs:documentation>Netherlands</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="NOR"><xs:annotation><xs:documentation>Norway</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="NPL"><xs:annotation><xs:documentation>Nepal</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="NRU"><xs:annotation><xs:documentation>Nauru</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="NZL"><xs:annotation><xs:documentation>New Zealand</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="OMN"><xs:annotation><xs:documentation>Oman</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="PAK"><xs:annotation><xs:documentation>Pakistan</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="PAN"><xs:annotation><xs:documentation>Panama</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="PCN"><xs:annotation><xs:documentation>Pitcairn</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="PER"><xs:annotation><xs:documentation>Peru</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="PHL"><xs:annotation><xs:documentation>Philippines</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="PLW"><xs:annotation><xs:documentation>Palau</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="PNG"><xs:annotation><xs:documentation>Papua New Guinea</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="POL"><xs:annotation><xs:documentation>Poland</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="PRI"><xs:annotation><xs:documentation>Puerto Rico</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="PRK"><xs:annotation><xs:documentation>Korea (Democratic People's Republic of)</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="PRT"><xs:annotation><xs:documentation>Portugal</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="PRY"><xs:annotation><xs:documentation>Paraguay</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="PSE"><xs:annotation><xs:documentation>Palestine, State of</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="PYF"><xs:annotation><xs:documentation>French Polynesia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="QAT"><xs:annotation><xs:documentation>Qatar</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="REU"><xs:annotation><xs:documentation>Reunion</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="ROU"><xs:annotation><xs:documentation>Romania</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="RUS"><xs:annotation><xs:documentation>Russian Federation</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="RWA"><xs:annotation><xs:documentation>Rwanda</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SAU"><xs:annotation><xs:documentation>Saudi Arabia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SDN"><xs:annotation><xs:documentation>Sudan</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SEN"><xs:annotation><xs:documentation>Senegal</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SGP"><xs:annotation><xs:documentation>Singapore</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SGS"><xs:annotation><xs:documentation>South Georgia and the South Sandwich Islands</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SHN"><xs:annotation><xs:documentation>Saint Helena, Ascension and Tristan da Cunha</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SJM"><xs:annotation><xs:documentation>Svalbard and Jan Mayen</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SLB"><xs:annotation><xs:documentation>Solomon Islands</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SLE"><xs:annotation><xs:documentation>Sierra Leone</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SLV"><xs:annotation><xs:documentation>El Salvador</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SMR"><xs:annotation><xs:documentation>San Marino</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SOM"><xs:annotation><xs:documentation>Somalia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SPM"><xs:annotation><xs:documentation>Saint Pierre and Miquelon</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SRB"><xs:annotation><xs:documentation>Serbia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SSD"><xs:annotation><xs:documentation>South Sudan</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="STP"><xs:annotation><xs:documentation>Sao Tome and Principe</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SUR"><xs:annotation><xs:documentation>Suriname</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SVK"><xs:annotation><xs:documentation>Slovakia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SVN"><xs:annotation><xs:documentation>Slovenia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SWE"><xs:annotation><xs:documentation>Sweden</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SWZ"><xs:annotation><xs:documentation>Eswatini</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SXM"><xs:annotation><xs:documentation>Sint Maarten (Dutch part)</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SYC"><xs:annotation><xs:documentation>Seychelles</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="SYR"><xs:annotation><xs:documentation>Syrian Arab Republic</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="TCA"><xs:annotation><xs:documentation>Turks and Caicos Islands</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="TCD"><xs:annotation><xs:documentation>Chad</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="TGO"><xs:annotation><xs:documentation>Togo</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="THA"><xs:annotation><xs:documentation>Thailand</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="TJK"><xs:annotation><xs:documentation>Tajikistan</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="TKL"><xs:annotation><xs:documentation>Tokelau</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="TKM"><xs:annotation><xs:documentation>Turkmenistan</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="TLS"><xs:annotation><xs:documentation>Timor-Leste</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="TON"><xs:annotation><xs:documentation>Tonga</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="TTO"><xs:annotation><xs:documentation>Trinidad and Tobago</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="TUN"><xs:annotation><xs:documentation>Tunisia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="TUR"><xs:annotation><xs:documentation>Turkey</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="TUV"><xs:annotation><xs:documentation>Tuvalu</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="TWN"><xs:annotation><xs:documentation>Taiwan, Province of China</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="TZA"><xs:annotation><xs:documentation>Tanzania, United Republic of</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="UGA"><xs:annotation><xs:documentation>Uganda</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="UKR"><xs:annotation><xs:documentation>Ukraine</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="UMI"><xs:annotation><xs:documentation>United States Minor Outlying Islands</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="RKS"><xs:annotation><xs:documentation>Kosovo</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="URY"><xs:annotation><xs:documentation>Uruguay</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="USA"><xs:annotation><xs:documentation>United States of America</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="UZB"><xs:annotation><xs:documentation>Uzbekistan</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="VAT"><xs:annotation><xs:documentation>Holy See</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="VCT"><xs:annotation><xs:documentation>Saint Vincent and the Grenadines</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="VEN"><xs:annotation><xs:documentation>Venezuela (Bolivarian Republic of)</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="VGB"><xs:annotation><xs:documentation>Virgin Islands (British)</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="VIR"><xs:annotation><xs:documentation>Virgin Islands (U.S.)</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="VNM"><xs:annotation><xs:documentation>Viet Nam</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="VUT"><xs:annotation><xs:documentation>Vanuatu</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="WLF"><xs:annotation><xs:documentation>Wallis and Futuna</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="WSM"><xs:annotation><xs:documentation>Samoa</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="YEM"><xs:annotation><xs:documentation>Yemen</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="ZAF"><xs:annotation><xs:documentation>South Africa</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="ZMB"><xs:annotation><xs:documentation>Zambia</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="ZWE"><xs:annotation><xs:documentation>Zimbabwe</xs:documentation></xs:annotation></xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:complexType name="BuyerType">
+                <xs:sequence>
+                    <xs:element name="IdentificationTypeId" type="fs:String20SType"/>
+                    <xs:element name="IdentificationNumber" type="xs:string"/>
+                    <xs:element name="Name" type="fs:String100SType"/>
+                    <xs:element name="Adress" type="fs:String200SType"/>
+                    <xs:element name="City" type="fs:String100SType"/>
+                    <xs:element name="CountryCode" type="fs:CountryCodeSType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="InvoiceItemsType">
+                <xs:sequence>
+                    <xs:element name="Item" maxOccurs="unbounded" type="fs:InvoiceItemType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="InvoiceItemType">
+                <xs:sequence>
+                    <xs:element name="Code" type="fs:String50SType"/>
+                    <xs:element name="Description" type="xs:string"/>
+                    <xs:element name="UnitBasePrice" type="fs:Decimal4SType"/>
+                    <xs:element name="RebatePercentage" type="fs:Decimal4SType"/>
+                    <xs:element name="TaxPercentage" type="fs:Decimal4SType"/>
+                    <xs:element name="UnitBasePriceWithRebateOnly" type="fs:Decimal4SType"/>
+                    <xs:element name="UnitBasePriceWithTaxOnly" type="fs:Decimal4SType"/>
+                    <xs:element name="UnitBasePriceWithRebateAndTax" type="fs:Decimal4SType"/>
+                    <xs:element name="UnitOfMeasure" type="xs:string"/>
+                    <xs:element name="Quantity" type="fs:DoubleNegForQuantitySType"/>
+                    <xs:element name="TotalBasePrice" type="fs:Decimal4SType"/>
+                    <xs:element name="TotalBasePriceWithRebateOnly" type="fs:Decimal4SType"/>
+                    <xs:element name="TotalBasePriceWithTaxOnly" type="fs:Decimal4SType"/>
+                    <xs:element name="TotalBasePriceWithRebateAndTax" type="fs:Decimal4SType"/>
+                    <xs:element name="TotalTaxAmount" type="fs:Decimal4SType"/>
+                    <xs:element name="TotalRebateAmountBeforeVat" type="fs:Decimal4SType"/>
+                    <xs:element name="TotalRebateAmountAfterVat" type="fs:Decimal4SType"/>
+                    <xs:element name="VatExemptionReasonId" type="xs:positiveInteger" minOccurs="0"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="TaxGroupsType">
+                <xs:sequence>
+                    <xs:element name="Item" maxOccurs="unbounded" type="fs:TaxGroupType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="TaxGroupType">
+                <xs:sequence>
+                    <xs:element name="NumberOfMatchedInvoiceItems" type="xs:positiveInteger"/>
+                    <xs:element name="BasePrice" type="fs:DoubleSType"/>
+                    <xs:element name="BasePriceWithRebateOnly" type="fs:DoubleSType"/>
+                    <xs:element name="BasePriceWithTaxOnly" type="fs:DoubleSType"/>
+                    <xs:element name="BasePriceWithRebateAndTax" type="fs:DoubleSType"/>
+                    <xs:element name="TaxPercentage" type="fs:DoubleSType"/>
+                    <xs:element name="TaxAmount" type="fs:DoubleSType"/>
+                    <xs:element name="RebateAmountBeforeVat" type="fs:DoubleSType"/>
+                    <xs:element name="RebateAmountAfterVat" type="fs:DoubleSType"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:simpleType name="PaymentTypeIdType">
+                <xs:annotation>
+                    <xs:documentation>Country codes from ISO 3166-1 alpha3 standard</xs:documentation>
+                    <xs:documentation>Value 1 - Banknotes and coins. This payment type is considered cash.</xs:documentation>
+                    <xs:documentation>Value 2 - Kreditna i debitna kartica banke izdata fizičkom licu. This payment type is considered cash.</xs:documentation>
+                    <xs:documentation>Value 4 - Single-purpose voucher. This payment type is considered cash.</xs:documentation>
+                    <xs:documentation>Value 5 - Seller's company cards, gift cards and similar prepaid cards. This payment type is considered cash.</xs:documentation>
+                    <xs:documentation>Value 6 - Invoice not yet paid. It will be paid by summary invoice. This payment type is considered cash.</xs:documentation>
+                    <xs:documentation>Value 7 - Invoice is paid in advance. This payment type is considered non-cash.</xs:documentation>
+                    <xs:documentation>Value 8 - Transaction account. This payment type is considered non-cash.</xs:documentation>
+                    <xs:documentation>Value 9 - Factoring. This payment type is considered non-cash.</xs:documentation>
+                    <xs:documentation>Value 14 - Other cashless payments. This payment type is considered non-cash.</xs:documentation>
+                    <xs:documentation>Value 15 - Credit and debit card issued to the taxpayer. This payment type is considered non-cash.</xs:documentation>
+                    <xs:documentation>Value 16 - Other cash payments. This payment type is considered cash.</xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:positiveInteger">
+                    <xs:enumeration value="1"/>
+                    <xs:enumeration value="2"/>
+                    <xs:enumeration value="4"/>
+                    <xs:enumeration value="5"/>
+                    <xs:enumeration value="6"/>
+                    <xs:enumeration value="7"/>
+                    <xs:enumeration value="8"/>
+                    <xs:enumeration value="9"/>
+                    <xs:enumeration value="14"/>
+                    <xs:enumeration value="15"/>
+                    <xs:enumeration value="16"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="CurrencyCodeSType">
+                <xs:annotation>
+                    <xs:documentation>Currency codes from ISO 4217 standard</xs:documentation>
+                    <xs:documentation>AED - United Arab Emirates Dirham</xs:documentation>
+                    <xs:documentation>AFN - Afghanistan Afghani</xs:documentation>
+                    <xs:documentation>AMD - Armenia Dram</xs:documentation>
+                    <xs:documentation>ANG - Netherlands Antilles Guilder</xs:documentation>
+                    <xs:documentation>AOA - Angola Kwanza</xs:documentation>
+                    <xs:documentation>ARS - Argentina Peso</xs:documentation>
+                    <xs:documentation>AUD - Australia Dollar</xs:documentation>
+                    <xs:documentation>AWG - Aruba Guilder</xs:documentation>
+                    <xs:documentation>AZN - Azerbaijan Manat</xs:documentation>
+                    <xs:documentation>BAM - Bosnia and Herzegovina Convertible Mark</xs:documentation>
+                    <xs:documentation>BBD - Barbados Dollar</xs:documentation>
+                    <xs:documentation>BDT - Bangladesh Taka</xs:documentation>
+                    <xs:documentation>BGN - Bulgaria Lev</xs:documentation>
+                    <xs:documentation>BHD - Bahrain Dinar</xs:documentation>
+                    <xs:documentation>BIF - Burundi Franc</xs:documentation>
+                    <xs:documentation>BMD - Bermuda Dollar</xs:documentation>
+                    <xs:documentation>BND - Brunei Darussalam Dollar</xs:documentation>
+                    <xs:documentation>BOB - Bolivia Boliviano</xs:documentation>
+                    <xs:documentation>BRL - Brazil Real</xs:documentation>
+                    <xs:documentation>BSD - Bahamas Dollar</xs:documentation>
+                    <xs:documentation>BTN - Bhutan Ngultrum</xs:documentation>
+                    <xs:documentation>BWP - Botswana Pula</xs:documentation>
+                    <xs:documentation>BYN - Belarus Ruble</xs:documentation>
+                    <xs:documentation>BZD - Belize Dollar</xs:documentation>
+                    <xs:documentation>CAD - Canada Dollar</xs:documentation>
+                    <xs:documentation>CDF - Congo/Kinshasa Franc</xs:documentation>
+                    <xs:documentation>CHF - Switzerland Franc</xs:documentation>
+                    <xs:documentation>CLP - Chile Peso</xs:documentation>
+                    <xs:documentation>CNY - China Yuan Renminbi</xs:documentation>
+                    <xs:documentation>COP - Colombia Peso</xs:documentation>
+                    <xs:documentation>CRC - Costa Rica Colon</xs:documentation>
+                    <xs:documentation>CUC - Cuba Convertible Peso</xs:documentation>
+                    <xs:documentation>CUP - Cuba Peso</xs:documentation>
+                    <xs:documentation>CVE - Cape Verde Escudo</xs:documentation>
+                    <xs:documentation>CZK - Czech Republic Koruna</xs:documentation>
+                    <xs:documentation>DJF - Djibouti Franc</xs:documentation>
+                    <xs:documentation>DKK - Denmark Krone</xs:documentation>
+                    <xs:documentation>DOP - Dominican Republic Peso</xs:documentation>
+                    <xs:documentation>DZD - Algeria Dinar</xs:documentation>
+                    <xs:documentation>EGP - Egypt Pound</xs:documentation>
+                    <xs:documentation>ERN - Eritrea Nakfa</xs:documentation>
+                    <xs:documentation>ETB - Ethiopia Birr</xs:documentation>
+                    <xs:documentation>EUR - Euro Member Countries</xs:documentation>
+                    <xs:documentation>FJD - Fiji Dollar</xs:documentation>
+                    <xs:documentation>FKP - Falkland Islands (Malvinas) Pound</xs:documentation>
+                    <xs:documentation>GBP - United Kingdom Pound</xs:documentation>
+                    <xs:documentation>GEL - Georgia Lari</xs:documentation>
+                    <xs:documentation>GGP - Guernsey Pound</xs:documentation>
+                    <xs:documentation>GHS - Ghana Cedi</xs:documentation>
+                    <xs:documentation>GIP - Gibraltar Pound</xs:documentation>
+                    <xs:documentation>GMD - Gambia Dalasi</xs:documentation>
+                    <xs:documentation>GNF - Guinea Franc</xs:documentation>
+                    <xs:documentation>GTQ - Guatemala Quetzal</xs:documentation>
+                    <xs:documentation>GYD - Guyana Dollar</xs:documentation>
+                    <xs:documentation>HKD - Hong Kong Dollar</xs:documentation>
+                    <xs:documentation>HNL - Honduras Lempira</xs:documentation>
+                    <xs:documentation>HRK - Croatia Kuna</xs:documentation>
+                    <xs:documentation>HTG - Haiti Gourde</xs:documentation>
+                    <xs:documentation>HUF - Hungary Forint</xs:documentation>
+                    <xs:documentation>IDR - Indonesia Rupiah</xs:documentation>
+                    <xs:documentation>ILS - Israel Shekel</xs:documentation>
+                    <xs:documentation>IMP - Isle of Man Pound</xs:documentation>
+                    <xs:documentation>INR - India Rupee</xs:documentation>
+                    <xs:documentation>IQD - Iraq Dinar</xs:documentation>
+                    <xs:documentation>IRR - Iran Rial</xs:documentation>
+                    <xs:documentation>ISK - Iceland Krona</xs:documentation>
+                    <xs:documentation>JEP - Jersey Pound</xs:documentation>
+                    <xs:documentation>JMD - Jamaica Dollar</xs:documentation>
+                    <xs:documentation>JOD - Jordan Dinar</xs:documentation>
+                    <xs:documentation>JPY - Japan Yen</xs:documentation>
+                    <xs:documentation>KES - Kenya Shilling</xs:documentation>
+                    <xs:documentation>KGS - Kyrgyzstan Som</xs:documentation>
+                    <xs:documentation>KHR - Cambodia Riel</xs:documentation>
+                    <xs:documentation>KMF - Comorian Franc</xs:documentation>
+                    <xs:documentation>KPW - Korea (North) Won</xs:documentation>
+                    <xs:documentation>KRW - Korea (South) Won</xs:documentation>
+                    <xs:documentation>KWD - Kuwait Dinar</xs:documentation>
+                    <xs:documentation>KYD - Cayman Islands Dollar</xs:documentation>
+                    <xs:documentation>KZT - Kazakhstan Tenge</xs:documentation>
+                    <xs:documentation>LAK - Laos Kip</xs:documentation>
+                    <xs:documentation>LBP - Lebanon Pound</xs:documentation>
+                    <xs:documentation>LKR - Sri Lanka Rupee</xs:documentation>
+                    <xs:documentation>LRD - Liberia Dollar</xs:documentation>
+                    <xs:documentation>LSL - Lesotho Loti</xs:documentation>
+                    <xs:documentation>LYD - Libya Dinar</xs:documentation>
+                    <xs:documentation>MAD - Morocco Dirham</xs:documentation>
+                    <xs:documentation>MDL - Moldova Leu</xs:documentation>
+                    <xs:documentation>MGA - Madagascar Ariary</xs:documentation>
+                    <xs:documentation>MKD - Macedonia Denar</xs:documentation>
+                    <xs:documentation>MMK - Myanmar (Burma) Kyat</xs:documentation>
+                    <xs:documentation>MNT - Mongolia Tughrik</xs:documentation>
+                    <xs:documentation>MOP - Macau Pataca</xs:documentation>
+                    <xs:documentation>MRU - Mauritania Ouguiya</xs:documentation>
+                    <xs:documentation>MUR - Mauritius Rupee</xs:documentation>
+                    <xs:documentation>MVR - Maldives (Maldive Islands) Rufiyaa</xs:documentation>
+                    <xs:documentation>MWK - Malawi Kwacha</xs:documentation>
+                    <xs:documentation>MXN - Mexico Peso</xs:documentation>
+                    <xs:documentation>MYR - Malaysia Ringgit</xs:documentation>
+                    <xs:documentation>MZN - Mozambique Metical</xs:documentation>
+                    <xs:documentation>NAD - Namibia Dollar</xs:documentation>
+                    <xs:documentation>NGN - Nigeria Naira</xs:documentation>
+                    <xs:documentation>NIO - Nicaragua Cordoba</xs:documentation>
+                    <xs:documentation>NOK - Norway Krone</xs:documentation>
+                    <xs:documentation>NPR - Nepal Rupee</xs:documentation>
+                    <xs:documentation>NZD - New Zealand Dollar</xs:documentation>
+                    <xs:documentation>OMR - Oman Rial</xs:documentation>
+                    <xs:documentation>PAB - Panama Balboa</xs:documentation>
+                    <xs:documentation>PEN - Peru Sol</xs:documentation>
+                    <xs:documentation>PGK - Papua New Guinea Kina</xs:documentation>
+                    <xs:documentation>PHP - Philippines Peso</xs:documentation>
+                    <xs:documentation>PKR - Pakistan Rupee</xs:documentation>
+                    <xs:documentation>PLN - Poland Zloty</xs:documentation>
+                    <xs:documentation>PYG - Paraguay Guarani</xs:documentation>
+                    <xs:documentation>QAR - Qatar Riyal</xs:documentation>
+                    <xs:documentation>RON - Romania Leu</xs:documentation>
+                    <xs:documentation>RSD - Serbia Dinar</xs:documentation>
+                    <xs:documentation>RUB - Russia Ruble</xs:documentation>
+                    <xs:documentation>RWF - Rwanda Franc</xs:documentation>
+                    <xs:documentation>SAR - Saudi Arabia Riyal</xs:documentation>
+                    <xs:documentation>SBD - Solomon Islands Dollar</xs:documentation>
+                    <xs:documentation>SCR - Seychelles Rupee</xs:documentation>
+                    <xs:documentation>SDG - Sudan Pound</xs:documentation>
+                    <xs:documentation>SEK - Sweden Krona</xs:documentation>
+                    <xs:documentation>SGD - Singapore Dollar</xs:documentation>
+                    <xs:documentation>SHP - Saint Helena Pound</xs:documentation>
+                    <xs:documentation>SLL - Sierra Leone Leone</xs:documentation>
+                    <xs:documentation>SOS - Somalia Shilling</xs:documentation>
+                    <xs:documentation>SPL - Seborga Luigino</xs:documentation>
+                    <xs:documentation>SRD - Suriname Dollar</xs:documentation>
+                    <xs:documentation>STN - Sao Tome and Principe Dobra</xs:documentation>
+                    <xs:documentation>SVC - El Salvador Colon</xs:documentation>
+                    <xs:documentation>SYP - Syria Pound</xs:documentation>
+                    <xs:documentation>SZL - eSwatini Lilangeni</xs:documentation>
+                    <xs:documentation>THB - Thailand Baht</xs:documentation>
+                    <xs:documentation>TJS - Tajikistan Somoni</xs:documentation>
+                    <xs:documentation>TMT - Turkmenistan Manat</xs:documentation>
+                    <xs:documentation>TND - Tunisia Dinar</xs:documentation>
+                    <xs:documentation>TOP - Tonga Pa'anga</xs:documentation>
+                    <xs:documentation>TRY - Turkey Lira</xs:documentation>
+                    <xs:documentation>TTD - Trinidad and Tobago Dollar</xs:documentation>
+                    <xs:documentation>TVD - Tuvalu Dollar</xs:documentation>
+                    <xs:documentation>TWD - Taiwan New Dollar</xs:documentation>
+                    <xs:documentation>TZS - Tanzania Shilling</xs:documentation>
+                    <xs:documentation>UAH - Ukraine Hryvnia</xs:documentation>
+                    <xs:documentation>UGX - Uganda Shilling</xs:documentation>
+                    <xs:documentation>USD - United States Dollar</xs:documentation>
+                    <xs:documentation>UYU - Uruguay Peso</xs:documentation>
+                    <xs:documentation>UZS - Uzbekistan Som</xs:documentation>
+                    <xs:documentation>VEF - Venezuela Bolivar</xs:documentation>
+                    <xs:documentation>VND - Viet Nam Dong</xs:documentation>
+                    <xs:documentation>VUV - Vanuatu Vatu</xs:documentation>
+                    <xs:documentation>WST - Samoa Tala</xs:documentation>
+                    <xs:documentation>XAF - Communaute Financiere Africaine (BEAC) CFA Franc BEAC</xs:documentation>
+                    <xs:documentation>XCD - East Caribbean Dollar</xs:documentation>
+                    <xs:documentation>XDR - International Monetary Fund (IMF) Special Drawing Rights</xs:documentation>
+                    <xs:documentation>XOF - Communaute Financiere Africaine (BCEAO) Franc</xs:documentation>
+                    <xs:documentation>XPF - Comptoirs Francais du Pacifique (CFP) Franc</xs:documentation>
+                    <xs:documentation>YER - Yemen Rial</xs:documentation>
+                    <xs:documentation>ZAR - South Africa Rand</xs:documentation>
+                    <xs:documentation>ZMW - Zambia Kwacha</xs:documentation>
+                    <xs:documentation>ZWD - Zimbabwe Dollar</xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="AED"/>
+                    <xs:enumeration value="AFN"/>
+                    <xs:enumeration value="AMD"/>
+                    <xs:enumeration value="ANG"/>
+                    <xs:enumeration value="AOA"/>
+                    <xs:enumeration value="ARS"/>
+                    <xs:enumeration value="AUD"/>
+                    <xs:enumeration value="AWG"/>
+                    <xs:enumeration value="AZN"/>
+                    <xs:enumeration value="BAM"/>
+                    <xs:enumeration value="BBD"/>
+                    <xs:enumeration value="BDT"/>
+                    <xs:enumeration value="BGN"/>
+                    <xs:enumeration value="BHD"/>
+                    <xs:enumeration value="BIF"/>
+                    <xs:enumeration value="BMD"/>
+                    <xs:enumeration value="BND"/>
+                    <xs:enumeration value="BOB"/>
+                    <xs:enumeration value="BRL"/>
+                    <xs:enumeration value="BSD"/>
+                    <xs:enumeration value="BTN"/>
+                    <xs:enumeration value="BWP"/>
+                    <xs:enumeration value="BYN"/>
+                    <xs:enumeration value="BZD"/>
+                    <xs:enumeration value="CAD"/>
+                    <xs:enumeration value="CDF"/>
+                    <xs:enumeration value="CHF"/>
+                    <xs:enumeration value="CLP"/>
+                    <xs:enumeration value="CNY"/>
+                    <xs:enumeration value="COP"/>
+                    <xs:enumeration value="CRC"/>
+                    <xs:enumeration value="CUC"/>
+                    <xs:enumeration value="CUP"/>
+                    <xs:enumeration value="CVE"/>
+                    <xs:enumeration value="CZK"/>
+                    <xs:enumeration value="DJF"/>
+                    <xs:enumeration value="DKK"/>
+                    <xs:enumeration value="DOP"/>
+                    <xs:enumeration value="DZD"/>
+                    <xs:enumeration value="EGP"/>
+                    <xs:enumeration value="ERN"/>
+                    <xs:enumeration value="ETB"/>
+                    <xs:enumeration value="EUR"/>
+                    <xs:enumeration value="FJD"/>
+                    <xs:enumeration value="FKP"/>
+                    <xs:enumeration value="GBP"/>
+                    <xs:enumeration value="GEL"/>
+                    <xs:enumeration value="GGP"/>
+                    <xs:enumeration value="GHS"/>
+                    <xs:enumeration value="GIP"/>
+                    <xs:enumeration value="GMD"/>
+                    <xs:enumeration value="GNF"/>
+                    <xs:enumeration value="GTQ"/>
+                    <xs:enumeration value="GYD"/>
+                    <xs:enumeration value="HKD"/>
+                    <xs:enumeration value="HNL"/>
+                    <xs:enumeration value="HRK"/>
+                    <xs:enumeration value="HTG"/>
+                    <xs:enumeration value="HUF"/>
+                    <xs:enumeration value="IDR"/>
+                    <xs:enumeration value="ILS"/>
+                    <xs:enumeration value="IMP"/>
+                    <xs:enumeration value="INR"/>
+                    <xs:enumeration value="IQD"/>
+                    <xs:enumeration value="IRR"/>
+                    <xs:enumeration value="ISK"/>
+                    <xs:enumeration value="JEP"/>
+                    <xs:enumeration value="JMD"/>
+                    <xs:enumeration value="JOD"/>
+                    <xs:enumeration value="JPY"/>
+                    <xs:enumeration value="KES"/>
+                    <xs:enumeration value="KGS"/>
+                    <xs:enumeration value="KHR"/>
+                    <xs:enumeration value="KMF"/>
+                    <xs:enumeration value="KPW"/>
+                    <xs:enumeration value="KRW"/>
+                    <xs:enumeration value="KWD"/>
+                    <xs:enumeration value="KYD"/>
+                    <xs:enumeration value="KZT"/>
+                    <xs:enumeration value="LAK"/>
+                    <xs:enumeration value="LBP"/>
+                    <xs:enumeration value="LKR"/>
+                    <xs:enumeration value="LRD"/>
+                    <xs:enumeration value="LSL"/>
+                    <xs:enumeration value="LYD"/>
+                    <xs:enumeration value="MAD"/>
+                    <xs:enumeration value="MDL"/>
+                    <xs:enumeration value="MGA"/>
+                    <xs:enumeration value="MKD"/>
+                    <xs:enumeration value="MMK"/>
+                    <xs:enumeration value="MNT"/>
+                    <xs:enumeration value="MOP"/>
+                    <xs:enumeration value="MRU"/>
+                    <xs:enumeration value="MUR"/>
+                    <xs:enumeration value="MVR"/>
+                    <xs:enumeration value="MWK"/>
+                    <xs:enumeration value="MXN"/>
+                    <xs:enumeration value="MYR"/>
+                    <xs:enumeration value="MZN"/>
+                    <xs:enumeration value="NAD"/>
+                    <xs:enumeration value="NGN"/>
+                    <xs:enumeration value="NIO"/>
+                    <xs:enumeration value="NOK"/>
+                    <xs:enumeration value="NPR"/>
+                    <xs:enumeration value="NZD"/>
+                    <xs:enumeration value="OMR"/>
+                    <xs:enumeration value="PAB"/>
+                    <xs:enumeration value="PEN"/>
+                    <xs:enumeration value="PGK"/>
+                    <xs:enumeration value="PHP"/>
+                    <xs:enumeration value="PKR"/>
+                    <xs:enumeration value="PLN"/>
+                    <xs:enumeration value="PYG"/>
+                    <xs:enumeration value="QAR"/>
+                    <xs:enumeration value="RON"/>
+                    <xs:enumeration value="RSD"/>
+                    <xs:enumeration value="RUB"/>
+                    <xs:enumeration value="RWF"/>
+                    <xs:enumeration value="SAR"/>
+                    <xs:enumeration value="SBD"/>
+                    <xs:enumeration value="SCR"/>
+                    <xs:enumeration value="SDG"/>
+                    <xs:enumeration value="SEK"/>
+                    <xs:enumeration value="SGD"/>
+                    <xs:enumeration value="SHP"/>
+                    <xs:enumeration value="SLL"/>
+                    <xs:enumeration value="SOS"/>
+                    <xs:enumeration value="SPL"/>
+                    <xs:enumeration value="SRD"/>
+                    <xs:enumeration value="STN"/>
+                    <xs:enumeration value="SVC"/>
+                    <xs:enumeration value="SYP"/>
+                    <xs:enumeration value="SZL"/>
+                    <xs:enumeration value="THB"/>
+                    <xs:enumeration value="TJS"/>
+                    <xs:enumeration value="TMT"/>
+                    <xs:enumeration value="TND"/>
+                    <xs:enumeration value="TOP"/>
+                    <xs:enumeration value="TRY"/>
+                    <xs:enumeration value="TTD"/>
+                    <xs:enumeration value="TVD"/>
+                    <xs:enumeration value="TWD"/>
+                    <xs:enumeration value="TZS"/>
+                    <xs:enumeration value="UAH"/>
+                    <xs:enumeration value="UGX"/>
+                    <xs:enumeration value="USD"/>
+                    <xs:enumeration value="UYU"/>
+                    <xs:enumeration value="UZS"/>
+                    <xs:enumeration value="VEF"/>
+                    <xs:enumeration value="VND"/>
+                    <xs:enumeration value="VUV"/>
+                    <xs:enumeration value="WST"/>
+                    <xs:enumeration value="XAF"/>
+                    <xs:enumeration value="XCD"/>
+                    <xs:enumeration value="XDR"/>
+                    <xs:enumeration value="XOF"/>
+                    <xs:enumeration value="XPF"/>
+                    <xs:enumeration value="YER"/>
+                    <xs:enumeration value="ZAR"/>
+                    <xs:enumeration value="ZMW"/>
+                    <xs:enumeration value="ZWD"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:complexType name="InvoiceCreateRequestType">
+                <xs:sequence>
+                    <xs:element name="SellerIdentificationNumber" type="xs:string"/>
+                    <xs:element name="Type" type="xs:positiveInteger"/>
+                    <xs:element name="DateCreated" type="fs:UTCSType"/>
+                    <xs:element name="ValueDate" type="fs:UTCSType"/>
+                    <xs:element name="TaxPeriod" type="fs:TaxPeriodSType"/>
+                    <xs:element name="PaymentTypeId" type="fs:PaymentTypeIdType"/>
+                    <xs:element name="OperatorEfiCode" type="fs:RegistrationCodeSType"/>
+                    <xs:element name="TotalBasePrice" type="fs:DecimalNegSType"/>
+                    <xs:element name="TotalBasePriceWithRebateOnly" type="fs:DecimalNegSType"/>
+                    <xs:element name="TotalBasePriceWithTaxOnly" type="fs:DecimalNegSType"/>
+                    <xs:element name="TotalBasePriceWithRebateAndTax" type="fs:DecimalNegSType"/>
+                    <xs:element name="TaxAmount" type="fs:DecimalNegSType"/>
+                    <xs:element name="RebateAmountBeforeVat" type="fs:DecimalNegSType"/>
+                    <xs:element name="RebateAmountAfterVat" type="fs:DecimalNegSType"/>
+                    <xs:element name="CorrectionInvoiceIICReference"/>
+                    <xs:element name="CurrencyIsoCode" type="fs:CurrencyCodeSType"/>
+                    <xs:element name="CurrencyExchangeRate" type="fs:DoubleSType"/>
+                    <xs:element name="Note" type="xs:string"/>
+                    <xs:element name="Buyer" type="fs:BuyerType" minOccurs="0"/>
+                    <xs:element name="Items" type="fs:InvoiceItemsType"/>
+                    <xs:element name="TaxGroups" type="fs:TaxGroupsType" minOccurs="0"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="InvoiceCreateResponseType">
+                <xs:sequence>
+                    <xs:element name="SellerIdentificationNumber" type="xs:string"/>
+                    <xs:element name="Type" type="xs:positiveInteger"/>
+                    <xs:element name="DateCreated" type="fs:UTCSType"/>
+                    <xs:element name="ValueDate" type="fs:UTCSType"/>
+                    <xs:element name="TaxPeriod" type="fs:TaxPeriodSType"/>
+                    <xs:element name="PaymentTypeId" type="fs:PaymentTypeIdType"/>
+                    <xs:element name="OperatorEfiCode" type="fs:RegistrationCodeSType"/>
+                    <xs:element name="TotalBasePrice" type="fs:DecimalNegSType"/>
+                    <xs:element name="TotalBasePriceWithRebateOnly" type="fs:DecimalNegSType"/>
+                    <xs:element name="TotalBasePriceWithTaxOnly" type="fs:DecimalNegSType"/>
+                    <xs:element name="TotalBasePriceWithRebateAndTax" type="fs:DecimalNegSType"/>
+                    <xs:element name="TaxAmount" type="fs:DecimalNegSType"/>
+                    <xs:element name="RebateAmountBeforeVat" type="fs:DecimalNegSType"/>
+                    <xs:element name="RebateAmountAfterVat" type="fs:DecimalNegSType"/>
+                    <xs:element name="CorrectionInvoiceIICReference"/>
+                    <xs:element name="CurrencyIsoCode" type="fs:CurrencyCodeSType"/>
+                    <xs:element name="CurrencyExchangeRate" type="fs:DoubleSType"/>
+                    <xs:element name="Note" type="xs:string"/>
+                    <xs:element name="IIC" type="xs:string"/>
+                    <xs:element name="FIC" type="xs:string"/>
+                    <xs:element name="EfiVerifyUrl" type="xs:string"/>
+                    <xs:element name="OrdinalNumber" type="xs:string"/>
+                    <xs:element name="IdNumber" type="xs:string"/>
+                    <xs:element name="Buyer" type="fs:BuyerType" minOccurs="0"/>
+                    <xs:element name="Items" type="fs:InvoiceItemsType"/>
+                    <xs:element name="TaxGroups" type="fs:TaxGroupsType" minOccurs="0"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+
+    <wsdl:message name="InvoiceCreateInput">
+        <wsdl:part name="Invoice" type="fs:InvoiceCreateRequestType"/>
+    </wsdl:message>
+
+    <wsdl:message name="InvoiceCreateOutput">
+        <wsdl:part name="Invoice" type="fs:InvoiceCreateResponseType"/>
+    </wsdl:message>
+
+    <wsdl:portType name="FiscalizationServicePortType">
+        <wsdl:operation name="InvoiceCreate">
+            <wsdl:input message="fs:InvoiceCreateInput"/>
+            <wsdl:output message="fs:InvoiceCreateOutput"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="FiscalizationServiceBinding" type="fs:FiscalizationServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="InvoiceCreate">
+            <soap:operation soapAction="http://testpos.e-lavirint.com/api/soap/invoice/create"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="FiscalizationService">
+        <wsdl:port name="FiscalizationServicePort" binding="fs:FiscalizationServiceBinding">
+            <soap:address location="http://testpos.e-lavirint.com/api/soap/invoice/create"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

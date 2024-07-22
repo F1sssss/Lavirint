@@ -1,0 +1,161 @@
+.ui-select-container {
+  width: 100%;
+}
+
+.select2-container .select2-choice,
+.select2-container .select2-choices {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: $line-height-base;
+  color: #212529;
+  background-color: #fff;
+  background-image: none;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: .25rem;
+  @include box-shadow($input-box-shadow);
+}
+
+.select2-container .select2-choice {
+  padding: .375rem .75rem;
+}
+
+
+.select2-container-active .select2-choice {
+  color: $input-focus-color;
+  background-color: $input-focus-bg;
+  border-color: $input-focus-border-color;
+  outline: 0;
+  @if $enable-shadows {
+    @include box-shadow($input-box-shadow, $input-focus-box-shadow);
+  } @else {
+    // Avoid using mixin so we can pass custom focus shadow properly
+    box-shadow: $input-focus-box-shadow;
+  }
+}
+
+.ng-dirty.ng-invalid > a.select2-choice {
+  border: 1px solid #ced4da;
+}
+
+.ng-invalid.is-invalid > a.select2-choice {
+  border: 1px solid #D44950;
+}
+
+/** TODO Change color with variable **/
+
+//.select2-dropdown-open .select2-choice
+//  border-bottom-left-radius: 0
+//  border-bottom-right-radius: 0
+
+.select2-container .select2-choice .select2-arrow {
+  border-color: #ddd;
+}
+
+
+.select2-container .select2-choice .select2-arrow b {
+  display: block;
+  width: 12px;
+  height: 12px;
+  background-position: 0px -4px;
+  margin-top: 8px;
+  margin-left: 10px;
+}
+
+.select2-dropdown-open .select2-choice .select2-arrow b {
+  background-position: -18px -4px;
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-resolution: 144dpi)  {
+  /* select2x2.png position */
+}
+
+.select2-container .select2-choice abbr {
+  top: 10px;
+  right: 50px;
+}
+
+
+.select2-container .select2-choice .select2-arrow {
+  width: 38px;
+  background-image: none;
+  border-radius: 0 3px 3px 0;
+}
+
+.input-group .ui-select-container:not(:first-child) {
+  flex: 1;
+
+  &.select2-container .select2-choice {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+  }
+}
+
+
+.input-group .ui-select-container:not(:last-child) {
+  flex: 1;
+
+  &.select2-container .select2-choice {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+  }
+}
+
+.ui-select-choices-row:hover {
+  color: inherit;
+}
+
+@media (max-width: 576px) {
+  .ui-select-offscreen {
+    display: none;
+  }
+}
+
+.select2-container-multi .select2-choices .select2-search-choice {
+  border: 1px solid $border-color;
+  background: $light;
+  display: flex;
+  padding: 5px 5px 7px 19px;
+  box-shadow: none;
+}
+
+.select2-container-multi .select2-search-choice-close {
+  left: 5px;
+}
+
+.select2-search-choice-close {
+  top: 7px;
+}
+
+.btn-default-focus {
+  .btn {
+    border: $input-border-width solid $input-focus-border-color !important;
+    box-shadow: $input-btn-focus-box-shadow;
+  }
+}
+
+@include media-breakpoint-down(md) {
+  .select2-choice.ui-select-match {
+    line-height: $mobile-line-height;
+  }
+
+  .select2-container .select2-choice .select2-arrow {
+    width: 50px;
+  }
+
+  .select2-container .select2-choice .select2-arrow b {
+    margin-top: 14px;
+    margin-left: 15px;
+  }
+
+  .select2-container .select2-choice abbr {
+    right: 64px;
+    top: 16px;
+  }
+}

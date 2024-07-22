@@ -1,0 +1,11 @@
+.btn {
+  text-transform: uppercase;
+}
+
+@include media-breakpoint-down(md) {
+  .btn {
+    line-height: $mobile-line-height;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+}

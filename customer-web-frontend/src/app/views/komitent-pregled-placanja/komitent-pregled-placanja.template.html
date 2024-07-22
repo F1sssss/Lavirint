@@ -1,0 +1,25 @@
+<div class="border-bottom bg-light">
+    <div class="container-lg py-3">
+        <h4 class="mb-3">{{ ctrl.komitent.naziv }}</h4>
+        <div>{{ ctrl.komitent.grad }}, {{ ctrl.komitent.adresa }}</div>
+    </div>
+</div>
+<div class="border-bottom bg-light" ng-repeat="placanje in ctrl.komitent.placanja">
+    <div class="container-lg py-3">
+        <div class="row">
+            <div class="col-9">
+                <div>
+                    <b>Datum:</b> {{ placanje.datum_placanja }}
+                </div>
+                <div>
+                    <b>Iznos:</b> {{ placanje.iznos }}
+                </div>
+            </div>
+            <div class="col-3">
+                <button type="button" class="btn btn-danger w-100" ng-click="ctrl.obrisi($index)">
+                    <i class="fa fa-trash"></i> Obriši
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

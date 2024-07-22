@@ -1,0 +1,120 @@
+<div class="modal-header">
+    <div class="d-flex justify-content-between align-items-center w-100">
+        <h4 class="mb-0">Ažuriranje stavke</h4>
+    </div>
+</div>
+<div class="modal-body flex-grow-1 overflow-y-scroll">
+    <form name="ctrl.forma" novalidate>
+        <div class="row g-3">
+            <div class="col-12">
+                <label for="modal-stavka-artikal" class="form-label">Artikal</label>
+                <textarea rows="1"
+                          type="text"
+                          id="modal-stavka-artikal"
+                          class="form-control"
+                          disabled
+                          ng-model="ctrl.item.magacin_zaliha.artikal.naziv">
+                </textarea>
+            </div>
+            <div class="col-md-6 d-none d-md-block">
+                <label for="modal-jedinicna-cijena-osnovna" class="form-label">Osnovica</label>
+                <input type="number"
+                       inputmode="decimal"
+                       name="jedinicna_cijena_osnovna"
+                       id="modal-jedinicna-cijena-osnovna"
+                       class="form-control"
+                       ng-model="ctrl.item.jedinicna_cijena_osnovna"
+                       ng-change="ctrl.invoiceFactory.recalculateItemBasedOnUPB(ctrl.invoice, ctrl.item)"
+                       min="0.0001"
+                       step="0.0001"
+                       required>
+                <div ng-messages="ctrl.forma.jedinicna_cijena_osnovna.$error" role="alert" class="invalid-feedback">
+                    <div ng-messages-include="error-messages"></div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <label for="modal-jedinicna-cijena-puna" class="form-label">Cijena sa porezom</label>
+                <input type="number"
+                       inputmode="decimal"
+                       name="jedinicna_cijena_puna"
+                       id="modal-jedinicna-cijena-puna"
+                       class="form-control"
+                       ng-model="ctrl.item.jedinicna_cijena_puna"
+                       ng-change="ctrl.invoiceFactory.recalculateItemBasedOnUPA(ctrl.invoice, ctrl.item)"
+                       min="0.0001"
+                       step="0.0001"
+                       required>
+                <div ng-messages="ctrl.forma.jedinicna_cijena_puna.$error" role="alert" class="invalid-feedback">
+                    <div ng-messages-include="error-messages"></div>
+                </div>
+            </div>
+            <div class="col-12">
+                <label for="modal-stavka-kolicina" class="form-label">Količina</label>
+                <input fis-autofocus="true"
+                       type="number"
+                       inputmode="decimal"
+                       name="kolicina"
+                       id="modal-stavka-kolicina"
+                       class="form-control"
+                       ng-model="ctrl.item.kolicina"
+                       ng-focus="$event.target.select()"
+                       required min="0.001"
+                       step="0.001"
+                       ng-change="ctrl.invoiceFactory.recalculateItem(ctrl.invoice, ctrl.item)">
+                <div ng-messages="ctrl.forma.kolicina.$error" role="alert" class="invalid-feedback">
+                    <div ng-messages-include="error-messages"></div>
+                </div>
+            </div>
+            <div class="col-12">
+                <label for="modal-stavka-rabat-procenat" class="form-label">Popust %</label>
+                <input type="number"
+                       inputmode="decimal"
+                       class="form-control"
+                       id="modal-stavka-rabat-procenat"
+                       placeholder="Popust %"
+                       name="rabat_procenat"
+                       ng-model="ctrl.item.rabat_procenat"
+                       required min="0"
+                       max="100"
+                       step="0.01"
+                       ng-change="ctrl.invoiceFactory.recalculateItem(ctrl.invoice, ctrl.item)">
+                <div ng-messages="ctrl.forma.rabat_procenat.$error" role="alert" class="invalid-feedback">
+                    <div ng-messages-include="error-messages"></div>
+                </div>
+            </div>
+            <div class="col-12">
+                <label for="modal-ukupna-cijena-prodajna" class="form-label">Za uplatu</label>
+                <input type="number"
+                       name="ukupna_cijena_prodajna"
+                       id="modal-ukupna-cijena-prodajna"
+                       class="form-control"
+                       ng-model="ctrl.item.ukupna_cijena_prodajna"
+                       ng-model-options="{ allowInvalid: true }"
+                       min="0.000001"
+                       step="0.000001"
+                       required
+                       disabled>
+                <div ng-messages="ctrl.forma.ukupna_cijena_prodajna.$error" role="alert" class="invalid-feedback">
+                    <div ng-message="max">
+                        Po podešavanjima artikla prodajna cijena za odabranu količinu ne može biti
+                        veća od {{ ctrl.item.ukupna_cijena_puna }}€.
+                    </div>
+                    <div ng-messages-include="error-messages"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <div class="text-end">
+        <button class="btn btn-light border" ng-click="$close({ isConfirmed: false })">
+            Odustani
+        </button>
+        <button class="btn btn-light border" ng-click="ctrl.deleteItem()">
+            Obriši
+        </button>
+        <button class="btn btn-primary" ng-click="ctrl.confirm()">
+            Sačuvaj
+        </button>
+    </div>
+</div>

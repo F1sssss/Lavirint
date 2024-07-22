@@ -1,0 +1,47 @@
+.dash-info {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+
+  .dash-info-spacing {
+    min-width: 1.5rem;
+  }
+
+
+  .dash-info-start {
+    position: relative;
+    z-index: 1;
+
+    span {
+      padding-right: map-get($spacers, 2);
+    }
+  }
+
+  .dash-info-end {
+    position: relative;
+    z-index: 1;
+
+    span {
+      padding-left: map-get($spacers, 2);
+    }
+  }
+
+  &:after {
+    content: '';
+    width: 100%;
+    position: absolute;
+    top: 12px;
+    left: 0;
+    display: block;
+    border-top: 1px dashed rgba(0, 0, 0, .2);
+  }
+}
+
+@each $color, $value in $theme-colors {
+  .bg-#{$color} {
+    .dash-info-end span,
+    .dash-info-start span {
+      background-color: $value;
+    }
+  }
+}

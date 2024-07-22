@@ -1,0 +1,55 @@
+<a class="dropdown-item py-3">
+    <div class="fw-bold text-uppercase">
+        Knjižno odobrenje {{ match.model.ordinalNumber }}
+    </div>
+    <div class="d-flex align-items-center">
+        <div style="min-width: 64px;" class="fw-bold">
+            Promet:
+        </div>
+        <div>
+            <span class="fs-5 fw-bold" ng-bind-html="match.model.returnAndDiscountAmountWithTax | fisRoundHalfUp:2"></span>
+            <span class="fw-bold">{{ match.model.currency.isoCode }}</span>
+        </div>
+    </div>
+    <div class="d-flex">
+        <div style="min-width: 64px;" class="fw-bold">
+            Datum:
+        </div>
+        <div>
+            <span ng-bind-html="match.model.fiscalizationDate | fisFormatDatetime | uibTypeaheadHighlight:query"></span>
+        </div>
+    </div>
+    <div class="d-flex">
+        <div style="min-width: 64px;" class="fw-bold">
+            Kupac:
+        </div>
+        <div>
+            <span ng-bind-html="match.model.buyer.name | uibTypeaheadHighlight:query"></span>
+        </div>
+    </div>
+    <div class="d-flex">
+        <div style="min-width: 64px;" class="fw-bold">
+            {{ match.model.buyer.identificationType.description }}:
+        </div>
+        <div>
+            <span ng-bind-html="match.model.buyer.identificationNumber | uibTypeaheadHighlight:query"></span>
+        </div>
+    </div>
+    <div class="d-flex">
+        <div style="min-width: 64px;" class="fw-bold">
+            Adresa:
+        </div>
+        <div>
+            <span ng-bind-html="match.model.buyer.address"></span>
+        </div>
+    </div>
+    <div class="d-flex">
+        <div style="min-width: 64px;" class="fw-bold">
+            Grad:
+        </div>
+        <div>
+            <span ng-bind-html="match.model.buyer.city"></span>,
+            <span ng-bind-html="match.model.buyer.country.name"></span>
+        </div>
+    </div>
+</a>

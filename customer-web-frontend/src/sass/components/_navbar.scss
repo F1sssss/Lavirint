@@ -1,0 +1,31 @@
+@import '../../../node_modules/bootstrap/scss/mixins';
+
+$navbar-heights: (
+  null: 44px,
+  sm: 56px
+);
+
+@each $breakpoint, $navbar-height in $navbar-heights {
+  @include media-breakpoint-up($breakpoint) {
+    body {
+      padding-top: $navbar-height;
+    }
+
+    .h-navbar {
+      height: $navbar-height;
+    }
+
+    #main-navbar {
+      height: $navbar-height;
+      min-height: $navbar-height;
+    }
+
+    .h-no-navbar {
+      height: calc(100% - #{$navbar-height}) !important;
+    }
+
+    .top-navbar {
+      top: $navbar-height;
+    }
+  }
+}

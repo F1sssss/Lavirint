@@ -1,0 +1,129 @@
+<div class="py-5">
+    <div class="container-lg">
+        <form name="ctrl.forma" novalidate ng-submit="ctrl.upis()">
+            <h4>Izmjena partnera</h4>
+            <div class="row g-3 mt-3">
+                <div class="col-12">
+                    <label for="komitent-naziv" class="form-label">Ime / Naziv</label>
+                    <input type="text" class="form-control" name="naziv" id="komitent-naziv" ng-model="ctrl.komitent.naziv" required ng-class="{'is-invalid': ctrl.forma.$submitted && ctrl.forma.naziv.$invalid}">
+                    <div ng-messages="ctrl.forma.naziv.$error" role="alert" class="invalid-feedback">
+                        <div ng-messages-include="error-messages"></div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <label for="tip-identifikacione-oznake-id" class="form-label">Tip identifikacione oznake</label>
+                    <ui-select
+                        name="tip_identifikacione_oznake_id"
+                        id="tip-identifikacione-oznake-id"
+                        ng-model="ctrl.komitent.tip_identifikacione_oznake_id"
+                        theme="select2"
+                        search-enabled="false"
+                        required
+                        ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.tip_identifikacione_oznake_id.$invalid }">
+                        <ui-select-match placeholder="&nbsp;" allow-clear="true">
+                            <span ng-bind="$select.selected.naziv"></span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item.id as item in (ctrl.tipoviIdentifikacioneOznake | filter: $select.search) track by item.id">
+                            <span ng-bind="item.naziv"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                    <div ng-messages="ctrl.forma.tip_identifikacione_oznake_id.$error" role="alert" class="invalid-feedback">
+                        <div ng-messages-include="error-messages"></div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <label for="identifikaciona-oznaka" class="form-label">Identifikaciona oznaka</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="identifikaciona_oznaka"
+                        id="identifikaciona-oznaka"
+                        ng-model="ctrl.komitent.identifikaciona_oznaka"
+                        required
+                        ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.identifikaciona_oznaka.$invalid }">
+                    <div ng-messages="ctrl.forma.identifikaciona_oznaka.$error" role="alert" class="invalid-feedback">
+                        <div ng-messages-include="error-messages"></div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-12 col-lg-4">
+                    <label for="komitent-pdvbroj" class="form-label">PDV broj</label>
+                    <input type="text" class="form-control" name="pdvbroj" id="komitent-pdvbroj" ng-model="ctrl.komitent.pdvbroj">
+                </div>
+                <div class="col-12 col-lg-6">
+                    <label for="komitent-adresa" class="form-label">Adresa</label>
+                    <input type="text" class="form-control" name="adresa" id="komitent-adresa" ng-model="ctrl.komitent.adresa" required ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.adresa.$invalid }">
+                    <div ng-messages="ctrl.forma.adresa.$error" role="alert" class="invalid-feedback">
+                        <div ng-messages-include="error-messages"></div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3">
+                    <label for="komitent-grad" class="form-label">Grad</label>
+                    <input type="text" class="form-control" name="grad" id="komitent-grad" ng-model="ctrl.komitent.grad" required ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.grad.$invalid }">
+                    <div ng-messages="ctrl.forma.grad.$error" role="alert" class="invalid-feedback">
+                        <div ng-messages-include="error-messages"></div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3">
+                    <label for="komitent-drzava" class="form-label">Država</label>
+                    <ui-select id="komitent-drzava" name="drzava" ng-model="ctrl.komitent.drzava" theme="select2" search-enabled="true" required ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.drzava.$invalid }">
+                        <ui-select-match placeholder="&nbsp;">
+                            <span ng-bind="$select.selected.drzava"></span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item.id as item in (ctrl.drzave | filter: $select.search) track by item.id">
+                            <span ng-bind="item.drzava"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                    <div ng-messages="ctrl.forma.drzava.$error" role="alert" class="invalid-feedback">
+                        <div ng-messages-include="error-messages"></div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-12 col-lg-4">
+                    <label for="komitent-ziroracun" class="form-label">Žiro račun</label>
+                    <input type="text" class="form-control" name="ziroracun" id="komitent-ziroracun" ng-model="ctrl.komitent.ziroracun">
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <label for="komitent-telefon" class="form-label">Telefon</label>
+                    <input type="text" class="form-control" name="telefon" id="komitent-telefon" ng-model="ctrl.komitent.telefon">
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <label for="komitent-email" class="form-label">Imejl</label>
+                    <input type="text" class="form-control" name="email" id="komitent-email" ng-model="ctrl.komitent.email">
+                </div>
+                <div class="col-12">
+                    <label for="komitent-napomena" class="form-label">Napomena</label>
+                    <textarea class="form-control" name="napomena" id="komitent-napomena" ng-model="ctrl.komitent.napomena" rows="5"></textarea>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <label for="show_total_debt_container" class="form-label">
+                        Prikaži dug u štampi
+                    </label>
+                    <div id="show_total_debt_container" class="d-flex">
+                        <button type="button" class="btn w-100" ng-class="{ 'btn-secondary': !ctrl.komitent.show_total_debt, 'btn-outline-secondary': ctrl.komitent.show_total_debt }" ng-click="ctrl.komitent.show_total_debt = false">
+                            Ne
+                        </button>
+                        <div class="me-3"></div>
+                        <button type="button" class="btn w-100" ng-class="{ 'btn-primary': ctrl.komitent.show_total_debt, 'btn-outline-primary': !ctrl.komitent.show_total_debt }" ng-click="ctrl.komitent.show_total_debt = true">
+                            Da
+                        </button>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <label for="komitent-previous-debt" class="form-label">Prethodni dug</label>
+                    <input type="number" class="form-control" name="previous_debt" id="komitent-previous-debt" ng-model="ctrl.komitent.previous_debt" ng-min="0" required ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.previous_debt.$invalid }">
+                    <div ng-messages="ctrl.forma.previous_debt.$error" role="alert" class="invalid-feedback">
+                        <div ng-messages-include="error-messages"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4 d-flex flex-column-reverse flex-md-row">
+                <a href="#" type="button" class="btn btn-dark flex-grow-1" ui-sref="komitent-pregled-lista">
+                    <i class="fa fa-close"></i> Odustani
+                </a>
+                <div class="me-4 mt-2"></div>
+                <button class="btn btn-success flex-grow-1">
+                    Izmijeni partnera
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

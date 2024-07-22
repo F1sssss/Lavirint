@@ -1,0 +1,116 @@
+<style>
+    table td {
+        font-family: monospace;
+        vertical-align: top;
+    }
+
+    .table th {
+        text-align: left;
+    }
+
+    table td:first-child {
+        width: 1px;
+        white-space: nowrap;
+    }
+
+    body {
+        padding: 0;
+        margin: 0;
+        font-size: 11px;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
+    }
+
+    table {
+        max-width: 210mm;
+        border-collapse: collapse;
+    }
+
+    table th,
+    table td {
+        border: 1px solid #ddd;
+        padding: .25rem .5rem;
+        text-align: left;
+    }
+
+    @page {
+        margin: 4mm;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .text-end {
+        text-align: right;
+    }
+
+    .mt-3 {
+        margin-top: 1rem;
+    }
+
+    .w-100 {
+        width: 100%;
+    }
+
+    .mx-auto {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact !important; /*Chrome, Safari */
+        color-adjust: exact !important; /*Firefox*/
+    }
+
+    .table-striped tr:nth-child(even) td {
+        background-color: #f4f4f4;
+    }
+
+    .table-definition td:first-child {
+        background-color: #eee;
+    }
+</style>
+<div>
+    <h2>Izvještaj po artiklima i uslugama</h2>
+    <table class="table-definition">
+        <tbody>
+            <tr>
+                <td>Početni datum</td>
+                <td>{{ data.start | fisFormatDatetime }}</td>
+            </tr>
+            <tr>
+                <td>Krajnji datum</td>
+                <td>{{ data.end | fisFormatDatetime }}</td>
+            </tr>
+            <tr>
+                <td>Datum dokumenta</td>
+                <td>{{ data.document_datetime | fisFormatDatetime }}</td>
+            </tr>
+            <tr>
+                <td>Kod operatera</td>
+                <td>{{ data.operator_efi_code }}</td>
+            </tr>
+            <tr ng-if="data.buyer !== null">
+                <td>Kupac</td>
+                <td>{{ data.buyer.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table-striped mt-3 w-100 mx-auto">
+        <thead>
+        <tr>
+            <th style="background-color: #eee;">Artikal</th>
+            <th style="background-color: #eee;" class="text-end">Količina</th>
+            <th style="background-color: #eee;" class="text-end">Za uplatu</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in data.items">
+            <td>{{ item.item_template_description }}</td>
+            <td class="text-end" style="width: 1px;">{{ item.quantity | fisRoundHalfUp:2 }}</td>
+            <td class="text-end" style="width: 1px;">{{ item.total_price | fisRoundHalfUp:2 }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

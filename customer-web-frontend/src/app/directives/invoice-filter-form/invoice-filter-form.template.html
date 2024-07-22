@@ -1,0 +1,118 @@
+<div class="card">
+    <div class="card-header">
+        <i class="fa fa-filter"></i> FILTERI
+    </div>
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-12 col-md-3">
+                <label for="invoice-search-invoice-ordinal-id" class="form-label">Redni broj</label>
+                <input type="number" id="invoice-search-invoice-ordinal-id" class="form-control"
+                       ng-model="filters.ordinal_id">
+            </div>
+            <div class="w-100 m-0"></div>
+            <div class="col-6 col-md-3">
+                <label for="invoice-search-total-price-gte" class="form-label">Min. iznos</label>
+                <input type="number" id="invoice-search-total-price-gte" class="form-control"
+                       ng-model="filters.total_price_gte">
+            </div>
+            <div class="col-6 col-md-3">
+                <label for="invoice-search-total-price-lte" class="form-label">Max. iznos</label>
+                <input type="number" id="invoice-search-total-price-lte" class="form-control"
+                       ng-model="filters.total_price_lte">
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="form-group">
+                    <label for="invoice-search-fiscalization-date-gte" class="form-label">Min. datum</label>
+                    <div class="input-group">
+                        <input type="text"
+                               class="form-control"
+                               id="invoice-search-fiscalization-date-gte"
+                               name="fiscalization_date_gte"
+                               uib-datepicker-popup
+                               is-open="ctrl.fiscalizationDateGteDropdownOpen"
+                               ng-model="filters.fiscalization_date_gte"
+                               pattern="\d{4}-\d{2}-\d{2}">
+                        <button type="button" class="btn btn-dark"
+                                data-ng-click="ctrl.fiscalizationDateGteDropdownOpen = !ctrl.fiscalizationDateGteDropdownOpen">
+                            <i class="fa fa-calendar"></i>
+                        </button>
+                    </div>
+                    <div ng-messages="ctrl.forme.racun.fiscalization_date_gte.$error" role="alert"
+                         class="invalid-feedback">
+                        <div ng-messages-include="error-messages"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="form-group">
+                    <label for="invoice-search-fiscalization-date-lte" class="form-label">Max. datum</label>
+                    <div class="input-group">
+                        <input type="text"
+                               class="form-control"
+                               id="invoice-search-fiscalization-date-lte"
+                               name="fiscalization_date_lte"
+                               uib-datepicker-popup
+                               is-open="ctrl.fiscalizationDateLteDropdownOpen"
+                               ng-model="filters.fiscalization_date_lte"
+                               pattern="\d{4}-\d{2}-\d{2}">
+                        <button type="button" class="btn btn-dark"
+                                ng-click="ctrl.fiscalizationDateLteDropdownOpen = !ctrl.fiscalizationDateLteDropdownOpen">
+                            <i class="fa fa-calendar"></i>
+                        </button>
+                    </div>
+                    <div ng-messages="ctrl.forme.racun.fiscalization_date_lte.$error" role="alert"
+                         class="invalid-feedback">
+                        <div ng-messages-include="error-messages"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="w-100"></div>
+            <div class="col-12">
+                <label class="form-label">Načini plaćanja</label>
+                <payment-method-typeahead
+                    on-select="onPaymentMethodSelect($item, $model, $label)"></payment-method-typeahead>
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                    <div class="fis-text-box d-flex gap-2 justify-content-between w-100 w-md-auto flex-grow-0"
+                         ng-click="deletePaymentMethodType($index)"
+                         ng-repeat="payment_method_type in filters.payment_method_types">
+                        <div>{{ payment_method_type.description }}</div>
+                        <div><i class="fa fa-close ms-auto"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <label for="invoice-client-id" class="form-label">Kupac</label>
+                <input type="text"
+                       id="invoice-client-id"
+                       class="form-control"
+                       uib-typeahead="item as item.naziv for item in searchBuyers($viewValue)"
+                       typeahead-template-url="app/directives/invoice-filter-form/buyer-typeahead-popup.template.html"
+                       typeahead-focus-first="false"
+                       typeahead-min-length="0"
+                       typeahead-focus-on-select="false"
+                       typeahead-wait-ms="300"
+                       typeahead-on-select="onSelect($item, $model, $label); query = '';"
+                       typeahead-additional-options="{ openOnFocus: true, clearOnFocus: true }"
+                       ng-model="query">
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                    <div class="fis-text-box d-flex gap-2 justify-content-between w-100 w-md-auto flex-grow-0"
+                         ng-click="deleteBuyer($index)"
+                         ng-repeat="buyer in filters.buyers">
+                        <div>{{ buyer.naziv }}</div>
+                        <div><i class="fa fa-close ms-auto"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="text-end">
+            <button type="button" class="btn btn-light border" data-ng-click="onClose()">
+                Zatvori
+            </button>
+            <button type="button" class="btn btn-primary" data-ng-click="onConfirm()">
+                Potvrdi
+            </button>
+        </div>
+    </div>
+</div>

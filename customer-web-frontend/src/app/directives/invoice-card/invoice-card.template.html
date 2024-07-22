@@ -1,0 +1,271 @@
+<div>
+    <div class="card">
+        <div class="card-body">
+            <div class="position-relative">
+                <div>
+                    Redni broj: <span class="text-nowrap">{{ invoice.efi_ordinal_number }}</span>
+                </div>
+                <div>
+                    Interni broj: <span class="text-nowrap">{{ invoice.internal_ordinal_number }}</span>
+                </div>
+                <div>
+                    {{ invoice.efi_broj_fakture }}
+                </div>
+                <div>
+                    {{ invoice.datumfakture | fisFormatDatetime }}
+                </div>
+                <invoice-badges invoice="invoice"></invoice-badges>
+                <a href="{{ invoice.efi_verify_url }}" target="_blank" class="btn btn-link text-decoration-none position-absolute lh-1 top-0 end-0">
+                    <i class="fa fa-external-link"></i> <span>Provjera</span>
+                </a>
+            </div>
+            <div class="mt-3">
+                <div class="bg-light px-3 py-2 rounded">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="fw-bold">Kupac:</div>
+                            <div ng-if="!invoice.komitent_id">
+                                <div>---</div>
+                                <div class="small">&nbsp;</div>
+                            </div>
+                            <div ng-if="invoice.komitent_id">
+                                <a href="#"
+                                   class="text-decoration-none"
+                                   ui-sref="komitent-izmjena({ id: invoice.komitent_id })">
+                                    {{ invoice.komitent.naziv }}
+                                </a>
+                            </div>
+                            <div class="text-muted small"
+                                 ng-if="$root.fisConfig.user.firma.settings.smtp_active">
+                                {{ invoice.komitent.email }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-3 bg-white">
+                <div class="fw-bold">Struktura cijene</div>
+                <div class="dash-info" ng-if="!invoice.je_korigovana">
+                    <div class="dash-info-start"><span>Cijena - EUR</span></div>
+                    <div class="dash-info-spacing"></div>
+                    <div class="dash-info-end text-nowrap">
+                        <span>{{ invoice.ukupna_cijena_prodajna }}</span>
+                    </div>
+                </div>
+                <div class="dash-info" ng-if="invoice.je_korigovana">
+                    <div class="dash-info-start"><span>Korigovana cijena - EUR</span></div>
+                    <div class="dash-info-spacing"></div>
+                    <div class="dash-info-end text-nowrap">
+                        <span>{{  invoice.korigovana_ukupna_cijena_prodajna }}</span>
+                    </div>
+                </div>
+                <div class="dash-info" ng-if="invoice.je_korigovana">
+                    <div class="dash-info-start"><span>Originalna cijena - EUR</span></div>
+                    <div class="dash-info-spacing"></div>
+                    <div class="dash-info-end text-nowrap">
+                        <span>{{  invoice.ukupna_cijena_prodajna }}</span>
+                    </div>
+                </div>
+                <div class="dash-info" ng-if="invoice.valuta.id !== 50">
+                    <div class="dash-info-start"><span>Ukupno - {{ invoice.valuta.iso_4217_alfanumericki_kod }}</span></div>
+                    <div class="dash-info-spacing"></div>
+                    <div class="dash-info-end">
+                        <span>
+                            {{ invoice.tip_fakture_id === 1 && invoice.je_korigovana
+                            ? invoice.korigovana_ukupna_cijena_prodajna_valuta
+                            : invoice.ukupna_cijena_prodajna_valuta }}
+                        </span>
+                    </div>
+                </div>
+                <div class="dash-info">
+                    <div class="dash-info-start"><span>Osnovica</span></div>
+                    <div class="dash-info-spacing"></div>
+                    <div class="dash-info-end text-nowrap">
+                        <span>{{ invoice.ukupna_cijena_rabatisana }}</span>
+                    </div>
+                </div>
+                <div class="dash-info">
+                    <div class="dash-info-start"><span>Porez</span></div>
+                    <div class="dash-info-spacing"></div>
+                    <div class="dash-info-end text-nowrap">
+                        <span>{{ invoice.porez_iznos }}</span>
+                    </div>
+                </div>
+                <div class="dash-info" ng-if="showPrometZaKnjizno">
+                    <div class="dash-info-start"><span>Promet za knjižno</span></div>
+                    <div class="dash-info-spacing"></div>
+                    <div class="dash-info-end">
+                        <span>{{ invoice.credit_note_turnover_remaining }}</span>
+                    </div>
+                </div>
+                <div class="dash-info">
+                    <div class="dash-info-start"><span>Poreski period</span></div>
+                    <div class="dash-info-spacing"></div>
+                    <div class="dash-info-end text-nowrap">
+                        <span>{{ invoice.poreski_period | fisFormatDatetime:'taxPeriod' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3 bg-white">
+                <div class="fw-bold">Načini plaćanja</div>
+                <div class="dash-info" ng-repeat="payment_method in invoice.payment_methods">
+                    <div class="dash-info-start"><span>{{ payment_method.payment_method_type.description }}</span></div>
+                    <div class="dash-info-spacing"></div>
+                    <div class="dash-info-end">
+                        <span>{{ payment_method.amount }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3 bg-white" ng-if="corrective_invoices.length > 0">
+                <div class="fw-bold">Korekcije</div>
+                <div class="dash-info" ng-repeat="corrective_invoice in corrective_invoices">
+                    <div class="dash-info-start">
+                        <div>
+                            <a href="#"
+                               class="text-decoration-none"
+                               ng-click="stampac.stampajFakturu(corrective_invoice.id, 'a4'); $event.preventDefault();">
+                                <span>Račun #{{ corrective_invoice.efi_ordinal_number }}</span>
+                            </a>
+                        </div>
+                        <div><span class="text-muted small">{{ corrective_invoice.datumfakture | fisFormatDatetime }}</span></div>
+                    </div>
+                    <div class="dash-info-spacing"></div>
+                    <div class="dash-info-end">
+                        <span>{{ corrective_invoice.ukupna_cijena_prodajna }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3 p-3 bg-warning-light" ng-if="invoice.active_invoice_schedule && invoice.tip_fakture_id !== 9">
+                <div class="fw-bold">Ponavljanje</div>
+                <div class="dash-info">
+                    <div class="dash-info-start"><span>Početak</span></div>
+                    <div class="dash-info-spacing"></div>
+                    <div class="dash-info-end text-end">
+                        <span class="text-nowrap">{{ invoice.active_invoice_schedule.start_datetime | fisFormatDatetime:'date' }}</span>
+                        <span class="text-nowrap">{{ invoice.active_invoice_schedule.start_datetime | fisFormatDatetime:'time' }}</span>
+                    </div>
+                </div>
+                <div class="dash-info">
+                    <div class="dash-info-start"><span>Sledeće</span></div>
+                    <div class="dash-info-spacing"></div>
+                    <div class="dash-info-end text-end">
+                        <span class="text-nowrap">{{ invoice.active_invoice_schedule.next_run_datetime | fisFormatDatetime:'date' }}</span>
+                        <span class="text-nowrap">{{ invoice.active_invoice_schedule.next_run_datetime | fisFormatDatetime:'time' }}</span>
+                    </div>
+                </div>
+                <div class="dash-info">
+                    <div class="dash-info-start"><span>Kraj</span></div>
+                    <div class="dash-info-spacing"></div>
+                    <div class="dash-info-end text-end">
+                        <span ng-if="invoice.active_invoice_schedule.end_datetime">
+                            <span class="text-nowrap">{{ invoice.active_invoice_schedule.end_datetime | fisFormatDatetime:'date' }}</span>
+                            <span class="text-nowrap">{{ invoice.active_invoice_schedule.end_datetime | fisFormatDatetime:'time' }}</span>
+                        </span>
+                        <span ng-if="!invoice.active_invoice_schedule.end_datetime">
+                            <span>Neogranično</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body" ng-if="showUpload && $root.fisConfig.user.firma.ima_upload_dokumenta">
+            <div class="fw-bold mb-1">Dokument</div>
+            <div class="row g-2" ng-if="!invoice.ima_dokument">
+                <div class="col-4">
+                    <button type="button" class="btn btn-light border w-100 px-1 lh-1 py-2" file-selection-changed="upload(files[0])">
+                        <div><i class="fa fa-print mb-1"></i></div>
+                        <div>Dodaj</div>
+                    </button>
+                </div>
+            </div>
+            <div class="row g-2" ng-if="invoice.ima_dokument">
+                <div class="col-4">
+                    <button type="button" class="btn btn-light border w-100 px-1 lh-1 py-2" file-selection-changed="upload(files[0])">
+                        <div><i class="fa fa-edit mb-1"></i></div>
+                        <div>Ažuriraj</div>
+                    </button>
+                </div>
+                <div class="col-4">
+                    <button type="button" class="btn btn-light border w-100 px-1 lh-1 py-2" file-selection-changed="upload(files[0])">
+                        <div><i class="fa fa-trash mb-1"></i></div>
+                        <div>Obriši</div>
+                    </button>
+                </div>
+                <div class="col-4">
+                    <button type="button" class="btn btn-light border w-100 px-1 lh-1 py-2" ng-click="stampac.stampajDokument(invoice.id)">
+                        <div><i class="fa fa-print mb-1"></i></div>
+                        <div>Kopija</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="row g-2">
+                <div class="col-6" ng-show="invoice.tip_fakture_id === 1 && invoice.status === 2">
+                    <button type="button"
+                            class="btn btn-light border w-100 px-1 lh-1 py-2"
+                            ui-sref="faktura-korekcija({ id: invoice.id })">
+                        <div><i class="fa fa-edit mb-1"></i></div>
+                        <div>Korektivni račun</div>
+                    </button>
+                </div>
+                <div class="col-6" ng-show="(invoice.tip_fakture_id === 1 || invoice.tip_fakture_id === 5) && invoice.status === 2 && invoice.korigovana_ukupna_cijena_prodajna !== 0">
+                    <button type="button"
+                            class="btn btn-light border w-100 px-1 lh-1 py-2"
+                            ng-click="cancel()">
+                        <div><i class="fa fa-remove mb-1"></i></div>
+                        <div>Storno račun</div>
+                    </button>
+                </div>
+                <div class="col-6">
+                    <button type="button"
+                            class="btn btn-light border w-100 px-1 lh-1 py-2"
+                            ng-click="stampac.stampajFakturu(invoice.id, 'a4')">
+                        <div><i class="fa fa-print mb-1"></i></div>
+                        <div>Kopija A4</div>
+                    </button>
+                </div>
+                <div class="col-6" ng-if="invoice.tip_fakture_id !== 9">
+                    <button type="button"
+                            class="btn btn-light border w-100 px-1 lh-1 py-2"
+                            ng-click="stampac.stampajFakturu(invoice.id, '58mm')">
+                        <div><i class="fa fa-print mb-1"></i></div>
+                        <div>Kopija 58mm</div>
+                    </button>
+                </div>
+                <div class="col-6" data-ng-if="$root.fisConfig.user.firma.settings.smtp_active && invoice.komitent_id && invoice.komitent.email">
+                    <button type="button"
+                            class="btn btn-light border w-100 px-1 lh-1 py-2"
+                            data-ng-click="sendMail()">
+                        <div><i class="fa fa-envelope mb-1"></i></div>
+                        <div>Pošalji e-Mail</div>
+                    </button>
+                </div>
+                <!-- TODO Should invoice template have reccuring fiscalization? -->
+                <div class="col-6" ng-if="$root.fisConfig.user.firma.settings.can_schedule && invoice.tip_fakture_id !== 9">
+                    <button type="button"
+                            class="btn btn-light border w-100 px-1 lh-1 py-2"
+                            data-ng-click="invoiceScheduleModal(invoice)">
+                        <div><i class="fa fa-repeat mb-1"></i></div>
+                        <div>Ponavljanje</div>
+                    </button>
+                </div>
+                <div class="col-6" ng-if="invoice.tip_fakture_id === 5 || invoice.is_advance_invoice">
+                    <a href="#" class="btn btn-light border w-100 px-1 lh-1 py-2" ui-sref="finalInvoiceInput({ advance_invoice_id: invoice.id })">
+                        <div><i class="fa fa-table mb-1"></i></div>
+                        <div>Konačni račun</div>
+                    </a>
+                </div>
+                <div class="col-6" ng-if="invoice.tip_fakture_id === 9">
+                    <a href="#" class="btn btn-light border w-100 px-1 lh-1 py-2" ui-sref="regularInvoiceInput({ invoice_template_id: invoice.id })">
+                        <div><i class="fa fa-edit mb-1"></i></div>
+                        <div>Napravi račun</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

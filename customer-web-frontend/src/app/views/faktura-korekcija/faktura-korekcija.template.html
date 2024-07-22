@@ -1,0 +1,374 @@
+<div class="container-lg">
+    <div class="mt-3" ng-form="innerForm" novalidate ng-repeat="stavka in ctrl.updated_invoice.stavke">
+        <div class="card">
+            <div class="card-header">
+                <div class="fw-bold text-uppercase">Stavka #{{ $index + 1 }}</div>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="item-{{$index}}-naziv" class="form-label">
+                                Naziv
+                            </label>
+                            <input id="item-{{$index}}-naziv"
+                                   type="text"
+                                   class="form-control"
+                                   ng-model="stavka.naziv"
+                                   disabled>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <label for="item-{{$index}}-porez-procenat" class="form-label">
+                            Stopa poreza
+                        </label>
+                        <input id="item-{{$index}}-porez-procenat"
+                               type="text"
+                               class="form-control"
+                               value="{{ stavka.porez_procenat === undefined || stavka.porez_procenat === null ? 'Oslobođeno' : stavka.porez_procenat + '%' }}"
+                               disabled>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <label for="item-{{$index}}-rabat-procenat" class="form-label">
+                            Popust %
+                        </label>
+                        <input id="item-{{$index}}-rabat-procenat"
+                               type="text"
+                               class="form-control"
+                               value="{{ stavka.rabat_procenat }}"
+                               disabled>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="item-{{$index}}-jedinica" class="form-label">
+                            Jedinica mjere
+                        </label>
+                        <input id="item-{{$index}}-jedinica"
+                               type="text"
+                               class="form-control"
+                               value="{{ stavka.jedinica_mjere.naziv }} - {{ stavka.jedinica_mjere.opis }}"
+                               disabled>
+                    </div>
+                </div>
+                <div class="row g-3 d-none">
+                    <div class="col-sm-4 col-md-4 col-lg-3">
+                        <label for="stavka-{{$index}}-kolicina" class="form-label">
+                            Nova količina
+                        </label>
+                        <div class="input-group">
+                            <input id="stavka-{{$index}}-kolicina"
+                                   type="number"
+                                   class="form-control"
+                                   ng-model="stavka.kolicina"
+                                   ng-model-options="{ allowInvalid: true }"
+                                   ng-change="ctrl.onQuantityChange($index)">
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-md-4 col-lg-3" ng-if="stavka.porez_procenat !== undefined && stavka.porez_procenat !== null">
+                        <label for="stavka-{{$index}}-ukupna-cijena-prodajna" class="form-label">
+                            Osnovica
+                        </label>
+                        <input id="stavka-{{$index}}-ukupna-cijena-prodajna"
+                               type="number"
+                               class="form-control"
+                               ng-disabled="stavka.izvor_kalkulacije != 1"
+                               ng-model="stavka.jedinicna_cijena_osnovna"
+                               ng-model-options="{ allowInvalid: true }"
+                               ng-change="ctrl.onPriceChange()">
+                    </div>
+                    <div class="col-sm-4 col-md-4 col-lg-3" ng-if="stavka.porez_procenat !== undefined && stavka.porez_procenat !== null">
+                        <label for="stavka-{{$index}}-ukupna-cijena-prodajna-razlika" class="form-label">
+                            Cijena sa porezom
+                        </label>
+                        <input id="stavka-{{$index}}-ukupna-cijena-prodajna-razlika"
+                               type="number"
+                               class="form-control"
+                               ng-model="stavka.jedinicna_cijena_puna"
+                               ng-change="ctrl.onPriceChange()"
+                               ng-disabled="stavka.izvor_kalkulacije != 2">
+                    </div>
+                    <div class="col-sm-4 col-md-4 col-lg-3" ng-if="stavka.porez_procenat === undefined || stavka.porez_procenat === null">
+                        <label for="stavka-{{$index}}-tax-free-amount" class="form-label">
+                            Cijena
+                        </label>
+                        <input id="stavka-{{$index}}-tax-free-amount"
+                               type="number"
+                               class="form-control"
+                               ng-model="stavka.tax_exemption_amount"
+                               ng-model-options="{ allowInvalid: true }"
+                               ng-change="ctrl.onPriceChange($index)">
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="fw-bold text-uppercase">Trenutno stanje</div>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label for="item-{{$index}}-original-quantity" class="form-label">
+                            Količina
+                        </label>
+                        <input id="item-{{$index}}-original-quantity"
+                               type="number"
+                               class="form-control"
+                               ng-model="ctrl.original_invoice.stavke[$index].kolicina"
+                               disabled
+                               ng-model-options="{ allowInvalid: true }">
+                    </div>
+                    <div class="col-md-3" ng-if="stavka.porez_procenat === undefined || stavka.porez_procenat === null">
+                        <label for="item-{{$index}}-tax-exemption-amount" class="form-label">
+                            Cijena
+                        </label>
+                        <input id="item-{{$index}}-tax-exemption-amount"
+                               type="number"
+                               class="form-control"
+                               ng-model="ctrl.original_invoice.stavke[$index].tax_exemption_amount"
+                               disabled>
+                    </div>
+                    <div class="col-md-3" ng-if="stavka.porez_procenat !== undefined && stavka.porez_procenat !== null">
+                        <label for="item-{{$index}}-original-price" class="form-label">
+                            Osnovica
+                        </label>
+                        <input id="item-{{$index}}-original-price"
+                               type="number"
+                               class="form-control"
+                               ng-model="ctrl.original_invoice.stavke[$index].jedinicna_cijena_osnovna"
+                               disabled>
+                    </div>
+                    <div class="col-md-3" ng-if="stavka.porez_procenat !== undefined && stavka.porez_procenat !== null">
+                        <label for="item-{{$index}}-jedinicna-cijena-puna" class="form-label">
+                            Cijena sa porezom
+                        </label>
+                        <input id="item-{{$index}}-jedinicna-cijena-puna"
+                               type="number"
+                               class="form-control"
+                               ng-model="ctrl.original_invoice.stavke[$index].jedinicna_cijena_puna"
+                               disabled>
+                    </div>
+                    <div class="col-md-3" ng-if="stavka.porez_procenat !== undefined && stavka.porez_procenat !== null">
+                        <label for="item-{{$index}}-ukupna-cijena-prodajna" class="form-label">
+                            Za uplatu
+                        </label>
+                        <input id="item-{{$index}}-ukupna-cijena-prodajna"
+                               type="number"
+                               class="form-control"
+                               ng-model="ctrl.original_invoice.stavke[$index].ukupna_cijena_prodajna"
+                               disabled>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="fw-bold text-uppercase">Novo stanje</div>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label for="item-{{$index}}-kolicina" class="form-label">
+                            Količina
+                        </label>
+                        <input id="item-{{$index}}-kolicina"
+                               type="number"
+                               class="form-control"
+                               ng-model="stavka.kolicina"
+                               ng-model-options="{ allowInvalid: true }"
+                               ng-change="ctrl.onInvoiceCorrection()">
+                    </div>
+                    <div class="col-md-3" ng-if="stavka.porez_procenat === undefined || stavka.porez_procenat === null">
+                        <label for="item-{{$index}}-tax-free-amount" class="form-label">
+                            Cijena
+                        </label>
+                        <input id="item-{{$index}}-tax-free-amount"
+                               type="number"
+                               class="form-control"
+                               ng-model="stavka.tax_exemption_amount"
+                               ng-model-options="{ allowInvalid: true }"
+                               ng-change="ctrl.onInvoiceCorrection()">
+                    </div>
+                    <div class="col-md-3" ng-if="stavka.porez_procenat !== undefined && stavka.porez_procenat !== null">
+                        <label for="item-{{$index}}-jedinicna-cijena-prodajna" class="form-label">
+                            Osnovica
+                        </label>
+                        <input id="item-{{$index}}-jedinicna-cijena-prodajna"
+                               type="number"
+                               class="form-control"
+                               ng-disabled="stavka.izvor_kalkulacije != 1"
+                               ng-model="stavka.jedinicna_cijena_osnovna"
+                               ng-model-options="{ allowInvalid: true }"
+                               ng-change="ctrl.onInvoiceCorrection()">
+                    </div>
+                    <div class="col-md-3" ng-if="stavka.porez_procenat !== undefined && stavka.porez_procenat !== null">
+                        <label for="item-{{$index}}-jedicna-cijena-puna" class="form-label">
+                            Cijena sa porezom
+                        </label>
+                        <input id="item-{{$index}}-jedicna-cijena-puna"
+                               type="number"
+                               class="form-control"
+                               ng-model="stavka.jedinicna_cijena_puna"
+                               ng-change="ctrl.onInvoiceCorrection()"
+                               ng-disabled="stavka.izvor_kalkulacije != 2">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="item-{{$index}}-za-uplatu" class="form-label">
+                            Za uplatu
+                        </label>
+                        <input id="item-{{$index}}-za-uplatu"
+                               type="number"
+                               class="form-control"
+                               ng-model="stavka.ukupna_cijena_prodajna"
+                               disabled>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4"></div>
+    <div class="card">
+        <div class="card-header">
+            <div class="fw-bold text-uppercase">Načini plaćanja</div>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label for="" class="form-label">Tip računa</label>
+                    <div class="btn-group w-100">
+                        <button type="button"
+                                class="btn"
+                                ng-class="{ 'btn-primary': ctrl.updated_invoice.is_cash, 'btn-light border': !ctrl.updated_invoice.is_cash }"
+                                ng-model="ctrl.updated_invoice.is_cash"
+                                uib-btn-radio="true"
+                                disabled>
+                            Gotovinski
+                        </button>
+                        <button type="button"
+                                class="btn"
+                                ng-class="{ 'btn-primary': !ctrl.updated_invoice.is_cash, 'btn-light border': ctrl.updated_invoice.is_cash }"
+                                ng-model="ctrl.updated_invoice.is_cash"
+                                uib-btn-radio="false"
+                                disabled>
+                            Bezgotovinski
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <label for="" class="form-label">Odabir načina plaćanja</label>
+                    <div class="position-relative">
+                        <payment-method-typeahead is-cash="ctrl.updated_invoice.is_cash" on-select="ctrl.onPaymentMethodTypeaheadSelect($item, $model, $label)"></payment-method-typeahead>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body" data-ng-if="ctrl.corrective_invoice.payment_methods.length === 0">
+            <div class="card card-body bg-light text-muted">
+                Nije definisan nijedan način plaćanja.
+            </div>
+        </div>
+        <div class="card-body" ng-repeat="payment_method in ctrl.corrective_invoice.payment_methods" data-ng-if="ctrl.corrective_invoice.payment_methods.length > 0">
+            <div ng-form="innerForm" novalidate>
+                <label for="" class="form-label">
+                    {{ payment_method.payment_method_type.description }}
+                </label>
+                <div class="row g-3">
+                    <div class="col-7 col-sm-5 col-md-4 col-xl-3">
+                        <input type="number"
+                               class="form-control"
+                               name="amount"
+                               ng-model="payment_method.amount"
+                               required
+                               ng-min="0.0001"
+                               ng-disabled="payment_method.payment_method_type_id === 7"
+                               ng-model-options="{ allowInvalid: true }"
+                               ng-change="ctrl.invoiceFactory.recalculatePaymentMethodTotals(ctrl.corrective_invoice, false);">
+                        <div ng-messages="innerForm.amount.$error" role="alert" class="invalid-feedback">
+                            <div ng-message="min" ng-if="payment_method.payment_method_type_id === 7">
+                                Vrijednost mora biti veća od 0. Korigujte stavke avansa.
+                            </div>
+                            <div ng-message="min" ng-if="payment_method.payment_method_type_id === 7">
+                                Vrijednost mora biti veća od 0. Ažurirajte vrijednost ili obrišite stavku.
+                            </div>
+                            <div ng-messages-include="error-messages"></div>
+                        </div>
+                    </div>
+                    <div class="col-5 col-sm-3 col-md-3 col-xl-2" ng-if="payment_method.payment_method_type_id !== 7">
+                        <button type="button" class="btn btn-light border d-block w-100" data-ng-click="ctrl.fisModal.deletePaymentMethod(ctrl.corrective_invoice, $index);">
+                            <i class="fa fa-trash"></i> Obriši
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <label for="" class="form-label">
+                Ukupan iznos računa
+            </label>
+            <div class="row g-3">
+                <div class="col-7 col-sm-5 col-md-4 col-xl-3">
+                    <input type="text" class="form-control"
+                           disabled
+                           ng-model="ctrl.corrective_invoice.ukupna_cijena_prodajna">
+                    <div ng-messages="ctrl.form.datumValute.$error" role="alert" class="invalid-feedback">
+                        <div ng-messages-include="error-messages"></div>
+                    </div>
+                </div>
+                <div class="col-5 col-sm-3 col-md-3 col-xl-2">
+                    <button type="button"
+                            class="btn btn-light border w-100 d-block"
+                            data-ng-click="ctrl.fisModal.distributeTotalEvenly(ctrl.corrective_invoice, ctrl.updated_invoice);">
+                        Rasporedi
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body" ng-if="ctrl.corrective_invoice.payment_methods_total_difference > 0">
+            <label for="" class="form-label">
+                Neraspoređeni iznos računa
+            </label>
+            <div class="row g-3">
+                <div class="col-7 col-sm-5 col-md-4 col-xl-3">
+                    <input type="number" class="form-control show-validation"
+                           disabled
+                           max="0"
+                           ng-model="ctrl.corrective_invoice.payment_methods_total_difference">
+                </div>
+                <div class="col-5 col-sm-3 col-md-3 col-xl-2">
+                    <button type="button" class="btn btn-light border w-100 d-block" data-ng-click="ctrl.fisModal.distributeDifferenceEvenly(ctrl.corrective_invoice, ctrl.updated_invoice);">
+                        Rasporedi
+                    </button>
+                </div>
+            </div>
+            <div class="invalid-feedback show-validation ng-active">
+                Iznosi u načinima plaćanja su zbirno manji od ukupne cijene računa.
+            </div>
+        </div>
+        <div class="card-body" ng-if="ctrl.corrective_invoice.payment_methods_total_difference < 0">
+            <label for="" class="form-label">
+                Višak
+            </label>
+            <div class="row g-3">
+                <div class="col-7 col-sm-5 col-md-4 col-xl-3">
+                    <input type="number" class="form-control show-validation"
+                           disabled
+                           min="0"
+                           ng-model="ctrl.corrective_invoice.payment_methods_total_difference">
+                </div>
+            </div>
+            <div class="invalid-feedback show-validation ng-active">
+                Iznosi u načinima plaćanja su zbirno veći od ukupne cijene računa.
+            </div>
+        </div>
+        <div class="card-body d-md-none">
+            <button type="button" class="btn btn-primary border w-100 w-md-auto"
+                    data-ng-click="ctrl.fisModal.addPaymentMethods(ctrl.corrective_invoice, ctrl.updated_invoice);">
+                Odaberi načine plaćanja
+            </button>
+        </div>
+    </div>
+</div>
+<div class="container-lg mt-3">
+    <div class="d-flex flex-column-reverse flex-md-row justify-content-xs-end">
+        <button type="button" class="btn btn-light border flex-grow-1 flex-xs-grow-0" ui-sref="faktura_pregled_redovnih()">
+            Odustani
+        </button>
+        <div class="me-2 mt-2"></div>
+        <button type="button" class="btn btn-primary flex-grow-1 flex-xs-grow-0" ng-click="ctrl.koriguj()">
+            Fiskalizuj
+        </button>
+    </div>
+</div>
+<div class="scroll-buffer-large"></div>

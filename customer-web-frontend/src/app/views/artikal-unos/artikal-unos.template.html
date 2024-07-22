@@ -1,0 +1,227 @@
+<div class="py-3 py-sm-5">
+    <div class="container">
+        <form name="ctrl.forma" novalidate>
+            <h4>Novi artikal</h4>
+            <div class="row g-3 mt-3">
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="form-group">
+                        <label for="artikal-sifra" class="form-label">Šifra</label>
+                        <input autocomplete="off"
+                               type="text"
+                               class="form-control"
+                               name="sifra"
+                               id="artikal-sifra"
+                               ng-model="ctrl.data.artikal.sifra"
+                               ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.sifra.$invalid }">
+                        <div ng-messages="ctrl.forma.sifra.$error" role="alert" class="invalid-feedback">
+                            <div ng-messages-include="error-messages"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="form-group">
+                        <label for="artikal-barkod" class="form-label">Barkod</label>
+                        <input autocomplete="off"
+                               type="text"
+                               class="form-control"
+                               name="barkod"
+                               id="artikal-barkod"
+                               ng-model="ctrl.data.artikal.barkod"
+                               pattern="\d*"
+                               ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.barkod.$invalid }">
+                        <div ng-messages="ctrl.forma.barkod.$error" role="alert" class="invalid-feedback">
+                            <div ng-message="pattern">Barkod smije sadržati samo cifre</div>
+                            <div ng-messages-include="error-messages"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="form-group">
+                        <label for="artikal-naziv" class="form-label">Naziv</label>
+                        <input autocomplete="off"
+                               type="text"
+                               class="form-control"
+                               name="naziv"
+                               id="artikal-naziv"
+                               ng-model="ctrl.data.artikal.naziv"
+                               required
+                               ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.naziv.$invalid }">
+                        <div ng-messages="ctrl.forma.naziv.$error" role="alert" class="invalid-feedback">
+                            <div ng-messages-include="error-messages"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-4">
+                    <div class="form-group">
+                        <label for="artikal-jedinica-mjere-id" class="form-label">Jedinica mjere</label>
+                        <ui-select id="artikal-jedinica-mjere-id"
+                                   name="jedinica_mjere_id"
+                                   ng-model="ctrl.data.artikal.jedinica_mjere_id"
+                                   theme="select2"
+                                   search-enabled="true"
+                                   required
+                                   ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.jedinica_mjere_id.$invalid }">
+                            <ui-select-match placeholder="&nbsp;">
+                                <span ng-bind="$select.selected.naziv"></span>
+                                -
+                                <span ng-bind="$select.selected.opis"></span>
+                            </ui-select-match>
+                            <ui-select-choices repeat="item.id as item in (ctrl.jediniceMjere | filter: $select.search) track by item.id">
+                                <span ng-bind="item.naziv"></span>
+                                -
+                                <span ng-bind="item.opis"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <div ng-messages="ctrl.forma.jedinica_mjere_id.$error" role="alert" class="invalid-feedback">
+                            <div ng-messages-include="error-messages"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-4">
+                    <div class="form-group">
+                        <label for="artikal-grupa-artikala-id" class="form-label">Grupa artikala</label>
+                        <div class="input-group">
+                            <ui-select id="artikal-grupa-artikala-id"
+                                       name="grupa_artikala_id"
+                                       ng-model="ctrl.data.artikal.grupa_artikala_id"
+                                       theme="select2"
+                                       search-enabled="true"
+                                       required
+                                       ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.grupa_artikala_id.$invalid }">
+                                <ui-select-match placeholder="&nbsp;">
+                                    <span ng-bind="$select.selected.naziv"></span>
+                                </ui-select-match>
+                                <ui-select-choices repeat="item.id as item in (ctrl.grupeArtikala | filter: $select.search) track by item.id">
+                                    <span ng-bind="item.naziv"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div ng-messages="ctrl.forma.grupa_artikala_id.$error" role="alert" class="invalid-feedback">
+                            <div ng-messages-include="error-messages"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3">
+                    <div class="form-group">
+                        <label for="magacin-zaliha-jedinicna-cijena-puna" class="form-label">Prodajna cijena</label>
+                        <div class="input-group">
+                            <input autocomplete="off"
+                                   type="number"
+                                   class="form-control"
+                                   name="jedinicna_cijena_puna"
+                                   id="magacin-zaliha-jedinicna-cijena-puna"
+                                   placeholder="Cijena"
+                                   ng-model="ctrl.data.magacin_zaliha.jedinicna_cijena_puna"
+                                   ng-model-options="{ allowInvalid: true }"
+                                   required min="0.000001"
+                                   step="0.000001"
+                                   ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.jedinicna_cijena_puna.$invalid }"
+                                   ng-change="ctrl.invoiceFactory.recalculateInvoiceItemTemplateFromUPA(ctrl.data.magacin_zaliha)"
+                                   ng-focus="$event.target.select()">
+                        </div>
+                        <div ng-messages="ctrl.forma.jedinicna_cijena_puna.$error" role="alert" class="invalid-feedback">
+                            <div ng-messages-include="error-messages"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3">
+                    <div class="form-group">
+                        <label for="magacin-zaliha-jedinicna-cijena-osnovna" class="form-label">Osnovica</label>
+                        <div class="input-group">
+                            <input autocomplete="off"
+                                   type="number"
+                                   class="form-control"
+                                   name="jedinicna_cijena_osnovna"
+                                   id="magacin-zaliha-jedinicna-cijena-osnovna"
+                                   placeholder="Cijena"
+                                   ng-model="ctrl.data.magacin_zaliha.jedinicna_cijena_osnovna"
+                                   ng-model-options="{ allowInvalid: true }"
+                                   required min="0.000001"
+                                   step="0.000001"
+                                   ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.jedinicna_cijena_osnovna.$invalid }"
+                                   ng-change="ctrl.invoiceFactory.recalculateInvoiceItemTemplateFromUPB(ctrl.data.magacin_zaliha)"
+                                   ng-focus="$event.target.select()">
+                        </div>
+                        <div ng-messages="ctrl.forma.jedinicna_cijena_osnovna.$error" role="alert" class="invalid-feedback">
+                            <div ng-messages-include="error-messages"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3">
+                    <div class="form-group">
+                        <label for="magacin-zaliha-porez-procenat" class="form-label">Porez</label>
+                        <ui-select id="magacin-zaliha-porez-procenat"
+                                   name="porez_procenat"
+                                   ng-model="ctrl.data.magacin_zaliha.porez_procenat"
+                                   search-enabled="false"
+                                   required theme="select2"
+                                   ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.porez_procenat.$invalid }"
+                                   ng-change="ctrl.invoiceFactory.recalculateInvoiceItemTemplate(ctrl.data.magacin_zaliha)">
+                            <ui-select-match placeholder="&nbsp;">
+                                <span ng-bind="$select.selected.label"></span>
+                            </ui-select-match>
+                            <ui-select-choices repeat="item.procenat as item in ctrl.poreskeStope">
+                                <span ng-bind="item.label"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <div ng-messages="ctrl.forma.porez_procenat.$error" role="alert" class="invalid-feedback">
+                            <div ng-messages-include="error-messages"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4" ng-if="ctrl.data.magacin_zaliha.porez_procenat === null">
+                    <label for="stavka-tax-exemption-reason-id-{{ $index }}" class="form-label">Razlog oslobođenja poreza</label>
+                    <ui-select id="stavka-tax-exemption-reason-id-{{ $index }}"
+                               name="tax_exemption_reason_id"
+                               ng-model="ctrl.data.magacin_zaliha.tax_exemption_reason_id"
+                               ng-required="ctrl.data.magacin_zaliha.porez_procenat === null"
+                               ng-disabled="stavka.isDisabled"
+                               theme="select2"
+                               data-search-enabled="false">
+                        <ui-select-match allow-clear="true" placeholder="&nbsp;">
+                            <span ng-bind="$select.selected.description"></span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item.id as item in (ctrl.tax_exemption_reasons | filter: $select.search) track by item.id">
+                            <span ng-bind="item.description"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                    <div ng-messages="ctrl.forma.tax_exemption_reason_id.$error" role="alert" class="invalid-feedback">
+                        <div ng-messages-include="error-messages"></div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-4">
+                    <div class="form-group">
+                        <label for="magacin-zaliha-raspoloziva-kolicina" class="form-label">Količina</label>
+                        <input autocomplete="off"
+                               type="number"
+                               class="form-control"
+                               name="raspoloziva_kolicina"
+                               id="magacin-zaliha-raspoloziva-kolicina"
+                               ng-model="ctrl.data.magacin_zaliha.raspoloziva_kolicina"
+                               required
+                               step="0.001"
+                               ng-class="{ 'is-invalid': ctrl.forma.$submitted && ctrl.forma.raspoloziva_kolicina.$invalid }">
+                        <div ng-messages="ctrl.forma.raspoloziva_kolicina.$error" role="alert" class="invalid-feedback">
+                            <div ng-messages-include="error-messages"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="artikal-opis" class="form-label">Opis</label>
+                        <textarea rows="5" type="text" class="form-control" name="opis" id="artikal-opis" ng-model="ctrl.data.artikal.opis"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4 d-flex flex-column-reverse flex-md-row">
+                <button type="button" class="btn btn-dark flex-grow-1" ui-sref="artikal-pregled-lista">
+                    <i class="fa fa-close"></i> Odustani
+                </button>
+                <div class="me-4 mt-2"></div>
+                <button type="button" class="btn btn-success flex-grow-1" ng-click="ctrl.upis()">
+                    Sačuvaj artikal
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

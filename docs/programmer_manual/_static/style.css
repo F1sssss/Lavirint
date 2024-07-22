@@ -1,0 +1,21 @@
+.definition-table {
+    border-color: transparent !important;
+}
+
+
+
+.definition-table td {
+    vertical-align: top !important;
+    margin: 0 !important;
+
+    border-color: transparent !important;
+    background-color: transparent !important;
+}
+
+.definition-table td:first-child {
+    font-weight: bold;   
+}
+
+.rst-content table.docutils td, .rst-content table.docutils th, .rst-content table.field-list td, .rst-content table.field-list th, .wy-table td, .wy-table th {
+    font-size: 100%;
+}

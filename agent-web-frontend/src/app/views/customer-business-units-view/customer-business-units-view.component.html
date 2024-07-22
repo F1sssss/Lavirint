@@ -1,0 +1,51 @@
+<div class="mt-4"></div>
+<div class="container">
+  <div class="d-flex align-items-end justify-content-between">
+    <div>
+      <nav>
+        <ol class="breadcrumb mb-1">
+          <li class="breadcrumb-item breadcrumb-item-action" [routerLink]="['/', 'customer-list-view']">Klijenti</li>
+          <li class="breadcrumb-item">{{ customer.name }}</li>
+          <li class="breadcrumb-item">Poslovne jedinice</li>
+        </ol>
+      </nav>
+      <h4 class="mb-0">Poslovne jedinice</h4>
+    </div>
+    <div>
+
+    </div>
+  </div>
+  <div class="card mt-3">
+    <table class="table table-flush">
+      <thead>
+        <tr>
+          <th>Kod</th>
+          <th class="w-auto">Naziv</th>
+          <th>Adresa</th>
+          <th>Grad</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of organizationalUnits; track item.id) {
+          <tr>
+            <td class="w-1">{{ item.fiscalizationCode }}</td>
+            <td class="w-auto">{{ item.name ? item.name : '---' }}</td>
+            <td class="w-1">{{ item.street }}</td>
+            <td class="w-1">{{ item.city }}</td>
+            <td class="w-1">
+              <div class="dropdown">
+                <button class="btn btn-sm btn-light" data-bs-toggle="dropdown">
+                  <i class="bi bi-three-dots"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <div class="dropdown-item">Naplatni uređaji</div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
