@@ -8,6 +8,8 @@ fontus
 
 docker-compose.yml
 
+nginx/frontend/*
+
 # Created by https://www.toptal.com/developers/gitignore/api/node,python,jetbrains,windows,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,python,jetbrains,windows,macos
 
