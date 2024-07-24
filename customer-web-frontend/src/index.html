@@ -146,6 +146,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="faktura_pregled_porudzbine()" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
+                                <span class="ms-3"></span>
+                                <i class="fa fa-table me-2"></i> Pregled porudžbina
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a style="margin-left: 20px;" class="nav-link py-3" href="#" ui-sref="advanceInvoiceInput" ui-sref-active="text-primary fw-bold" ng-click="$root.showSidebar = false">
                                 <span class="ms-3"></span>
                                 <i class="fa fa-plus me-1"></i> Slobodan unos avansa
@@ -373,6 +379,11 @@
                         <li>
                             <a href="#" class="dropdown-item" ui-sref="faktura_pregled_redovnih()" ui-sref-active="active">
                                 <i class="fa fa-table me-2"></i> Pregled računa
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item" ui-sref="faktura_pregled_porudzbine()" ui-sref-active="active">
+                                <i class="fa fa-table me-2"></i> Pregled porudžbina
                             </a>
                         </li>
                         <li><hr class="dropdown-divider"></li>
@@ -698,6 +709,7 @@
 <script src="app/views/faktura-pos-unos/faktura-pos-unos.controller.js"></script>
 <script src="app/views/faktura-pregled-avansa/faktura-pregled-avansa.controller.js"></script>
 <script src="app/views/faktura-pregled-redovnih/faktura-pregled-redovnih.controller.js"></script>
+<script src="app/views/faktura-pregled-porudzbine/faktura-pregled-porudzbine.controller.js"></script>
 <script src="app/views/faktura-slobodan-unos-avansa/faktura-slobodan-unos-avansa.controller.js"></script>
 <script src="app/views/faktura-slobodan-unos-korekcije/faktura-slobodan-unos-korekcije.controller.js"></script>
 <script src="app/views/faktura-slobodan-unos-redovnih/faktura-slobodan-unos-redovnih.controller.js"></script>

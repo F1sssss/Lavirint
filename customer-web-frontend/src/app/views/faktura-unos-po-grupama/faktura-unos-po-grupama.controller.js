@@ -50,6 +50,7 @@ function FakturaUnosPoGrupamaController(
     ctrl.showBuyerUpdateModal = showBuyerUpdateModal;
     ctrl.upis = upis;
     ctrl.upisSaKupcem = upisSaKupcem;
+    ctrl.porudzbina = porudzbina;
     ctrl.updateGridLayout = updateGridLayout;
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -376,5 +377,10 @@ function FakturaUnosPoGrupamaController(
                 });
             }
         });
+    }
+
+    function porudzbina(){
+        // TODO: implement logic
+        alert("Porudzbina!")
     }
 }

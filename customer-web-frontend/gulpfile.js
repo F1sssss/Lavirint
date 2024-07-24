@@ -46,7 +46,7 @@ const templates = () => {
 };
 
 const delete_templates = () => {
-  return src('src/app/app.templates.js').pipe(plugins.clean());
+  return src('src/app/app.templates.js', { allowEmpty: true }).pipe(plugins.clean());
 };
 
 const fontawesomeSrc = () => {
@@ -160,26 +160,25 @@ const copy_and_rename = (cb) => {
   }
 };
 
-const posmatraj = {
-  sass: (cb) => {
-    watch(['src/sass/**/*'], sass_task);
-    cb();
-  }
+const watch_files = () => {
+  watch(['src/sass/**/*', 'src/**/*.css'], series(sass_task, useref, copy_and_rename));
+  watch(['src/**/*.js', 'src/**/*.html', '!src/app/app.templates.js'], series(delete_templates, templates, useref, copy_and_rename));
 };
 
 const build = series(
+  clean,
   parallel(manifest, serviceWorker, templates, fontawesomeDist, sass_task),
   parallel(img, useref),
   delete_templates,
-  copy_and_rename // Updated task
+  copy_and_rename
 );
 
 // Glavna komanda, formiranje finalnih resursa
-exports.default = series(clean, build);
+exports.default = build;
 exports.clean = clean;
 exports.build = build;
 
 // Komanda za razvoj, formiranje resursa u relanom vremenu
 // na osnovu promjena u datotekama
-exports.posmatraj = parallel(sass_task, posmatraj.sass);
+exports.posmatraj = watch_files;
 exports['build:vendor'] = parallel(vendor, fontawesomeSrc);

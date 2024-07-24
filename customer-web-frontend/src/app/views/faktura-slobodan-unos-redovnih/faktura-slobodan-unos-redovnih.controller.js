@@ -31,6 +31,7 @@ function FakturaSlobodanUnosRedovnihController(
 
     ctrl.createInvoice = createInvoice;
     ctrl.createInvoiceTemplate = createInvoiceTemplate;
+    ctrl.createOrder = createOrder;
     ctrl.onInvoiceItemTemplateSelect = onInvoiceItemTemplateSelect;
     ctrl.getStavkeLagera = getStavkeLagera;
     ctrl.naPromjenuTipaUnosa = naPromjenuTipaUnosa;
@@ -273,6 +274,11 @@ function FakturaSlobodanUnosRedovnihController(
                 });
             }
         });
+    }
+
+    function createOrder() {
+        // TODO: ADD LOGIC FOR ORDER
+        alert("Order made");
     }
 
     function getData() {
