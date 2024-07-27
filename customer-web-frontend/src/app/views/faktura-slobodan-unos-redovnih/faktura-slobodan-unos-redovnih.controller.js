@@ -31,7 +31,6 @@ function FakturaSlobodanUnosRedovnihController(
 
     ctrl.createInvoice = createInvoice;
     ctrl.createInvoiceTemplate = createInvoiceTemplate;
-    ctrl.createOrder = createOrder;
     ctrl.onInvoiceItemTemplateSelect = onInvoiceItemTemplateSelect;
     ctrl.getStavkeLagera = getStavkeLagera;
     ctrl.naPromjenuTipaUnosa = naPromjenuTipaUnosa;
@@ -192,61 +191,6 @@ function FakturaSlobodanUnosRedovnihController(
     }
 
 
-    function createOrder(){
-        _validateBuyer();
-        ctrl.form.$setSubmitted();
-        if (ctrl.form.$invalid) {
-            fisModal.invalidForm().finally(function() {
-                fisGui.scrollToNgInvalid(-56 - 20, 260);
-            });
-            return;
-        }
-
-        fisModal.confirmOrCancel({
-            headerText: 'Upis računa',
-            bodyText: "Da li ste sigurni da želite da napravite porudžbinu?",
-            confirmButtonText: 'Da, napravi',
-            cancelButtonText: 'Odustani'
-        }).then(function(result) {
-            if (result.isConfirmed) {
-                sendInvoiceData();
-            }
-        });
-
-        function sendInvoiceData() {
-            let podaci = getData();
-
-            if ((new Big(podaci.payment_methods[0].amount)).eq(0)) {
-                podaci.payment_methods.splice(0, 1);
-            }
-
-            fisGui.wrapInLoader(function() {
-                return api.api__order__create(podaci).then(function (data) {
-                    return data;
-                });
-            }).then(function(data) {
-                if (data.result.is_success) {
-                    return stampac.stampajFakturu(
-                        data.invoice.id,
-                        fisConfig.user.podesavanja_aplikacije.podrazumijevani_tip_stampe
-                    ).then(function() {
-                        let params = {};
-
-                        return $state.transitionTo($state.current, params, {
-                            reload: true, inherit: false
-                        });
-                    });
-                } else {
-                    return fisModal.confirm({
-                        headerIcon: 'fa fa-exclamation-circle text-danger',
-                        headerText: 'Grеška',
-                        bodyText: data.result.message
-                    });
-                }
-            });
-        }
-    }
-
     function createInvoice(invoice) {
         _validateBuyer();
         ctrl.form.$setSubmitted();
@@ -331,10 +275,6 @@ function FakturaSlobodanUnosRedovnihController(
             }
         });
     }
-
-    // function createOrder() {
-    //     const group = fisModal.orderGroupModal();
-    // }
 
     function getData() {
         let data = {};

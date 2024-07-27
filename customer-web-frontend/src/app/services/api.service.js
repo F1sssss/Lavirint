@@ -43,6 +43,10 @@ function ApiService($http, $q, invoiceFactory) {
     api.faktura.poId.invoice_schedule = {};
     api.faktura.poId.invoice_schedule.add = api__faktura__pd_id__invoice_schedule__add;
 
+    api.order = {};
+    api.order.listaj = apiKomitentListaj;
+
+
     api.profaktura = {};
     api.profaktura.listaj = apiProfakturaListaj;
     api.profaktura.dodaj = apiProfakturaDodaj;
@@ -354,6 +358,31 @@ function ApiService($http, $q, invoiceFactory) {
             method: 'POST',
             url: '/api/customer/faktura/' + invoiceId + '/invoice_schedule/add',
             data: data
+        });
+    }
+
+    function apiOrderListaj(upitZaPretragu, brojStavkiPoStranici, brojStranice) {
+        if (upitZaPretragu) {
+            upitZaPretragu = upitZaPretragu.replaceAll('ć', 'c');
+            upitZaPretragu = upitZaPretragu.replaceAll('Ć', 'C');
+            upitZaPretragu = upitZaPretragu.replaceAll('č', 'c');
+            upitZaPretragu = upitZaPretragu.replaceAll('Č', 'C');
+            upitZaPretragu = upitZaPretragu.replaceAll('ž', 'z');
+            upitZaPretragu = upitZaPretragu.replaceAll('Ž', 'z');
+            upitZaPretragu = upitZaPretragu.replaceAll('đ', 'd');
+            upitZaPretragu = upitZaPretragu.replaceAll('Đ', 'D');
+            upitZaPretragu = upitZaPretragu.replaceAll('š', 's');
+            upitZaPretragu = upitZaPretragu.replaceAll('Š', 'S');
+        }
+
+        return _getRequest({
+            method: 'GET',
+            url: '/api/customer/komitent/listaj',
+            params: {
+                upit_za_pretragu: upitZaPretragu,
+                broj_stavki_po_stranici: brojStavkiPoStranici,
+                broj_stranice: brojStranice
+            }
         });
     }
 

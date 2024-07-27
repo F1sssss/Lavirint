@@ -34,6 +34,7 @@ function invoiceFactory(fisConfig) {
 
     let service = {};
     service.setBuyer = setBuyer;
+    service.setOrderGroup = setOrderGroup;
     //
     service.copyToCorrectedFields = copyToCorrectedFields;
     service.copyItemsFromAdvanceInvoice = copyItemsFromAdvanceInvoice;
@@ -240,6 +241,17 @@ function invoiceFactory(fisConfig) {
         }
     }
 
+    function setOrderGroup(invoice, group) {
+        if (!group) {
+            invoice.order_group = null;
+            invoice.order_group_id = null;
+        } else {
+            invoice.order_group = angular.copy(group);
+            invoice.order_group_id = group.id;
+        }
+    }
+
+
     function copyToCorrectedFields(invoice) {
         invoice.ukupna_cijena_osnovna = invoice.korigovana_ukupna_cijena_osnovna;
         invoice.ukupna_cijena_prodajna = invoice.korigovana_ukupna_cijena_prodajna;
@@ -287,6 +299,7 @@ function invoiceFactory(fisConfig) {
         let invoice = {}
         invoice.komitent_id = null;
         invoice.komitent = null;
+        invoice.order_group = null;
         invoice.is_cash = null;
         invoice.valuta_id = 50;
         invoice.valuta = fisConfig.valute.find((x) => { return x.id === invoice.valuta_id });

@@ -182,6 +182,8 @@
                 </div>
             </div>
         </div>
+
+        
         <div ng-repeat="stavka in ctrl.racun.stavke track by $index">
             <div class="position-relative">
                 <div id="invoice-item-{{ $index }}" style="position: absolute; top: -20px;"></div>
@@ -574,12 +576,6 @@
                 class="btn btn-light border"
                 ng-click="ctrl.createInvoiceTemplate()">
                 Napravi predračun
-            </button>
-            <button
-                type="button"
-                class="btn btn-warning border"
-                ng-click="ctrl.createOrder()">
-                Napravi porudžbinu
             </button>
             <button
                 type="button"
