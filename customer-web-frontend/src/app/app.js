@@ -14,4 +14,5 @@ angular.module('app', [
 
 angular.module('app').constant('fisInvoiceConfig', {
     itemsPerPage: 12
+    
 });

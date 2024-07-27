@@ -277,6 +277,73 @@ function routesConfig($urlRouterProvider, $stateProvider, fisConfigProvider, fis
     });
 
     $stateProvider.state({
+        title: 'Pregled porudžbina',
+        showDesktopTitle: true,
+
+        name: 'faktura_pregled_porudzbine',
+        url: '/racun/porudzbine/pregled?broj_stranice&broj_stavki_po_stranici&{ordinal_id}&{client_id}&{payment_type_id}&{total_price_gte}&{total_price_lte}&{fiscalization_date_gte}&{fiscalization_date_lte}',
+        templateUrl: 'app/views/faktura-pregled-porudzbine/faktura-pregled-porudzbine.template.html',
+        controller: 'FakturaPregledPorudzbineController',
+        controllerAs: 'ctrl',
+        params: {
+            broj_stranice: {
+                type: 'int',
+                value: 1
+            },
+            broj_stavki_po_stranici: {
+                type: 'int',
+                value: fisInvoiceConfig.itemsPerPage
+            },
+            ordinal_id: {
+                type: 'int',
+                value: undefined
+            },
+            total_price_gte: {
+                type: 'int',
+                value: undefined
+            },
+            total_price_lte: {
+                type: 'int',
+                value: undefined
+            },
+            fiscalization_date_gte: {
+                type: 'datetime',
+                value: undefined
+            },
+            fiscalization_date_lte: {
+                type: 'datetime',
+                value: undefined
+            },
+            client_id: {
+                type: 'int',
+                array: true
+            },
+            payment_type_id: {
+                type: 'int',
+                array: true
+            },
+        },
+        resolve: {
+            /* @ngInject */
+            initialData: ['api', '$stateParams', function (api, $stateParams) {
+                let params = {
+                    ordinal_id: $stateParams.ordinal_id,
+                    broj_stavki_po_stranici: $stateParams.broj_stavki_po_stranici,
+                    broj_stranice: $stateParams.broj_stranice,
+                    total_price_gte: $stateParams.total_price_gte,
+                    total_price_lte: $stateParams.total_price_lte,
+                    fiscalization_date_gte: $stateParams.fiscalization_date_gte,
+                    fiscalization_date_lte: $stateParams.fiscalization_date_lte,
+                    payment_type_id: $stateParams.payment_type_id,
+                    client_id: $stateParams.client_id
+                }
+
+                return api.api__frontend__invoice__regular__all(params);
+            }]
+        }
+    });
+
+    $stateProvider.state({
         title: 'Slobodan unos avansa',
         showDesktopTitle: true,
 

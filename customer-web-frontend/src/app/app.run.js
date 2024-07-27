@@ -31,6 +31,7 @@ function run(
     $rootScope.isArtikliCollapsed = true;
     $rootScope.isPartneriCollapsed = true;
     $rootScope.isReportCollapsed = true;
+    $rootScope.selectedOrders = {};
 
     $rootScope.goToHomepage = goToHomepage;
 
