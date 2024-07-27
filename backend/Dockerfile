@@ -34,5 +34,9 @@ EXPOSE 9100
 
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Install the dependencies
+RUN apt-get update && apt-get install -y wkhtmltopdf 
+
+
 # Run the application
 CMD ["make", "run"]

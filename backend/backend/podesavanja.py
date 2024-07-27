@@ -41,7 +41,7 @@ class OsnovaPodesavanja(object):
 
     SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
 
-    TIMEZONE = '+01:00'
+    TIMEZONE = '+02:00'
 
 
 def config_as_str():
