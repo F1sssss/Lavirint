@@ -184,7 +184,7 @@ def generate_register_invoice_request(faktura: models.Faktura, iic_signature) ->
     xml_header.set('UUID', faktura.uuid)
 
     xml_invoice = etree.SubElement(xml_request, 'Invoice')
-    xml_invoice.set('InvType', faktura.tip_fakture.efi_kod)
+    xml_invoice.set('InvType', 'INVOICE' if faktura.tip_fakture.efi_kod == 'ORDER' else faktura.tip_fakture.efi_kod)
     xml_invoice.set('TypeOfInv', 'CASH' if faktura.is_cash else 'NONCASH')
     # xml_invoice.set('TypeOfSelfiss', '')  # min=0, max=1
     # xml_invoice.set('IsSimplifiedInv', 'false')

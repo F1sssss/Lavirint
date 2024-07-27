@@ -434,6 +434,8 @@ def get_internal_ordinal_number(invoice: Faktura, year: int, session: sqlalchemy
         type_id = enums.OrdinalNumberCounterType.ADVANCE_INVOICES.value
     elif invoice.tip_fakture_id == Faktura.TYPE_REGULAR:
         type_id = enums.OrdinalNumberCounterType.REGULAR_INVOICES.value
+    elif invoice.tip_fakture_id == Faktura.TYPE_ORDER:
+        type_id = enums.OrdinalNumberCounterType.ORDER_INVOICES.value
     elif invoice.tip_fakture_id == Faktura.TYPE_CORRECTIVE or invoice.tip_fakture_id == Faktura.TYPE_ERROR_CORRECTIVE:
         if invoice.korigovana_faktura is not None:
             if invoice.korigovana_faktura.tip_fakture_id == Faktura.TYPE_REGULAR:
@@ -644,6 +646,15 @@ def get_regular_invoice(invoice_data, firma, operater, naplatni_uredjaj, calcula
 
     return invoice
 
+def get_order_invoice(invoice_data, firma, operater, naplatni_uredjaj, calculate_totals, calculate_tax_groups):
+    invoice = get_invoice_from_dict(
+        invoice_data, firma, operater, naplatni_uredjaj, calculate_totals, calculate_tax_groups)
+
+    invoice.tip_fakture_id = Faktura.TYPE_ORDER
+    invoice.customer_invoice_view = enums.CustomerInvoiceView.ORDER_INVOICES.value
+
+    return invoice
+
 
 def get_final_invoice(invoice_data, firma, opreater, naplatni_uredjaj, advance_invoice_id, calculate_totals,
                       calculate_tax_groups):
@@ -692,11 +703,13 @@ def get_invoice_from_dict(
     faktura.kurs_razmjene = invoice_data['kurs_razmjene']
 
     faktura.komitent_id = invoice_data.get('komitent_id')
-    if not faktura.is_cash and faktura.komitent_id is None:
-        raise InvoiceProcessingException({
-            i18n.LOCALE_SR_LATN_ME: 'Kupac mora biti definisan kod bezgotovinskih računa.',
-            i18n.LOCALE_EN_US: 'Kupac mora biti definisan kod bezgotovinskih računa.'
-        })
+    
+    #TODO: Uncomment this later
+    #if not faktura.is_cash and faktura.komitent_id is None:
+    #    raise InvoiceProcessingException({
+    #        i18n.LOCALE_SR_LATN_ME: 'Kupac mora biti definisan kod bezgotovinskih računa.',
+    #        i18n.LOCALE_EN_US: 'Kupac mora biti definisan kod bezgotovinskih računa.'
+    #    })
 
     if faktura.komitent_id is not None:
         faktura.komitent = get_buyer_by_id(firma, faktura.komitent_id)
@@ -963,6 +976,7 @@ def fiscalize_invoice(faktura: Faktura, fiscalisation_date) -> Faktura:
     counter_session.commit()
 
     return faktura
+
 
 
 def update_inventory_from_invoice(invoice: Faktura):
@@ -1249,6 +1263,39 @@ def make_regular_invoice(invoice_data, firma, operater, naplatni_uredjaj, calcul
 
     return processing, invoice
 
+def make_order_invoice(
+        invoice_data: dict,
+        firma: Firma,
+        operater: Operater,
+        naplatni_uredjaj: NaplatniUredjaj,
+        calculate_totals: bool = True,
+        calculate_tax_groups: bool = True,
+        fiscalization_date: datetime = None
+):
+    invoice_processing = InvoiceProcessing()
+    invoice = None
+
+    if fiscalization_date is None:
+        fiscalization_date = datetime.now(pytz.timezone('Europe/Podgorica'))
+
+    with invoice_processing.acquire_lock(naplatni_uredjaj.id) as _:
+        invoice = get_order_invoice(
+            invoice_data, firma, operater, naplatni_uredjaj, calculate_totals, calculate_tax_groups)
+
+        db.session.add(invoice)
+        db.session.commit()
+
+        invoice = fiscalize_invoice(invoice, fiscalization_date)
+
+        #Posle uspjesne fiskalizacije, dodajemo fakturu u order_grupa_stavka
+        #order_grupa_stavka = OrderGrupaStavka(faktura_id=invoice.id)
+        #db.session.add(order_grupa_stavka)
+        #db.session.commit()  
+
+        update_inventory_from_invoice(invoice)
+        save_invoice_print(invoice)
+
+    return invoice_processing, invoice
 
 def make_advance_invoice(
         invoice_data: dict,

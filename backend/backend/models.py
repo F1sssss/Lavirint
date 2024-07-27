@@ -655,6 +655,7 @@ class Faktura(Base):
     TYPE_CORRECTIVE = 7
     TYPE_ERROR_CORRECTIVE = 8
     TYPE_INVOICE_TEMPLATE = 9
+    TYPE_ORDER=10
 
     STATUS_STORED = 1
     STATUS_FISCALISATION_SUCCESS = 2
@@ -1277,7 +1278,7 @@ class OrderGrupa(Base):
 class OrderGrupaStavka(Base):
     __tablename__ = 'order_grupa_stavka'
 
-    id: Mapped[int] = Column(Integer(), primary_key=True)
+    id: Mapped[int] = Column(Integer(), primary_key=True, autoincrement=True)
     order_grupa_id: Mapped[int] = Column(
         Integer(),
         ForeignKey('order_grupa.id', name='fk__order_grupa_stavka__order_grupa'),
