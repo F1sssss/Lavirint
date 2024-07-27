@@ -10,6 +10,28 @@ docker-compose.yml
 
 nginx/frontend/*
 
+./customer_sessions/*
+
+customer_sessions/*
+
+customer_sessions
+
+filestore/*
+
+filestore
+
+certificate_store/*
+
+certificate_store
+
+test_files
+
+test_files/*
+
+prc
+
+prc/*
+
 # Created by https://www.toptal.com/developers/gitignore/api/node,python,jetbrains,windows,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,python,jetbrains,windows,macos
 

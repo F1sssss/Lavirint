@@ -1,6 +1,21 @@
 # Use the official Python image from the Docker Hub
 FROM python:3.8
 
+
+# Copy the requirements file to the working directory
+RUN mkdir -p /home/boca/prc/certificate_store/
+
+RUN mkdir -p /home/boca/prc/log/efi/
+
+RUN mkdir -p /home/boca/megas/filestore
+
+COPY certificate_store/* /home/boca/prc/certificate_store
+
+
+# Set the timezone
+RUN ln -sf /usr/share/zoneinfo/Europe/Podgorica /etc/localtime && echo "Europe/Podgorica" > /etc/timezone
+
+
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
@@ -10,14 +25,10 @@ WORKDIR /usr/src/app
 COPY . .
 
 
-# Install any needed packages specified in requirements.txt
-#RUN pip install --no-cache-dir -r requirements.txt
 
-# Set environment variables to use the virtual environment
 #ENV VIRTUAL_ENV=/app/megas-venv
 #ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-# Make port 9100 available to the world outside this container
 EXPOSE 9100
 
 

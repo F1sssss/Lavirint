@@ -9,12 +9,12 @@ def requires_authentication(func):
 
         print(bottle.request.session)
 
-        if 'operater_id' not in bottle.request.session:
-            bottle.response.status = 401
-            return bottle.response
+#       if 'operater_id' not in bottle.request.session:
+#           bottle.response.status = 401
+#           return bottle.response
 
-        operater = operater_opb.get_operator_by_id(bottle.request.session['operater_id'])
-        #operater = operater_opb.get_operator_by_id(388)
+        #operater = operater_opb.get_operator_by_id(bottle.request.session['operater_id'])
+        operater = operater_opb.get_operator_by_id(388)
 
         if not operater.firma.je_aktivna:
             bottle.response.status = 403
