@@ -27,6 +27,7 @@ function fisModal($q, $uibModal, fisConfig, api, invoiceFactory) {
     service.depositNeededModal = depositNeededModal;
     service.invalidForm = invalidForm;
     service.certificateUpload = certificateUpload;
+    service.orderGroupModal = orderGroupModal;
 
     return service;
 
@@ -237,6 +238,75 @@ function fisModal($q, $uibModal, fisConfig, api, invoiceFactory) {
             windowTemplateUrl: 'app/modals/window-fixed.template.html',
             resolve: {
                 komitent: api.komitent.poId.listaj(buyerId)
+            }
+        });
+
+        return modalInstance.result;
+    }
+
+    function mockGetGroups(){
+        return new Promise(r => setTimeout(() => r(["eLavirint Podgorica", "eLavirint Nikšić", "CKB 1", "CKB 2",   "apple",
+            "banana",
+            "cherry",
+            "date",
+            "elderberry",
+            "fig",
+            "grape",
+            "honeydew",
+            "kiwi",
+            "lemon",
+            "mango",
+            "nectarine",
+            "orange",
+            "papaya",
+            "quince",
+            "raspberry",
+            "strawberry",
+            "tangerine",
+            "ugli fruit",
+            "victoria plum",
+            "watermelon",
+            "xigua",
+            "yellow passion fruit",
+            "zucchini",
+            "avocado",
+            "blueberry",
+            "cranberry",
+            "dragon fruit",
+            "eggplant",
+            "feijoa",
+            "gooseberry",
+            "huckleberry",
+            "jackfruit",
+            "kumquat",
+            "lime",
+            "mulberry",
+            "olive",
+            "pineapple",
+            "quandong",
+            "rambutan",
+            "soursop",
+            "tamarillo",
+            "ugni",
+            "vanilla",
+            "walnut",
+            "ximenia",
+            "yew berry",
+            "ziziphus",
+            "apricot",
+            "blackberry"]), 500))
+    }
+
+    function orderGroupModal(){
+        let modalInstance = $uibModal.open({
+            templateUrl: 'app/modals/order-group-modal/order-group-modal.template.html',
+            controller: 'OrderGroupModalController',
+            controllerAs: 'ctrl',
+            size: 'lg',
+            backdrop: 'static',
+            windowTemplateUrl: 'app/modals/window-fixed.template.html',
+            resolve: {
+                groups: mockGetGroups()
             }
         });
 

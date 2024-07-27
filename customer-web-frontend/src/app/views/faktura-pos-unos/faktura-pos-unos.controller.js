@@ -33,6 +33,7 @@ function FakturaPosUnosController(
     ctrl.addInvoiceItem = addInvoiceItem;
     ctrl.editInvoiceItem = editInvoiceItem;
     ctrl.upis = upis;
+    ctrl.porudzbina = porudzbina;
 
     function addInvoiceItem($data, $eventType) {
         let index = null;
@@ -152,6 +153,59 @@ function FakturaPosUnosController(
                 } else {
                     return fisModal.confirm({
                         headerText: 'Grеška prilikom fiskalizacije',
+                        headerIcon: 'fa fa-exclamation-triangle text-danger',
+                        bodyText: data.result.message
+                    });
+                }
+            }).catch(() => {
+                return fisModal.confirm({
+                    headerText: 'Greška',
+                    headerIcon: 'fa fa-exclamation-triangle text-danger',
+                    bodyText: 'Došlo je do nepredviđene greške. Kontaktirajte administratore sistema.'
+                });
+            });
+        }).finally(function() {
+            $state.reload();
+        });
+    }
+
+
+    function porudzbina() {
+        if (ctrl.racun.stavke.length === 0) {
+            fisModal.confirm({
+                headerText: 'Porudžbina je prazna',
+                headerIcon: 'fa fa-exclamation-triangle text-danger',
+                bodyText: 'Dodajte stavke pa probajte ponovo.'
+            });
+            return;
+        }
+
+        let podaci = angular.copy(ctrl.racun);
+        
+        podaci.is_cash = false;
+
+        let currentTime = new Date();
+
+        podaci.poreski_period = angular.copy(currentTime);
+        podaci.poreski_period.setDate(1);
+        podaci.poreski_period.setHours(0, 0, 0, 0);
+        podaci.poreski_period = moment(podaci.poreski_period).format()
+
+        podaci.datumfakture = moment(podaci.datumfakture).format()
+
+        podaci.datumvalute = angular.copy(currentTime);
+        podaci.datumvalute = moment(podaci.datumvalute).format();
+
+        fisGui.wrapInLoader(function() {
+            return api.api__order__create(podaci).then(function (data) {
+                if (data.result.is_success) {
+                    return stampac.stampajFakturu(
+                        data.invoice.id,
+                        fisConfig.user.podesavanja_aplikacije.podrazumijevani_tip_stampe
+                    );
+                } else {
+                    return fisModal.confirm({
+                        headerText: 'Grеška prilikom kreiranja',
                         headerIcon: 'fa fa-exclamation-triangle text-danger',
                         bodyText: data.result.message
                     });

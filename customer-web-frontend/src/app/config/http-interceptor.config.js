@@ -8,7 +8,7 @@ angular.module('app').config(['$httpProvider', function ($httpProvider) {
 
                 if (rejection.config.url.match('^/api')) {
                     if (rejection.status === 401) {
-                        $window.location.href = './login.html';
+                        // $window.location.href = './login.html';
                         return;
                     }
 
@@ -18,7 +18,7 @@ angular.module('app').config(['$httpProvider', function ($httpProvider) {
                     }
                 }
 
-                $window.location.href = './login.html';
+                // $window.location.href = './login.html';
             }
         }
     });

@@ -380,7 +380,56 @@ function FakturaUnosPoGrupamaController(
     }
 
     function porudzbina(){
-        // TODO: implement logic
-        alert("Porudzbina!")
+        if (ctrl.racun.stavke.length === 0) {
+            fisModal.confirm({
+                headeText: 'Račun je prazan',
+                headerIcon: 'fa fa-exclamation-triangle text-danger',
+                bodyText: 'Dodajte stavke pa probajte ponovo.'
+            });
+            return;
+        }
+
+        sendData();
+    }
+
+    function sendData() {
+        let podaci = angular.copy(ctrl.racun);
+
+        podaci.is_cash = false;
+
+        let currentTime = new Date();
+
+        podaci.poreski_period = angular.copy(currentTime);
+        podaci.poreski_period.setDate(1);
+        podaci.poreski_period.setHours(0, 0, 0, 0);
+        podaci.poreski_period = moment(podaci.poreski_period).format()
+
+        podaci.datumfakture = moment(podaci.datumfakture).format()
+
+        podaci.datumvalute = angular.copy(currentTime);
+        podaci.datumvalute = moment(podaci.datumvalute).format()
+
+
+        $rootScope.showLoader = true;
+        fisGui.wrapInLoader(function() {
+            return api.api__order__create(podaci).then(function (data) {
+                return data;
+            });
+        }).then(function(data) {
+            if (data.result.is_success) {
+                return stampac.stampajFakturu(
+                    data.invoice.id,
+                    fisConfig.user.podesavanja_aplikacije.podrazumijevani_tip_stampe
+                ).then(function() {
+                    $state.reload();
+                });
+            } else {
+                return fisModal.confirm({
+                    headerIcon: 'fa fa-exclamation-circle text-danger',
+                    headerText: 'Grеška',
+                    bodyText: data.result.message
+                });
+            }
+        });
     }
 }

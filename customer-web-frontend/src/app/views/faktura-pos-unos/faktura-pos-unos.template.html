@@ -74,14 +74,14 @@
                 </div>
             </div>
             <div class="row g-3">
-                <div class="col-4">
+                <div class="col-6">
                     <div
                       class="d-flex align-items-center justify-content-between bg-white rounded border h-100 px-3 fw-bold fs-5">
                         <div>UKUPNO</div>
                         <div>{{ ctrl.racun.ukupna_cijena_prodajna | fisRoundHalfUp:2 }}</div>
                     </div>
                 </div>
-                <div class="col-3">
+                <div class="col-6">
                     <button
                       type="button"
                       class="btn w-100 px-3 py-2 h-100"
@@ -95,23 +95,34 @@
                         </div>
                     </button>
                 </div>
-                <div class="col-5">
-                    <div class="d-flex justify-content-end gap-3 h-100">
-                        <button type="button" class="btn btn-success flex-grow-1 py-3" ng-click="ctrl.upis(1)">
-                            <i class="fa fa-money"></i>
-                            Gotovina
-                        </button>
-                        <button type="button" class="btn btn-success flex-grow-1 py-3" ng-click="ctrl.upis(2)">
-                            <i class="fa fa-credit-card"></i>
-                            Kartica
-                        </button>
-                        <button type="button" class="btn btn-success flex-grow-1 py-3" ng-click="ctrl.upis(8)">
-                            <i class="fa fa-file"></i>
-                            Virman
-                        </button>
-                    </div>
-                </div>
             </div>
+
+            <div class="row g-3">
+                <div class="col-3">
+                    <button type="button" class="w-100 btn btn-success flex-grow-1 py-3" ng-click="ctrl.upis(1)">
+                        <i class="fa fa-money"></i>
+                        Gotovina
+                    </button>
+                </div>
+                <div class="col-3">
+                    <button type="button" class="w-100 btn btn-success flex-grow-1 py-3" ng-click="ctrl.upis(2)">
+                        <i class="fa fa-credit-card"></i>
+                        Kartica
+                    </button>
+                </div>
+                <div class="col-3">
+                    <button type="button" class="w-100 btn btn-success flex-grow-1 py-3" ng-click="ctrl.upis(8)">
+                        <i class="fa fa-file"></i>
+                        Virman
+                    </button>
+                </div>
+                <div class="col-3">
+                    <button type="button" class="w-100 btn btn-warning flex-grow-1 py-3" ng-click="ctrl.porudzbina()">
+                        <i class="fa fa-plus"></i>
+                        Porudžbina
+                    </button>
+                </div>
+        </div>
         </div>
     </div>
 </div>
@@ -251,6 +262,10 @@
                             <i class="fa fa-file"></i>
                             Virman
                         </button>
+                        <button type="button" class="btn btn-warning flex-grow-1 py-3" ng-click="ctrl.porudzbina()">
+                            <i class="fa fa-plus"></i>
+                            Porudžbina
+                        </button>
                     </div>
                 </div>
             </div>
@@ -323,7 +338,7 @@
         ng-show="!ctrl.typeaheadMobileState.isOpen">
         <div class="px-2 pt-2 border-top bg-white ng_animate__slide_in_up__slide_out_down" ng-show="moreOptions">
             <div class="row g-2">
-                <div class="col-8">
+                <div class="col-12">
                     <button
                         type="button"
                         class="text-center btn flex-grow-1 py-2 w-100 lh-base"
@@ -337,7 +352,13 @@
                         </div>
                     </button>
                 </div>
-                <div class="col-4">
+                <div class="col-6">
+                    <button type="button" class="text-center btn btn-warning flex-grow-1 py-2 w-100 lh-base" ng-click="ctrl.porudzbina()">
+                        <div><i class="fa fa-plus"></i></div>
+                        Porudžbina
+                    </button>
+                </div>
+                <div class="col-6">
                     <button
                         type="button"
                         class="text-center btn btn-success flex-grow-1 py-2 w-100 lh-base"

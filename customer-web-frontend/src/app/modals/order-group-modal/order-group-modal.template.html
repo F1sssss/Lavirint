@@ -1,0 +1,26 @@
+<div class="modal-header d-md-none p-0 w-100 d-flex justify-content-between">
+    <button type="button" class="btn btn-light border" data-ng-click="$close({ isConfirmed: false })">
+        <i class="fa fa-arrow-left"></i> Odustani
+    </button>
+    <button type="button" class="btn btn-primary" data-ng-click="ctrl.confirm();">
+        Potvrdi
+    </button>
+</div>
+<div class="modal-body">
+    <label class="form-label" for="group">Odaberite groupu kojoj porudžbina pripada:</label>
+    <input class="form-control" list="groups" name="group" id="group" ng-model="ctrl.group">
+
+    <datalist id="groups">
+        <option ng-repeat="group in ctrl.groups">{{group}}</option>
+    </datalist>
+</div>
+<div class="modal-footer d-none d-md-block">
+    <div class="text-end">
+        <button type="button" class="btn btn-light border" data-ng-click="$close({ isConfirmed: false })">
+            <i class="fa fa-arrow-left"></i> Odustani
+        </button>
+        <button type="button" class="btn btn-primary" data-ng-click="$close({ isConfirmed: true, group: ctrl.group.trim() })">
+            Potvrdi
+        </button>
+    </div>
+</div>

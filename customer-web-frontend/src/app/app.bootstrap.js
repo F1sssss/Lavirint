@@ -316,7 +316,7 @@
     function redirect(rejection) {
         if (rejection.config.url.match('^/api')) {
             if (rejection.status === 401) {
-                window.location.href = './login.html';
+                // window.location.href = './login.html';
                 return;
             }
             if (rejection.status === 403) {
@@ -325,6 +325,6 @@
             }
         }
 
-        window.location.href = './login.html';
+        // window.location.href = './login.html';
     }
 })();

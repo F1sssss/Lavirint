@@ -31,6 +31,7 @@ function ApiService($http, $q, invoiceFactory) {
     api.faktura = {};
     api.faktura.listaj = apiFakturaListaj;
     api.api__faktura__dodaj = api__faktura__dodaj;
+    api.api__order__create = api_order_create;
     api.api__advance__create = api__advance__create;
     api.faktura.storniraj = apiFakturaStorniraj;
     api.faktura.poId = {};
@@ -282,6 +283,14 @@ function ApiService($http, $q, invoiceFactory) {
             method: 'POST',
             url: '/api/customer/faktura/dodaj',
             data: podaciRacuna
+        });
+    }
+
+    function api_order_create(data){
+        return _getRequest({
+            method: 'POST',
+            url: '/api/customer/faktura/order/dodaj',
+            data
         });
     }
 
