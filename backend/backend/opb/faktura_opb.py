@@ -513,6 +513,9 @@ def get_internal_ordinal_number(invoice: Faktura, year: int, session: sqlalchemy
         type_id = enums.OrdinalNumberCounterType.REGULAR_INVOICES.value
     elif invoice.tip_fakture_id == Faktura.TYPE_ORDER:
         type_id = enums.OrdinalNumberCounterType.ORDER_INVOICES.value
+    #TODO: Ispraviti tip fakture za kumulativne fakture
+    elif invoice.tip_fakture_id == Faktura.TYPE_CUMMULATIVE:
+        type_id = enums.OrdinalNumberCounterType.ORDER_INVOICES.value
     elif invoice.tip_fakture_id == Faktura.TYPE_CORRECTIVE or invoice.tip_fakture_id == Faktura.TYPE_ERROR_CORRECTIVE:
         if invoice.korigovana_faktura is not None:
             if invoice.korigovana_faktura.tip_fakture_id == Faktura.TYPE_REGULAR:
@@ -734,7 +737,7 @@ def get_order_invoice(invoice_data, firma, operater, naplatni_uredjaj, calculate
 
 def get_cummulative_invoice(invoice_ids, firma, operater, naplatni_uredjaj, calculate_totals, calculate_tax_groups):
     
-    if not isinstance(invoice_ids, list):
+    if not isinstance(invoice_ids['invoice_ids'], list):
         raise InvoiceProcessingException(
             messages={
                 i18n.LOCALE_SR_LATN_ME: "Neispravan format podataka.",
@@ -742,7 +745,7 @@ def get_cummulative_invoice(invoice_ids, firma, operater, naplatni_uredjaj, calc
             }
         )
 
-    invoices = db.session.query(Faktura).filter(Faktura.id.in_(invoice_ids)).all()
+    invoices = db.session.query(Faktura).filter(Faktura.id.in_(invoice_ids['invoice_ids'])).all()
 
     #Da li raisati exception ako nema faktura?
     if len(invoices) == 0:
@@ -753,7 +756,8 @@ def get_cummulative_invoice(invoice_ids, firma, operater, naplatni_uredjaj, calc
             }
         )
 
-    if not all(invoice.payment_methods == PaymentMethod.TYPE_ORDER for invoice in invoices):
+
+    if not all( all( payment_method.payment_method_type_id == PaymentMethod.TYPE_ORDER  for payment_method in invoice.payment_methods) for invoice in invoices):
         raise InvoiceProcessingException(
             messages={
                 i18n.LOCALE_SR_LATN_ME: "Sve izabrane fakture moraju imati način plaćanja 'ORDER'.",
@@ -1605,20 +1609,39 @@ def update_invoice_amounts(invoice, corrected_invoice_data):
     db.session.add(invoice)
     db.session.commit()
 
-def create_cummulative_invoice(fakture, operater: Operater):
+def create_cummulative_invoice(     
+        invoices,
+        firma: Firma,
+        operater: Operater,
+        naplatni_uredjaj: NaplatniUredjaj,
+        calculate_totals: bool = True,
+        calculate_tax_groups: bool = True
+):
     zbirna_faktura = Faktura()
     zbirna_faktura.tip_fakture_id = Faktura.TYPE_CUMMULATIVE
     zbirna_faktura.poreski_period = datetime.now(pytz.timezone('Europe/Podgorica'))
     zbirna_faktura.poreski_period.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     zbirna_faktura.operater = operater
     zbirna_faktura.status = Faktura.STATUS_STORED
-
+    zbirna_faktura.firma = firma
+    zbirna_faktura.firma_id = firma.id
+    zbirna_faktura.naplatni_uredjaj_id = naplatni_uredjaj.id
+    zbirna_faktura.naplatni_uredjaj = naplatni_uredjaj
+    zbirna_faktura.status = Faktura.STATUS_STORED
     
-    for clanica in fakture.clanice_fakture:
+    #TODO: sta radimo sa ovim poljima ukoliko se razlikuju izmedju faktura?
+    zbirna_faktura.napomena = invoices[0].napomena 
+    zbirna_faktura.valuta_id = invoices[0].valuta_id
+    zbirna_faktura.valuta = invoices[0].valuta
+    zbirna_faktura.kurs_razmjene = invoices[0].kurs_razmjene
+
+    zbirna_faktura.komitent_id = invoices[0].komitent_id
+    
+    for clanica in invoices:
         zbirna_faktura.clanice_zbirne_fakture.append(clanica)
 
 
-    for stavka in listaj_stavke_faktura(fakture):
+    for stavka in listaj_stavke_faktura(invoices):
         nova_stavka = FakturaStavka()
         nova_stavka.sifra = stavka.sifra
         nova_stavka.kolicina = stavka.korigovana_kolicina
@@ -1648,18 +1671,17 @@ def create_cummulative_invoice(fakture, operater: Operater):
         nova_stavka.corrected_tax_exemption_amount = stavka.corrected_tax_exemption_amount
         zbirna_faktura.stavke.append(nova_stavka)
     
-    update_invoice_totals_from_items(zbirna_faktura, listaj_stavke_faktura(fakture), use_corrected_amounts=True)
+    update_invoice_totals_from_items(zbirna_faktura, listaj_stavke_faktura(invoices), use_corrected_amounts=False)
 
     zbirna_faktura.credit_note_turnover_remaining = zbirna_faktura.ukupna_cijena_prodajna
     zbirna_faktura.credit_note_turnover_used = 0
 
     payment_method = PaymentMethod()
-    payment_method.payment_method_type_id = fakture[0].payment_methods[0].payment_method_type_id
+    payment_method.payment_method_type_id = invoices[0].payment_methods[0].payment_method_type_id
     payment_method.amount = zbirna_faktura.ukupna_cijena_prodajna
     zbirna_faktura.payment_methods.append(payment_method)
 
-    #Sta je ovo tacno?
-    grupe_poreza = formiraj_korigovane_grupe_poreza(zbirna_faktura)
+    grupe_poreza = get_tax_groups_from_items(zbirna_faktura)
     for grupa_poreza in grupe_poreza:
         zbirna_faktura.grupe_poreza.append(grupa_poreza)
 
