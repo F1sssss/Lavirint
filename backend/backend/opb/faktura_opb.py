@@ -31,6 +31,7 @@ from backend.models import FakturaMailKampanjaStavka
 from backend.models import FakturaStavka
 from backend.models import FakturaTip
 from backend.models import Firma
+from backend.models import OrderGrupaStavka
 from backend.models import InvoiceItemCorrectionType
 from backend.models import InvoiceProcessingLock
 from backend.models import InvoiceSchedule
@@ -184,6 +185,13 @@ def listaj_fakturu_po_idu(faktura_id):
         .filter(Faktura.id == faktura_id) \
         .first()
 
+def listaj_fakture_po_idevima(faktura_id):
+    return db.session.query(Faktura) \
+        .filter(Faktura.id.in_(faktura_id)) \
+        .all()
+
+def listaj_stavke_faktura(fakture) -> list:
+    return [stavka for f in fakture for stavka in f.stavke]
 
 def listaj_fakturu_po_ikofu(faktura_ikof) -> Faktura:
     # TODO: Ovaj poziv je veoma sport, potrebno ga je optimizovati
@@ -326,6 +334,75 @@ def add_invoice_filters_to_query(
     q1 = q1.filter(Faktura.customer_invoice_view == customer_invoice_view.value)
 
     return q1
+
+def get_order_filter_query(
+        firma_id: int,
+        naplatni_uredjaj_id: int,
+        filters: InvoiceFilterData,
+        customer_invoice_view: enums.CustomerInvoiceView
+):
+    q1 = db.session.query(Faktura) \
+        .filter(Faktura.naplatni_uredjaj_id == naplatni_uredjaj_id) \
+        .filter(Faktura.status.in_([
+            Faktura.STATUS_FISCALISATION_SUCCESS,
+            Faktura.STATUS_CANCELLED,
+            Faktura.STATUS_IN_CREDIT_NOTE,
+            Faktura.STATUS_HAS_ERROR_CORRECTIVE
+        ]))
+
+    q1 = q1.filter(Faktura.payment_methods.any(PaymentMethod.payment_method_type_id == PaymentMethod.TYPE_ORDER))
+
+    
+    if filters.ordinal_id is not None:
+        q1 = q1.filter(Faktura.efi_ordinal_number == filters.ordinal_id)
+
+    if filters.total_price_gte is not None:
+        q1 = q1.filter(Faktura.korigovana_ukupna_cijena_prodajna >= filters.total_price_gte)
+
+    if filters.total_price_lte is not None:
+        q1 = q1.filter(Faktura.korigovana_ukupna_cijena_prodajna <= filters.total_price_lte)
+
+    if filters.fiscalization_date_gte is not None:
+        q1 = q1.filter(Faktura.datumfakture >= filters.fiscalization_date_gte)
+
+    if filters.fiscalization_date_lte is not None:
+        q1 = q1.filter(Faktura.datumfakture <= filters.fiscalization_date_lte)
+
+
+    if len(filters.client_ids) > 0:
+        q1 = q1.filter(Faktura.komitent_id.in_(filters.client_ids))
+
+    if len(filters.invoice_type_ids) > 0:
+        q1 = q1.filter(
+            sql.or_(
+                Faktura.tip_fakture_id.in_(filters.invoice_type_ids)
+            )
+        )
+
+    if len(filters.not_invoice_type_ids) > 0:
+        q1 = q1.filter(
+            sql.or_(
+                Faktura.tip_fakture_id.notin_(filters.not_invoice_type_ids)
+            )
+        )
+
+    if len(filters.invoice_ids) > 0:
+        q1 = q1.filter(Faktura.id.in_(filters.invoice_ids))
+
+    if len(filters.not_invoice_ids) > 0:
+        q1 = q1.filter(Faktura.id.notin_(filters.not_invoice_ids))
+
+    if len(filters.statuses) > 0:
+        q1 = q1.filter(Faktura.status.in_(filters.statuses))
+
+    if len(filters.not_statuses) > 0:
+        q1 = q1.filter(Faktura.status.notin_(filters.not_statuses))
+
+    # q1 = q1.filter(Faktura.customer_invoice_view == customer_invoice_view.value)
+
+    return q1.order_by(func.year(Faktura.datumfakture).desc(), Faktura.efi_ordinal_number.desc())
+
+
 
 
 def get_invoice_filter_query(
@@ -655,6 +732,41 @@ def get_order_invoice(invoice_data, firma, operater, naplatni_uredjaj, calculate
 
     return invoice
 
+def get_cummulative_invoice(invoice_ids, firma, operater, naplatni_uredjaj, calculate_totals, calculate_tax_groups):
+    
+    if not isinstance(invoice_ids, list):
+        raise InvoiceProcessingException(
+            messages={
+                i18n.LOCALE_SR_LATN_ME: "Neispravan format podataka.",
+                i18n.LOCALE_EN_US: "Invalid data format.",
+            }
+        )
+
+    invoices = db.session.query(Faktura).filter(Faktura.id.in_(invoice_ids)).all()
+
+    #Da li raisati exception ako nema faktura?
+    if len(invoices) == 0:
+        raise InvoiceProcessingException(
+            messages={
+                i18n.LOCALE_SR_LATN_ME: "Nijedna faktura nije pronađena.",
+                i18n.LOCALE_EN_US: "No invoices found.",
+            }
+        )
+
+    if not all(invoice.payment_methods == PaymentMethod.TYPE_ORDER for invoice in invoices):
+        raise InvoiceProcessingException(
+            messages={
+                i18n.LOCALE_SR_LATN_ME: "Sve izabrane fakture moraju imati način plaćanja 'ORDER'.",
+                i18n.LOCALE_EN_US: "All selected invoices must have payment method 'ORDER'.",
+            }
+        )
+
+    invoice = create_cummulative_invoice(invoices, firma, operater, naplatni_uredjaj, calculate_totals, calculate_tax_groups)
+
+    invoice.tip_fakture_id = Faktura.TYPE_CUMMULATIVE
+    invoice.customer_invoice_view = enums.CustomerInvoiceView.REGULAR_INVOICES.value
+
+    return invoice
 
 def get_final_invoice(invoice_data, firma, opreater, naplatni_uredjaj, advance_invoice_id, calculate_totals,
                       calculate_tax_groups):
@@ -736,7 +848,7 @@ def get_invoice_from_dict(
         update_invoice_totals_from_items(faktura, faktura.stavke)
     else:
         update_invoice_totals_from_dict(faktura, invoice_data)
-
+    
     faktura.credit_note_turnover_remaining = faktura.ukupna_cijena_prodajna
     faktura.credit_note_turnover_used = 0
 
@@ -1263,6 +1375,26 @@ def make_regular_invoice(invoice_data, firma, operater, naplatni_uredjaj, calcul
 
     return processing, invoice
 
+def make_cummulative_invoice(invoice_ids, firma, operater, naplatni_uredjaj, calculate_totals=True,
+                             calculate_tax_groups=True, fiscalization_date=None):
+    processing = InvoiceProcessing()
+    invoice = None
+
+    if fiscalization_date is None:
+        fiscalization_date = datetime.now(pytz.timezone('Europe/Podgorica'))
+
+    with processing.acquire_lock(naplatni_uredjaj.id) as _:
+        invoice = get_cummulative_invoice(
+            invoice_ids, firma, operater, naplatni_uredjaj, calculate_totals, calculate_tax_groups)
+
+        db.session.add(invoice)
+        db.session.commit()
+
+        invoice = fiscalize_invoice(invoice, fiscalization_date)
+        save_invoice_print(invoice)
+
+    return processing, invoice
+
 def make_order_invoice(
         invoice_data: dict,
         firma: Firma,
@@ -1472,6 +1604,70 @@ def update_invoice_amounts(invoice, corrected_invoice_data):
 
     db.session.add(invoice)
     db.session.commit()
+
+def create_cummulative_invoice(fakture, operater: Operater):
+    zbirna_faktura = Faktura()
+    zbirna_faktura.tip_fakture_id = Faktura.TYPE_CUMMULATIVE
+    zbirna_faktura.poreski_period = datetime.now(pytz.timezone('Europe/Podgorica'))
+    zbirna_faktura.poreski_period.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    zbirna_faktura.operater = operater
+    zbirna_faktura.status = Faktura.STATUS_STORED
+
+    
+    for clanica in fakture.clanice_fakture:
+        zbirna_faktura.clanice_zbirne_fakture.append(clanica)
+
+
+    for stavka in listaj_stavke_faktura(fakture):
+        nova_stavka = FakturaStavka()
+        nova_stavka.sifra = stavka.sifra
+        nova_stavka.kolicina = stavka.korigovana_kolicina
+        nova_stavka.izvor_kalkulacije = stavka.izvor_kalkulacije
+        nova_stavka.jedinicna_cijena_osnovna = stavka.jedinicna_cijena_osnovna
+        nova_stavka.jedinicna_cijena_rabatisana = stavka.jedinicna_cijena_rabatisana
+        nova_stavka.jedinicna_cijena_puna = stavka.jedinicna_cijena_puna
+        nova_stavka.jedinicna_cijena_prodajna = stavka.jedinicna_cijena_prodajna
+        nova_stavka.porez_procenat = stavka.porez_procenat
+        nova_stavka.rabat_procenat = stavka.rabat_procenat
+        nova_stavka.ukupna_cijena_osnovna = stavka.korigovana_ukupna_cijena_osnovna
+        nova_stavka.ukupna_cijena_rabatisana = stavka.korigovana_ukupna_cijena_rabatisana
+        nova_stavka.ukupna_cijena_puna = stavka.korigovana_ukupna_cijena_puna
+        nova_stavka.ukupna_cijena_prodajna = stavka.korigovana_ukupna_cijena_prodajna
+        nova_stavka.porez_iznos = stavka.korigovani_porez_iznos
+        nova_stavka.rabat_iznos_osnovni = stavka.korigovani_rabat_iznos_osnovni
+        nova_stavka.rabat_iznos_prodajni = stavka.korigovani_rabat_iznos_prodajni
+        nova_stavka.naziv = stavka.naziv
+        nova_stavka.credit_note_turnover_used = 0
+        nova_stavka.credit_note_turnover_remaining = stavka.korigovani_rabat_iznos_prodajni
+        nova_stavka.jedinica_mjere_id = stavka.jedinica_mjere_id
+        nova_stavka.tax_exemption_reason_id = stavka.tax_exemption_reason_id
+        nova_stavka.magacin_zaliha_id = stavka.magacin_zaliha_id
+        nova_stavka.credit_note_turnover_remaining = stavka.ukupna_cijena_prodajna
+        nova_stavka.credit_note_turnover_used = 0
+        nova_stavka.tax_exemption_amount = stavka.tax_exemption_amount
+        nova_stavka.corrected_tax_exemption_amount = stavka.corrected_tax_exemption_amount
+        zbirna_faktura.stavke.append(nova_stavka)
+    
+    update_invoice_totals_from_items(zbirna_faktura, listaj_stavke_faktura(fakture), use_corrected_amounts=True)
+
+    zbirna_faktura.credit_note_turnover_remaining = zbirna_faktura.ukupna_cijena_prodajna
+    zbirna_faktura.credit_note_turnover_used = 0
+
+    payment_method = PaymentMethod()
+    payment_method.payment_method_type_id = fakture[0].payment_methods[0].payment_method_type_id
+    payment_method.amount = zbirna_faktura.ukupna_cijena_prodajna
+    zbirna_faktura.payment_methods.append(payment_method)
+
+    #Sta je ovo tacno?
+    grupe_poreza = formiraj_korigovane_grupe_poreza(zbirna_faktura)
+    for grupa_poreza in grupe_poreza:
+        zbirna_faktura.grupe_poreza.append(grupa_poreza)
+
+    db.session.add(zbirna_faktura)
+    db.session.commit()
+    
+    return zbirna_faktura
+
 
 
 def create_cummulative_invoice_from_corrected_invoice(korigovana_faktura: Faktura, operater: Operater):

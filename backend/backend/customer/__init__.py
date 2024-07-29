@@ -82,6 +82,14 @@ def setup_customer_frontend_routes(app: Bottle):
         method='POST',
         callback=endpoints.api__faktura__order__dodaj)
     app.route(
+        path='/api/customer/faktura/order/listaj',
+        method='GET',
+        callback=endpoints.api__faktura__order__listaj)
+    app.route(
+        path='/api/customer/faktura/order/create',
+        method='POST',
+        callback=endpoints.api__faktura__order__create)
+    app.route(
         path='/api/customer/faktura/dodaj',
         method='POST',
         callback=endpoints.api__faktura__dodaj)
