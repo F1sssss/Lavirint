@@ -7,8 +7,6 @@ from backend.logging import cli_logger
 def requires_authentication(func):
     def wrapper(*args, **kwargs):
 
-        print(bottle.request.session)
-
 #       if 'operater_id' not in bottle.request.session:
 #           bottle.response.status = 401
 #           return bottle.response

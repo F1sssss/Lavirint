@@ -60,6 +60,10 @@ class KomitentSchema(BaseSchema):
         model = models.Komitent
         include_relationships = False
 
+class GrupaOrderaSchema(BaseSchema):
+    class Meta(BaseSchema.Meta):
+        model = models.GrupaOrdera
+        include_relationships = False
 
 class VrstaPlacanjaSchema(BaseSchema):
     class Meta(BaseSchema.Meta):

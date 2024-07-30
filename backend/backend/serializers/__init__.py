@@ -61,7 +61,7 @@ invoice_view_schema = definitions.FakturaSchema(only=(
     'poreski_period'
 ))
 
-
+grupa_ordera_schema = definitions.GrupaOrderaSchema()
 grupa_artikala_schema = definitions.GrupaArtikalaSchema()
 artikal_schema = definitions.ArtikalSchema()
 jedinica_mjere_schema = definitions.JedinicaMjereSchema()

@@ -184,6 +184,7 @@ def generate_register_invoice_request(faktura: models.Faktura, iic_signature) ->
     xml_header.set('UUID', faktura.uuid)
 
     xml_invoice = etree.SubElement(xml_request, 'Invoice')
+    #TODO: PROMIJNITI NAKON TESTIRANJA
     xml_invoice.set('InvType', 'INVOICE' if faktura.tip_fakture.efi_kod == 'ORDER' else faktura.tip_fakture.efi_kod)
     xml_invoice.set('TypeOfInv', 'CASH' if faktura.is_cash else 'NONCASH')
     # xml_invoice.set('TypeOfSelfiss', '')  # min=0, max=1
@@ -269,7 +270,8 @@ def generate_register_invoice_request(faktura: models.Faktura, iic_signature) ->
     for payment_method in faktura.payment_methods:
         xml_pay_method = etree.SubElement(xml_pay_methods, 'PayMethod')
         xml_pay_method.set('Amt', calc.format_decimal(payment_method.amount, 2, 2))
-        xml_pay_method.set('Type', payment_method.payment_method_type.efi_code)
+        #TODO: Promijeniti ovo van testiranja!!
+        xml_pay_method.set('Type', 'BANKNOTE' if payment_method.payment_method_type.efi_code == 'ORDER' else payment_method.payment_method_type.efi_code)
         if payment_method.payment_method_type_id == 7:
             xml_pay_method.set('AdvIIC', payment_method.advance_invoice.ikof)
 

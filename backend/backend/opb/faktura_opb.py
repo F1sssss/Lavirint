@@ -509,9 +509,9 @@ def get_efi_ordinal_number(invoice: Faktura, year: int, session: sqlalchemy.orm.
 def get_internal_ordinal_number(invoice: Faktura, year: int, session: sqlalchemy.orm.Session):
     if invoice.tip_fakture_id == Faktura.TYPE_ADVANCE:
         type_id = enums.OrdinalNumberCounterType.ADVANCE_INVOICES.value
-    elif invoice.tip_fakture_id == Faktura.TYPE_REGULAR:
+    elif invoice.tip_fakture_id == Faktura.TYPE_REGULAR and invoice.is_cash:
         type_id = enums.OrdinalNumberCounterType.REGULAR_INVOICES.value
-    elif invoice.tip_fakture_id == Faktura.TYPE_ORDER:
+    elif invoice.tip_fakture_id == Faktura.TYPE_REGULAR and invoice.payment_methods[0].payment_method_type_id == PaymentMethod.TYPE_ORDER:
         type_id = enums.OrdinalNumberCounterType.ORDER_INVOICES.value
     #TODO: Ispraviti tip fakture za kumulativne fakture
     elif invoice.tip_fakture_id == Faktura.TYPE_CUMMULATIVE:
@@ -730,7 +730,7 @@ def get_order_invoice(invoice_data, firma, operater, naplatni_uredjaj, calculate
     invoice = get_invoice_from_dict(
         invoice_data, firma, operater, naplatni_uredjaj, calculate_totals, calculate_tax_groups)
 
-    invoice.tip_fakture_id = Faktura.TYPE_ORDER
+    invoice.tip_fakture_id = Faktura.TYPE_REGULAR
     invoice.customer_invoice_view = enums.CustomerInvoiceView.ORDER_INVOICES.value
 
     return invoice
@@ -747,7 +747,7 @@ def get_cummulative_invoice(invoice_ids, firma, operater, naplatni_uredjaj, calc
 
     invoices = db.session.query(Faktura).filter(Faktura.id.in_(invoice_ids['invoice_ids'])).all()
 
-    #Da li raisati exception ako nema faktura?
+    #TODO: @Aco Da li raisati exception ako nema faktura?
     if len(invoices) == 0:
         raise InvoiceProcessingException(
             messages={
@@ -820,12 +820,6 @@ def get_invoice_from_dict(
 
     faktura.komitent_id = invoice_data.get('komitent_id')
     
-    #TODO: Uncomment this later
-    #if not faktura.is_cash and faktura.komitent_id is None:
-    #    raise InvoiceProcessingException({
-    #        i18n.LOCALE_SR_LATN_ME: 'Kupac mora biti definisan kod bezgotovinskih računa.',
-    #        i18n.LOCALE_EN_US: 'Kupac mora biti definisan kod bezgotovinskih računa.'
-    #    })
 
     if faktura.komitent_id is not None:
         faktura.komitent = get_buyer_by_id(firma, faktura.komitent_id)
@@ -870,6 +864,13 @@ def get_invoice_from_dict(
 
     if len(faktura.payment_methods) == 1:
         faktura.payment_methods[0].amount = faktura.ukupna_cijena_prodajna
+
+    
+    if not (faktura.is_cash or all(payment_method.payment_method_type.efi_code == 'ORDER' for payment_method in faktura.payment_methods)) and faktura.komitent_id is None:
+        raise InvoiceProcessingException({
+            i18n.LOCALE_SR_LATN_ME: 'Kupac mora biti definisan kod bezgotovinskih računa.',
+            i18n.LOCALE_EN_US: 'Kupac mora biti definisan kod bezgotovinskih računa.'
+        })
 
     if calculate_tax_groups:
         for tax_group in get_tax_groups_from_items(faktura):
@@ -1627,7 +1628,6 @@ def create_cummulative_invoice(
     zbirna_faktura.firma_id = firma.id
     zbirna_faktura.naplatni_uredjaj_id = naplatni_uredjaj.id
     zbirna_faktura.naplatni_uredjaj = naplatni_uredjaj
-    zbirna_faktura.status = Faktura.STATUS_STORED
     
     #TODO: sta radimo sa ovim poljima ukoliko se razlikuju izmedju faktura?
     zbirna_faktura.napomena = invoices[0].napomena 
