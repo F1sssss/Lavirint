@@ -1,0 +1,204 @@
+<div class="modal-header d-md-none p-0 w-100 d-flex justify-content-between">
+  <button
+    type="button"
+    class="btn btn-light border"
+    data-ng-click="$close({ isConfirmed: false })"
+  >
+    <i class="fa fa-arrow-left"></i> Odustani
+  </button>
+  <button type="button" class="btn btn-primary" data-ng-click="ctrl.confirm();">
+    Potvrdi
+  </button>
+</div>
+<div class="modal-body">
+  <div class="card">
+    <div class="card-header">
+      <div class="fw-bold text-uppercase">Načini plaćanja</div>
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-12">
+          <label for="" class="form-label">Tip računa</label>
+          <div class="btn-group w-100">
+            <button
+              type="button"
+              class="btn"
+              ng-class="{ 'btn-primary': ctrl.is_cash, 'btn-light border': !ctrl.is_cash }"
+              ng-model="ctrl.is_cash"
+              uib-btn-radio="true"
+              ng-click="ctrl.is_cash = true"
+              ng-disabled="ctrl.payment_methods.length"
+            >
+              Gotovinski
+            </button>
+            <button
+              type="button"
+              class="btn"
+              ng-class="{ 'btn-primary': !ctrl.is_cash, 'btn-light border': ctrl.is_cash }"
+              ng-model="ctrl.is_cash"
+              uib-btn-radio="false"
+              ng-click="ctrl.is_cash = false"
+              ng-disabled="ctrl.payment_methods.length"
+            >
+              Bezgotovinski
+            </button>
+          </div>
+        </div>
+        <div class="col-12">
+          <label for="" class="form-label">Odabir načina plaćanja</label>
+          <div class="position-relative">
+            <payment-method-typeahead
+              is-cash="ctrl.is_cash"
+              on-select="ctrl.onPaymentMethodTypeaheadSelect($item, $model, $label)"
+            >
+            </payment-method-typeahead>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body" data-ng-if="ctrl.payment_methods.length === 0">
+      <div class="card card-body bg-light text-muted">
+        Nije definisan nijedan način plaćanja.
+      </div>
+    </div>
+    <div
+      class="card-body"
+      ng-repeat="payment_method in ctrl.payment_methods"
+      data-ng-if="ctrl.payment_methods.length > 0"
+    >
+      <div ng-form="innerForm" novalidate>
+        <label for="" class="form-label">
+          {{ payment_method.payment_method_type.description }}
+        </label>
+        <div class="row g-3">
+          <div class="col-12 col-xs-6 col-lg-3">
+            <input
+              type="number"
+              class="form-control"
+              name="amount"
+              ng-model="payment_method.amount"
+              required
+              ng-min="0.0001"
+              ng-disabled="payment_method.payment_method_type_id === 7"
+              ng-model-options="{ allowInvalid: true }"
+              ng-change="ctrl.recalculatePaymentMethodTotals(false);"
+            />
+            <div
+              ng-messages="innerForm.amount.$error"
+              role="alert"
+              class="invalid-feedback"
+            >
+              <div
+                ng-message="min"
+                ng-if="payment_method.payment_method_type_id === 7"
+              >
+                Vrijednost mora biti veća od 0. Korigujte stavke avansa.
+              </div>
+              <div
+                ng-message="min"
+                ng-if="payment_method.payment_method_type_id === 7"
+              >
+                Vrijednost mora biti veća od 0. Ažurirajte vrijednost ili
+                obrišite stavku.
+              </div>
+              <div ng-messages-include="error-messages"></div>
+            </div>
+          </div>
+          <div
+            class="col-12 col-xs-6 col-lg-2"
+            ng-if="payment_method.payment_method_type_id !== 7"
+          >
+            <button
+              type="button"
+              class="btn btn-light border d-block w-100"
+              data-ng-click="ctrl.deletePaymentMethod($index);"
+            >
+              <i class="fa fa-trash"></i> Obriši
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <label for="" class="form-label"> Ukupan iznos računa </label>
+      <div class="row g-3">
+        <div class="col-12 col-xs-6 col-lg-3">
+          <input
+            type="text"
+            class="form-control"
+            disabled
+            ng-model="ctrl.total"
+          />
+          <div
+            ng-messages="ctrl.form.datumValute.$error"
+            role="alert"
+            class="invalid-feedback"
+          >
+            <div ng-messages-include="error-messages"></div>
+          </div>
+        </div>
+        <div class="col-12 col-xs-6 col-lg-2">
+          <button
+            type="button"
+            class="btn btn-light border w-100 d-block"
+            data-ng-click="ctrl.divideEqually();"
+          >
+            Rasporedi
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body" ng-if="ctrl.payment_methods_total_difference > 0">
+      <label for="" class="form-label"> Neraspoređeni iznos računa </label>
+      <div class="row g-3">
+        <div class="col-7 col-sm-5 col-md-4 col-xl-3">
+          <input
+            type="number"
+            class="form-control show-validation"
+            disabled
+            max="0"
+            ng-model="ctrl.payment_methods_total_difference"
+          />
+        </div>
+      </div>
+      <div class="invalid-feedback show-validation ng-active">
+        Iznosi u načinima plaćanja su zbirno manji od ukupne cijene računa.
+      </div>
+    </div>
+    <div class="card-body" ng-if="ctrl.payment_methods_total_difference < 0">
+      <label for="" class="form-label"> Višak </label>
+      <div class="row g-3">
+        <div class="col-7 col-sm-5 col-md-4 col-xl-3">
+          <input
+            type="number"
+            class="form-control show-validation"
+            disabled
+            min="0"
+            ng-model="ctrl.payment_methods_total_difference"
+          />
+        </div>
+      </div>
+      <div class="invalid-feedback show-validation ng-active">
+        Iznosi u načinima plaćanja su zbirno veći od ukupne cijene računa.
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer d-none d-md-block">
+  <div class="text-end">
+    <button
+      type="button"
+      class="btn btn-light border"
+      data-ng-click="$close({ isConfirmed: false })"
+    >
+      <i class="fa fa-arrow-left"></i> Odustani
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-ng-click="ctrl.confirm()"
+    >
+      Potvrdi
+    </button>
+  </div>
+</div>
