@@ -170,6 +170,10 @@ def setup_customer_frontend_routes(app: Bottle):
         method='GET',
         callback=endpoints.api__frontend__invoice__regular__all)
     app.route(
+        path='/api/customer/frontend/order/all',
+        method='GET',
+        callback=endpoints.api__frontend__order__all)
+    app.route(
         path='/api/customer/frontend/invoice/create/type1',
         method='GET',
         callback=endpoints.api__frontend__invoice__create__type1)

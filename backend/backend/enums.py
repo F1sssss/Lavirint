@@ -7,6 +7,7 @@ class CustomerInvoiceView(Enum):
     CREDIT_NOTES = 3
     REGULAR_INVOICE_TEMPLATES = 4
     ORDER_INVOICES = 5
+    CUMMULATIVE_INVOICES = 6
 
 
 class OrdinalNumberCounterType(Enum):
