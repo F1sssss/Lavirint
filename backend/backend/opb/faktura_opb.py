@@ -217,7 +217,7 @@ def get_invoice_by_company_tin_and_iic(company_tin, iic) -> Faktura:
         .first()
 
 def validan_format_faktura(faktura_ids: list) -> bool:
-    if not isinstance(invoice_ids['invoice_ids'], list):
+    if not isinstance(faktura_ids['invoice_ids'], list):
         raise InvoiceProcessingException(
             messages={
                 i18n.LOCALE_SR_LATN_ME: "Neispravan format podataka.",
@@ -611,6 +611,23 @@ def get_payment_methods_from_dict(data: dict):
         yield get_payment_method_from_dict(row)
 
 
+def get_payment_methods_list_from_dict(data: dict):
+    data = data.get('payment_methods')
+    if not isinstance(data, list) or len(data) == 0:
+        raise InvoiceProcessingException(
+            messages={
+                i18n.LOCALE_SR_LATN_ME: 'Faktura nije fiskalizovana jer nedostaje vrsta plaćanja.',
+                i18n.LOCALE_EN_US: 'Invoice was not fiscalised because it is missing payment type.',
+            }
+        )
+
+    payment_methods = []
+    for row in data:
+        payment_methods.append(get_payment_method_from_dict(row))
+
+    return payment_methods
+
+
 def get_currency_from_dict(data: dict) -> Valuta:
     return db.session.query(Valuta).get(data['valuta_id'])
 
@@ -761,7 +778,7 @@ def get_order_invoice(invoice_data, firma, operater, naplatni_uredjaj, calculate
 def get_cummulative_invoice(invoices_data, firma, operater, naplatni_uredjaj, calculate_totals, calculate_tax_groups):
     
     if (validan_format_faktura(invoices_data)):
-        invoices = listaj_fakture_po_idevima(invoice_data['invoice_ids'])
+        invoices = listaj_fakture_po_idevima(invoices_data['invoice_ids'])
 
     if (sve_fakture_su_order(invoices)):
         raise InvoiceProcessingException(
@@ -779,7 +796,7 @@ def get_cummulative_invoice(invoices_data, firma, operater, naplatni_uredjaj, ca
             }
         )
 
-    payment_methods = get_payment_methods_from_dict(invoices_data)
+    payment_methods = get_payment_methods_list_from_dict(invoices_data)
 
     invoice = create_cummulative_invoice(invoices, payment_methods, invoices_data['napomena'], firma, operater, naplatni_uredjaj, calculate_totals, calculate_tax_groups)
 
@@ -1694,7 +1711,8 @@ def create_cummulative_invoice(
     zbirna_faktura.credit_note_turnover_remaining = zbirna_faktura.ukupna_cijena_prodajna
     zbirna_faktura.credit_note_turnover_used = 0
 
-    zbirna_faktura.payment_methods = payment_methods
+    for payment_method in payment_methods:
+        zbirna_faktura.payment_methods.append(payment_method)
 
     grupe_poreza = get_tax_groups_from_items(zbirna_faktura)
     for grupa_poreza in grupe_poreza:
@@ -1759,6 +1777,7 @@ def create_cummulative_invoice_from_corrected_invoice(korigovana_faktura: Faktur
     payment_method = PaymentMethod()
     payment_method.payment_method_type_id = korigovana_faktura.payment_methods[0].payment_method_type_id
     payment_method.amount = zbirna_faktura.ukupna_cijena_prodajna
+
     zbirna_faktura.payment_methods.append(payment_method)
 
     grupe_poreza = formiraj_korigovane_grupe_poreza(korigovana_faktura)
