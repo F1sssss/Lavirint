@@ -83,12 +83,20 @@ def setup_customer_frontend_routes(app: Bottle):
         callback=endpoints.api__grupa_ordera__dodaj)
     app.route(
         path='/api/customer/order_grupa/stavka/dodaj',
-        method='GET',
+        method='POST',
         callback=endpoints.api__grupa_ordera__stavka__dodaj)
     app.route(
         path='/api/customer/order_grupa/stavka/izbrisi',
         method='POST',
         callback=endpoints.api__grupa_ordera__stavka__izbrisi)
+    app.route(
+        path='/api/customer/order_grupa/<param_grupa_ordera_id>/listaj',
+        method='GET',
+        callback=endpoints.api__grupa_ordera__param_grupa_ordera_id__listaj)
+    app.route(
+        path='/api/customer/order_grupa/<param_grupa_ordera_id>/izmijeni',
+        method='POST',
+        callback=endpoints.api__grupa_ordera__param_grupa_ordera_id__izmijeni)
     app.route(
         path='/api/customer/faktura/listaj',
         method='GET',

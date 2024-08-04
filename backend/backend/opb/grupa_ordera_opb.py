@@ -4,8 +4,10 @@ from sqlalchemy import exc, func
 
 from backend.db import db
 from backend.models import OrderGrupa, OrderGrupaStavka
-from backend.opb.faktura_opb import listaj_fakturu_po_idu, sve_fakture_su_order 
+from backend.opb.faktura_opb import listaj_fakture_po_idevima, sve_fakture_su_order 
 
+
+from backend.models import OrderGrupa, PaymentMethod
 from backend import i18n
 
 
@@ -28,7 +30,6 @@ class OrderGrupaProcessingError(Exception):
         return self.messages.get(locale)
 
 
-
 def dodaj_grupu_ordera(podaci, operater):
     try:
         order_grupa = OrderGrupa()
@@ -43,13 +44,10 @@ def dodaj_grupu_ordera(podaci, operater):
 
     except exc.SQLAlchemyError as e:
         db.session.rollback()
-        return {
-            'podaci': podaci,
-            'greska': {
-                'opis': str(e),
-                'greska': 1
-            }
-        }
+        raise OrderGrupaProcessingError({
+            i18n.LOCALE_EN_US: 'Error while adding order group',
+            i18n.LOCALE_SR_LATN_ME: 'Greška prilikom dodavanja grupe ordera',
+        })
 
 def order_grupa_po_id(order_grupa_id, operater):
     return db.session.query(OrderGrupa) \
@@ -57,45 +55,14 @@ def order_grupa_po_id(order_grupa_id, operater):
         .filter(OrderGrupa.naplatni_uredjaj_id == operater.naplatni_uredjaj_id) \
         .first()
 
+
 def order_grupa_po_naplatnom_uredjaju_query(naplatni_uredjaj_id, upit_za_pretragu):
-
-    query = db.session.query(OrderGrupa) \
-        .filter(OrderGrupa.naplatni_uredjaj_id == naplatni_uredjaj_id)
-
-    if name is not None:
-        query = query.filter(Komitent.naziv.contains(name)) \
-
-    return query
+    return db.session.query(OrderGrupa) \
+        .filter(OrderGrupa.naplatni_uredjaj_id == naplatni_uredjaj_id) \
+        .filter(func.lower(OrderGrupa.naziv).like(f'%{upit_za_pretragu.lower()}%')) 
+        
 
 def po_id__izmijeni(order_grupa_id, podaci, operater):
-    try:
-        data = {
-            "naziv": podaci['naziv']
-        }
-
-        db.session.query(OrderGrupa) \
-            .filter(OrderGrupa.id == order_grupa_id) \
-            .filter(OrderGrupa.naplatni_uredjaj_id == operater.naplatni_uredjaj_id) \
-            .update(data)
-
-        db.session.commit()
-
-        return {
-            'podaci': podaci,
-            'greska': 0
-        }
-
-    except exc.SQLAlchemyError as e:
-        db.session.rollback()
-        return {
-            'podaci': podaci,
-            'greska': {
-                'opis': str(e),
-                'greska': 1
-            }
-        }
-
-def dodaj_fakture_u_grupu_ordera(order_grupa_id, podaci, operater):
     try:
         order_grupa = order_grupa_po_id(order_grupa_id, operater)
 
@@ -105,65 +72,101 @@ def dodaj_fakture_u_grupu_ordera(order_grupa_id, podaci, operater):
                 i18n.LOCALE_SR_LATN_ME: 'Grupa ordera ne postoji',
             })
 
-        for faktura_id in podaci['fakture']:
+        order_grupa.naziv = podaci['naziv']
 
-            faktura = listaj_fakturu_po_idu(faktura_id)
+        db.session.commit()
+        return order_grupa
 
-            if (sve_fakture_su_order(faktura) == False):
-                raise OrderGrupaProcessingError({
-                    i18n.LOCALE_EN_US: 'All invoices must be in order',
-                    i18n.LOCALE_SR_LATN_ME: 'Sve fakture moraju biti tipa order',
-                })
+    except exc.SQLAlchemyError as e:
+        db.session.rollback()
+        raise OrderGrupaProcessingError({
+            i18n.LOCALE_EN_US: 'Error while updating order group',
+            i18n.LOCALE_SR_LATN_ME: 'Greška prilikom izmjene grupe ordera',
+        })
 
 
-            if faktura is None:
-                raise OrderGrupaProcessingError({
-                    i18n.LOCALE_EN_US: 'Invoice does not exist',
-                    i18n.LOCALE_SR_LATN_ME: 'Faktura ne postoji',
-                })
+def dodaj_fakture_u_grupu_ordera(podaci, operater):
+    try:
+        order_grupa = order_grupa_po_id(podaci['order_grupa_id'], operater)
 
+        if order_grupa is None:
+            raise OrderGrupaProcessingError({
+                i18n.LOCALE_EN_US: 'Order group does not exist',
+                i18n.LOCALE_SR_LATN_ME: 'Grupa ordera ne postoji',
+            })
+
+        fakture = listaj_fakture_po_idevima(podaci['fakture'])
+
+        if(sve_fakture_su_order(fakture) == False):
+            raise OrderGrupaProcessingError({
+                i18n.LOCALE_EN_US: 'All invoices must be in order',
+                i18n.LOCALE_SR_LATN_ME: 'Sve fakture moraju biti tipa order',
+            })
+
+        if (order_stavka_dio_order_grupe(order_grupa, fakture, operater) == True):
+            raise OrderGrupaProcessingError({
+                i18n.LOCALE_EN_US: 'Invoices are already in the order group',
+                i18n.LOCALE_SR_LATN_ME: 'Fakture su već u grupi ordera',
+            })
+            
+        if fakture is None:
+            raise OrderGrupaProcessingError({
+                i18n.LOCALE_EN_US: 'Invoice does not exist',
+                i18n.LOCALE_SR_LATN_ME: 'Faktura ne postoji',
+            })
+
+        for faktura in fakture:
             order_grupa_stavka = OrderGrupaStavka()
-            order_grupa_stavka.order_grupa_id = order_grupa_id
-            order_grupa_stavka.faktura_id = faktura_id
+            order_grupa_stavka.order_grupa = order_grupa
+            order_grupa_stavka.faktura = faktura
 
             order_grupa.stavke.append(order_grupa_stavka)
 
         db.session.commit()
-        return {
-            'podaci': podaci,
-            'greska': 0
-        }
+        
+        return order_grupa 
 
     except exc.SQLAlchemyError as e:
         db.session.rollback()
-        return {
-            'podaci': podaci,
-            'greska': {
-                'opis': str(e),
-                'greska': 1
-            }
-        }
+        raise OrderGrupaProcessingError({
+            i18n.LOCALE_EN_US: 'Error adding invoices to order group',
+            i18n.LOCALE_SR_LATN_ME: 'Greška prilikom dodavanja faktura u grupu ordera',
+        })
 
-def izbrisi_fakture_iz_grupe_ordera(order_grupa_id, podaci, operater):
+
+def izbrisi_fakture_iz_grupe_ordera( podaci, operater):
     try:
-        for faktura_id in podaci['fakture']:
-            db.session.query(OrderGrupaStavka) \
-                .filter(OrderGrupaStavka.order_grupa_id == order_grupa_id) \
-                .filter(OrderGrupaStavka.faktura_id == faktura_id) \
-                .delete()
+        query = db.session.query(OrderGrupaStavka) \
+            .filter(OrderGrupaStavka.faktura_id.in_(podaci['fakture'])) \
+            .filter(OrderGrupaStavka.order_grupa_id == podaci['order_grupa_id']) \
+            .delete(synchronize_session='fetch')
 
         db.session.commit()
-        return {
-            'podaci': podaci,
-            'greska': 0
-        }
-
     except exc.SQLAlchemyError as e:
         db.session.rollback()
-        return {
-            'podaci': podaci,
-            'greska': {
-                'opis': str(e),
-                'greska': 1
-            }
-        }
+        raise OrderGrupaProcessingError({
+            i18n.LOCALE_EN_US: 'Error deleting invoices from order group',
+            i18n.LOCALE_SR_LATN_ME: 'Greška prilikom brisanja faktura iz grupe ordera',
+        })
+
+
+def listaj_order_grupe_po_stavkama(order_grupa_stavke, operater):
+    return db.session.query(OrderGrupa) \
+        .join(OrderGrupaStavka) \
+        .filter(OrderGrupaStavka.faktura_id.in_(order_grupa_stavke)) \
+        .filter(OrderGrupa.naplatni_uredjaj_id == operater.naplatni_uredjaj_id) \
+        .all()
+
+
+def order_stavka_dio_order_grupe(order_grupa_id,order_grupa_stavke, operater):
+    if type(order_grupa_stavke) is not list:
+        order_grupa_stavke_id = [order_grupa_stavke.id]
+    else:
+        order_grupa_stavke_id = [order_grupa_stavka.id for order_grupa_stavka in order_grupa_stavke]
+
+    order_grupe = listaj_order_grupe_po_stavkama(order_grupa_stavke_id, operater)
+
+    if len(order_grupe) > 0:
+        return True
+    else:
+        return False

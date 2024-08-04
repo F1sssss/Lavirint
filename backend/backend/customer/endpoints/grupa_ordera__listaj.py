@@ -10,6 +10,7 @@ from backend.models import OrderGrupa, OrderGrupaStavka
 from backend.opb import grupa_ordera_opb 
 from backend.opb.helpers import dohvati_stranicu
 from backend.podesavanja import podesavanja
+from backend.serializers import grupa_ordera_schema
 
 
 @requires_authentication
@@ -34,12 +35,7 @@ def serialize_order_groups(data):
     serialized_order_groups = []
 
     for order_group in data:
-        serialized_order_group = {
-            'id': order_group.id,
-            'name': order_group.name
-       }
-
-        serialized_order_groups.append(serialized_order_group)
+        serialized_order_groups.append(grupa_ordera_schema.dump(order_group))
     
     return serialized_order_groups
 
@@ -48,12 +44,7 @@ def serialize_response(paged_data):
     serialized_response = []
 
     for order_group in paged_data['stavke']:
-        serialized_order_group = {
-            'id': order_group.id,
-            'name': order_group.name
-       }
-
-        serialized_response.append(serialized_order_group)
+        serialized_response.append(grupa_ordera_schema.dump(order_group))
 
     return {
         'broj_stranice': paged_data['broj_stranice'],

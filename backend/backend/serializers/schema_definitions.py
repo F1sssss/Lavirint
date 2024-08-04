@@ -60,7 +60,14 @@ class KomitentSchema(BaseSchema):
         model = models.Komitent
         include_relationships = False
 
+
+class OrderGrupaStavkaSchema(BaseSchema):
+    class Meta(BaseSchema.Meta):
+        model = models.OrderGrupaStavka
+        include_relationships = False
+
 class GrupaOrderaSchema(BaseSchema):
+    stavke = fields.Nested(OrderGrupaStavkaSchema, many=True)
     class Meta(BaseSchema.Meta):
         model = models.OrderGrupa
         include_relationships = False
