@@ -143,6 +143,9 @@ function ApiService($http, $q, invoiceFactory) {
 
   api.order_groups = {};
   api.order_groups.all = apiGetOrderGroups;
+  api.order_groups.create = createOrderGroup;
+  api.order_groups.edit = editOrderGroup;
+  api.order_groups.addOrderToGroup = addOrderToGroup;
 
   return api;
 
@@ -162,6 +165,8 @@ function ApiService($http, $q, invoiceFactory) {
 
     return httpPromise;
   }
+
+  function _getRequestWithErrorHandling(requestObject) {}
 
   function apiKorisnikListaj() {
     return _getRequest({
@@ -800,6 +805,38 @@ function ApiService($http, $q, invoiceFactory) {
       url: "/api/customer/order_grupa/listaj",
       params: {
         upit_za_pretragu: query,
+      },
+    });
+  }
+
+  function createOrderGroup(name) {
+    return _getRequest({
+      method: "POST",
+      url: "/api/customer/order_grupa/dodaj",
+      data: {
+        naziv: name,
+        komitent_id: 123, // TODO: remove
+      },
+    });
+  }
+
+  function editOrderGroup(name, id) {
+    return _getRequest({
+      method: "POST",
+      url: `/api/customer/order_grupa/${id}/izmijeni`,
+      data: {
+        naziv: name,
+      },
+    });
+  }
+
+  function addOrderToGroup(order_id, group_id) {
+    return _getRequest({
+      method: "POST",
+      url: "/api/customer/order_grupa/stavka/dodaj",
+      data: {
+        order_grupa_id: group_id,
+        fakture: [order_id],
       },
     });
   }

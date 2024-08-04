@@ -182,7 +182,7 @@ function FakturaPosUnosController(
     podaci.datumvalute = angular.copy(currentTime);
     podaci.datumvalute = moment(podaci.datumvalute).format();
 
-    fisGui
+    return fisGui
       .wrapInLoader(function () {
         const api_name =
           paymentMethodTypeId === 6
@@ -192,6 +192,8 @@ function FakturaPosUnosController(
         return api[api_name](podaci)
           .then(function (data) {
             if (data.result.is_success) {
+              ctrl.created_invoice_id = data.invoice.id;
+
               return stampac.stampajFakturu(
                 data.invoice.id,
                 fisConfig.user.podesavanja_aplikacije.podrazumijevani_tip_stampe
@@ -219,8 +221,37 @@ function FakturaPosUnosController(
   }
 
   function porudzbina() {
-    // fisModal.orderGroupModal(ctrl.racun).then((data) => console.log(data));
+    if (ctrl.racun.stavke.length === 0) {
+      fisModal.confirm({
+        headerText: "Račun je prazan",
+        headerIcon: "fa fa-exclamation-triangle text-danger",
+        bodyText: "Dodajte stavke pa probajte ponovo.",
+      });
+      return;
+    }
 
-    return upis(6);
+    let group_id;
+    fisModal
+      .orderGroupModal(ctrl.racun)
+      .then((data) => {
+        ctrl.created_invoice_id = null;
+        if (data.isConfirmed) group_id = data.group;
+        else return;
+
+        return upis(6);
+      })
+      .then(() => {
+        if (ctrl.created_invoice_id && group_id)
+          api.order_groups
+            .addOrderToGroup(ctrl.created_invoice_id, group_id)
+            .then((r) => {
+              if (!r.is_success)
+                return fisModal.confirm({
+                  headerIcon: "fa fa-exclamation-circle text-danger",
+                  headerText: "Grеška",
+                  bodyText: "Porudžbina nije ubačena u grupu.",
+                });
+            });
+      });
   }
 }

@@ -374,15 +374,36 @@ function FakturaUnosPoGrupamaController(
       return;
     }
 
-    sendData(paymentMethodTypeId);
+    return sendData(paymentMethodTypeId);
   }
 
   function porudzbina() {
-    // fisModal.orderGroupModal(ctrl.racun).then((data) => console.log(data));
+    if (ctrl.racun.stavke.length === 0) {
+      fisModal.confirm({
+        headeText: "Račun je prazan",
+        headerIcon: "fa fa-exclamation-triangle text-danger",
+        bodyText: "Dodajte stavke pa probajte ponovo.",
+      });
 
-    return upis(6);
+      return;
+    }
+
+    let group_id;
+
+    fisModal
+      .orderGroupModal(ctrl.racun)
+      .then((data) => {
+        ctrl.created_invoice_id = null;
+        if (data.isConfirmed) group_id = data.group;
+        else return;
+
+        return upis(6);
+      })
+      .then(() => {
+        if (ctrl.created_invoice_id && group_id)
+          api.order_groups.addOrderToGroup(ctrl.created_invoice_id, group_id);
+      });
   }
-
   function sendData(paymentMethodTypeId) {
     let podaci = angular.copy(ctrl.racun);
 
@@ -405,7 +426,7 @@ function FakturaUnosPoGrupamaController(
     podaci.datumvalute = moment(podaci.datumvalute).format();
 
     $rootScope.showLoader = true;
-    fisGui
+    return fisGui
       .wrapInLoader(function () {
         const api_name =
           paymentMethodTypeId === 6
@@ -418,6 +439,8 @@ function FakturaUnosPoGrupamaController(
       })
       .then(function (data) {
         if (data.result.is_success) {
+          ctrl.created_invoice_id = data.invoice.id;
+
           return stampac
             .stampajFakturu(
               data.invoice.id,

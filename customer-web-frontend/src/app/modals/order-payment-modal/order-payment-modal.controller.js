@@ -7,6 +7,7 @@ OrderPaymentModalController.$inject = [
   "$rootScope",
   "invoiceFactory",
   "api",
+  "fisModal",
   "orders",
   "total",
 ];
@@ -16,6 +17,7 @@ function OrderPaymentModalController(
   $rootScope,
   invoiceFactory,
   api,
+  fisModal,
   orders,
   total
 ) {
@@ -120,22 +122,31 @@ function OrderPaymentModalController(
 
     if (ctrl.findErrors()) return;
 
-    api.order.summerize({
-      invoice_ids: Object.keys($rootScope.selectedOrders).filter(
-        (k) => $rootScope.selectedOrders[k]
-      ),
-      is_cash: ctrl.is_cash,
-      payment_methods: ctrl.payment_methods.filter((pm) => pm.amount),
-      napomena: ctrl.napomena,
-    });
+    api.order
+      .summerize({
+        invoice_ids: Object.keys($rootScope.selectedOrders).filter(
+          (k) => $rootScope.selectedOrders[k]
+        ),
+        is_cash: ctrl.is_cash,
+        payment_methods: ctrl.payment_methods.filter((pm) => pm.amount),
+        napomena: ctrl.napomena,
+      })
+      .then((r) => {
+        if (!r.is_success)
+          return fisModal.confirm({
+            headerIcon: "fa fa-exclamation-circle text-danger",
+            headerText: "Grеška",
+            bodyText: r.message,
+          });
 
-    Object.keys($rootScope.selectedOrders).forEach(
-      (k) => delete $rootScope.selectedOrders[k]
-    );
+        Object.keys($rootScope.selectedOrders).forEach(
+          (k) => delete $rootScope.selectedOrders[k]
+        );
 
-    Object.keys($rootScope.selectedOrdersTotals).forEach(
-      (k) => delete $rootScope.selectedOrdersTotals[k]
-    );
+        Object.keys($rootScope.selectedOrdersTotals).forEach(
+          (k) => delete $rootScope.selectedOrdersTotals[k]
+        );
+      });
 
     $uibModalInstance.close({ isConfirmed: true });
   }
