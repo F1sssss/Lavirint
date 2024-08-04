@@ -132,11 +132,11 @@ function OrderPaymentModalController(
         napomena: ctrl.napomena,
       })
       .then((r) => {
-        if (!r.is_success)
+        if (!r.result.is_success)
           return fisModal.confirm({
             headerIcon: "fa fa-exclamation-circle text-danger",
             headerText: "Grеška",
-            bodyText: r.message,
+            bodyText: r.result.message,
           });
 
         Object.keys($rootScope.selectedOrders).forEach(

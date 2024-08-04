@@ -401,7 +401,16 @@ function FakturaUnosPoGrupamaController(
       })
       .then(() => {
         if (ctrl.created_invoice_id && group_id)
-          api.order_groups.addOrderToGroup(ctrl.created_invoice_id, group_id);
+          api.order_groups
+            .addOrderToGroup(ctrl.created_invoice_id, group_id)
+            .then((r) => {
+              if (!r.result.is_success)
+                return fisModal.confirm({
+                  headerIcon: "fa fa-exclamation-circle text-danger",
+                  headerText: "Grеška",
+                  bodyText: r.result.message,
+                });
+            });
       });
   }
   function sendData(paymentMethodTypeId) {

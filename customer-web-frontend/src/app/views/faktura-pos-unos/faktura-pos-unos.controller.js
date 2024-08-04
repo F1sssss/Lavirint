@@ -245,7 +245,7 @@ function FakturaPosUnosController(
           api.order_groups
             .addOrderToGroup(ctrl.created_invoice_id, group_id)
             .then((r) => {
-              if (!r.is_success)
+              if (!r.result.is_success)
                 return fisModal.confirm({
                   headerIcon: "fa fa-exclamation-circle text-danger",
                   headerText: "Grеška",
