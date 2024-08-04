@@ -1,61 +1,62 @@
 <div class="mb-2">
-    <label for="" class="form-label">Pretraga grupe</label>
-    <div class="position-relative">
-        <input
-            type="text"
-            class="form-control"
-            uib-typeahead="item as item.naziv for item in searchBuyers($viewValue)"
-            typeahead-template-url="app/directives/order-group-picker/order-group-picker-popup.template.html"
-            typeahead-focus-first="false"
-            typeahead-min-length="0"
-            typeahead-focus-on-select="false"
-            typeahead-wait-ms="300"
-            typeahead-on-select="onSelect($item, $model, $label); query = '';"
-            typeahead-additional-options="{ openOnFocus: true, clearOnFocus: true }"
-            ng-model="query"
-            ng-disabled="stavka.isDisabled">
-    </div>
+  <label for="" class="form-label">Pretraga grupe</label>
+  <div class="position-relative">
+    <input
+      type="text"
+      class="form-control"
+      uib-typeahead="item as item.naziv for item in searchBuyers($viewValue)"
+      typeahead-template-url="app/directives/order-group-picker/order-group-picker-popup.template.html"
+      typeahead-focus-first="false"
+      typeahead-min-length="0"
+      typeahead-focus-on-select="false"
+      typeahead-wait-ms="300"
+      typeahead-on-select="onSelect($item, $model, $label); query = '';"
+      typeahead-additional-options="{ openOnFocus: true, clearOnFocus: true }"
+      ng-model="query"
+      ng-disabled="stavka.isDisabled"
+    />
+  </div>
 </div>
 <div class="card bg-light" ng-if="!invoice.order_group">
-    <div class="card-body">
-        Grupa nije odabrana
-    </div>
+  <div class="card-body">Grupa nije odabrana</div>
 </div>
 <div ng-transclude></div>
 <div class="card bg-light" ng-if="invoice.order_group">
-    <div class="card-body">
-        <div class="fw-bold fs-5">
-            {{ invoice.order_group.naziv }}
-        </div>
-        <div>
-            {{ invoice.order_group.opis }}
-        </div>
-    </div>
+  <div class="card-body">
+    <div class="fw-bold fs-5">{{ invoice.order_group.naziv }}</div>
+    <div>{{ invoice.order_group.opis }}</div>
+  </div>
 </div>
 <div class="mt-2" ng-if="!disabled">
-    <div class="row g-2">
-        <div class="{{ buttonResponsiveClasses }}">
-            <button type="button"
-                    class="btn btn-light border w-100"
-                    data-ng-click="showCreateBuyerModal();">
-                <i class="fa fa-plus"></i> Novi kupac
-            </button>
-        </div>
-        <div class="{{ buttonResponsiveClasses }}">
-            <button type="button"
-                    class="btn btn-light border w-100"
-                    data-ng-click="removeBuyer()"
-                    ng-if="invoice.order_group !== null">
-                <i class="fa fa-close"></i> Poništi odabir
-            </button>
-        </div>
-        <div class="{{ buttonResponsiveClasses }}">
-            <button type="button"
-                    class="btn btn-light border w-100"
-                    data-ng-click="showBuyerUpdateModal()"
-                    ng-if="invoice.order_group !== null">
-                <i class="fa fa-edit"></i> Izmijeni podatke
-            </button>
-        </div>
+  <div class="row g-2">
+    <div class="{{ buttonResponsiveClasses }}">
+      <button
+        type="button"
+        class="btn btn-light border w-100"
+        data-ng-click="showCreateBuyerModal();"
+      >
+        <i class="fa fa-plus"></i> Nova grupa
+      </button>
     </div>
+    <div class="{{ buttonResponsiveClasses }}">
+      <button
+        type="button"
+        class="btn btn-light border w-100"
+        data-ng-click="removeBuyer()"
+        ng-if="invoice.order_group !== null"
+      >
+        <i class="fa fa-close"></i> Poništi odabir
+      </button>
+    </div>
+    <div class="{{ buttonResponsiveClasses }}">
+      <button
+        type="button"
+        class="btn btn-light border w-100"
+        data-ng-click="showBuyerUpdateModal()"
+        ng-if="invoice.order_group !== null"
+      >
+        <i class="fa fa-edit"></i> Izmijeni podatke
+      </button>
+    </div>
+  </div>
 </div>

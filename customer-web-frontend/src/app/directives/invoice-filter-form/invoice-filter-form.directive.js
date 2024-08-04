@@ -11,13 +11,14 @@ function invoiceFilterForm(fisConfig, api) {
         templateUrl: 'app/directives/invoice-filter-form/invoice-filter-form.template.html',
         scope: {
             filters: '=',
+            shouldHidePaymentMethod: "=",
             onConfirm: '&',
             onClose: '&',
             onBuyerSelect: '&'
         }
     }
 
-    function link(scope, element, attrs) {
+    function link(scope, element, attrs) {        
         scope.payment_method_types = angular.copy(fisConfig.payment_method_types);
 
         scope.onPaymentMethodSelect = function($item, $model, $label) {

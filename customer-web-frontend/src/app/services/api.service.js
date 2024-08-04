@@ -53,6 +53,7 @@ function ApiService($http, $q, invoiceFactory) {
 
   api.order = {};
   api.order.listaj = apiKomitentListaj;
+  api.order.summerize = api_order_summerize;
 
   api.profaktura = {};
   api.profaktura.listaj = apiProfakturaListaj;
@@ -247,7 +248,7 @@ function ApiService($http, $q, invoiceFactory) {
   function api__frontend__invoice__order__all(params) {
     return _getRequest({
       method: "GET",
-      url: "/api/customer/faktura/order/listaj",
+      url: "/api/customer/frontend/order/all",
       params: params,
     });
   }
@@ -322,6 +323,14 @@ function ApiService($http, $q, invoiceFactory) {
       method: "POST",
       url: "/api/customer/faktura/dodaj",
       data: podaciRacuna,
+    });
+  }
+
+  function api_order_summerize(data) {
+    return _getRequest({
+      method: "POST",
+      url: "/api/customer/faktura/order/create",
+      data,
     });
   }
 

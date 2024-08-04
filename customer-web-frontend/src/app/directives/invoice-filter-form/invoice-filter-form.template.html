@@ -67,7 +67,7 @@
                 </div>
             </div>
             <div class="w-100"></div>
-            <div class="col-12">
+            <div class="col-12" ng-if="!shouldHidePaymentMethod">
                 <label class="form-label">Načini plaćanja</label>
                 <payment-method-typeahead
                     on-select="onPaymentMethodSelect($item, $model, $label)"></payment-method-typeahead>

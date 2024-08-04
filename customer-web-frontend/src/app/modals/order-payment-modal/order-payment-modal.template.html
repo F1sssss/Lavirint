@@ -44,12 +44,15 @@
             </button>
           </div>
         </div>
-        <div class="col-12">
+        <div
+          ng-class="{'col-12': true, 'border-danger': ctrl.errors.payment_methods }"
+        >
           <label for="" class="form-label">Odabir načina plaćanja</label>
           <div class="position-relative">
             <payment-method-typeahead
               is-cash="ctrl.is_cash"
-              on-select="ctrl.onPaymentMethodTypeaheadSelect($item, $model, $label)"
+              on-select="ctrl.onPaymentMethodTypeaheadSelect($item, $model, $label); ctrl.findErrors();"
+              should-hide-order-type="true"
             >
             </payment-method-typeahead>
           </div>
@@ -181,6 +184,18 @@
       <div class="invalid-feedback show-validation ng-active">
         Iznosi u načinima plaćanja su zbirno veći od ukupne cijene računa.
       </div>
+    </div>
+  </div>
+  <div class="card mt-3">
+    <div class="card-header">
+      <label class="fw-bold text-uppercase">Napomena</label>
+    </div>
+    <div class="card-body">
+      <textarea
+        ng-model="ctrl.napomena"
+        class="form-control"
+        rows="5"
+      ></textarea>
     </div>
   </div>
 </div>
