@@ -781,10 +781,26 @@ function ApiService($http, $q, invoiceFactory) {
     });
   }
 
-  function apiGetOrderGroups() {
+  function apiGetOrderGroups(query) {
+    if (query) {
+      query = query.replaceAll("ć", "c");
+      query = query.replaceAll("Ć", "C");
+      query = query.replaceAll("č", "c");
+      query = query.replaceAll("Č", "C");
+      query = query.replaceAll("ž", "z");
+      query = query.replaceAll("Ž", "z");
+      query = query.replaceAll("đ", "d");
+      query = query.replaceAll("Đ", "D");
+      query = query.replaceAll("š", "s");
+      query = query.replaceAll("Š", "S");
+    }
+
     return _getRequest({
       method: "GET",
       url: "/api/customer/order_grupa/listaj",
+      params: {
+        upit_za_pretragu: query,
+      },
     });
   }
 }

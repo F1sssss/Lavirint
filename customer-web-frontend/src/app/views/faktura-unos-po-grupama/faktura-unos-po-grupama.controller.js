@@ -378,9 +378,9 @@ function FakturaUnosPoGrupamaController(
   }
 
   function porudzbina() {
-    fisModal.orderGroupModal(ctrl.racun).then((data) => console.log(data));
+    // fisModal.orderGroupModal(ctrl.racun).then((data) => console.log(data));
 
-    // return upis(6);
+    return upis(6);
   }
 
   function sendData(paymentMethodTypeId) {

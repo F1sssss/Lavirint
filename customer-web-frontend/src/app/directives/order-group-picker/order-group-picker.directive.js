@@ -29,8 +29,6 @@ function orderGroupPicker(fisModal, invoiceFactory, api) {
     }
 
     scope.searchGroups = function (query) {
-      console.log(query);
-
       return api.order_groups.all(query).then(function (data) {
         return data;
       });
