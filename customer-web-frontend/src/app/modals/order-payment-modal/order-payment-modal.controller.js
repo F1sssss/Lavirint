@@ -6,6 +6,7 @@ OrderPaymentModalController.$inject = [
   "$uibModalInstance",
   "$rootScope",
   "invoiceFactory",
+  "api",
   "orders",
   "total",
 ];
@@ -14,6 +15,7 @@ function OrderPaymentModalController(
   $uibModalInstance,
   $rootScope,
   invoiceFactory,
+  api,
   orders,
   total
 ) {
@@ -23,11 +25,14 @@ function OrderPaymentModalController(
   ctrl.total = total;
   ctrl.payment_methods = [];
   ctrl.is_cash = true;
+  ctrl.errors = {};
+  ctrl.napomena = "";
 
   ctrl.onPaymentMethodTypeaheadSelect = onPaymentMethodTypeaheadSelect;
   ctrl.recalculatePaymentMethodTotals = recalculatePaymentMethodTotals;
   ctrl.deletePaymentMethod = deletePaymentMethod;
   ctrl.divideEqually = divideEqually;
+  ctrl.findErrors = findErrors;
   ctrl.confirm = confirm;
 
   function onPaymentMethodTypeaheadSelect($item, $model, $label) {
@@ -77,6 +82,8 @@ function OrderPaymentModalController(
   }
 
   function divideEqually() {
+    if (!ctrl.payment_methods.length) return;
+
     const equalNumber = +(total / ctrl.payment_methods.length).toFixed(2);
     const pm = ctrl.payment_methods;
 
@@ -91,7 +98,37 @@ function OrderPaymentModalController(
     ctrl.payment_methods_total_difference = 0;
   }
 
+  function calcTotalDifference() {
+    let payment_methods_sum = 0;
+    ctrl.payment_methods.forEach((pm) => (payment_methods_sum += pm.amount));
+
+    ctrl.payment_methods_total_difference = Math.abs(
+      ctrl.total - payment_methods_sum
+    );
+  }
+
+  function findErrors() {
+    if (!ctrl.firstSubmitted) return;
+
+    calcTotalDifference();
+
+    return Boolean(ctrl.payment_methods_total_difference);
+  }
+
   function confirm() {
+    ctrl.firstSubmitted = true;
+
+    if (ctrl.findErrors()) return;
+
+    api.order.summerize({
+      invoice_ids: Object.keys($rootScope.selectedOrders).filter(
+        (k) => $rootScope.selectedOrders[k]
+      ),
+      is_cash: ctrl.is_cash,
+      payment_methods: ctrl.payment_methods.filter((pm) => pm.amount),
+      napomena: ctrl.napomena,
+    });
+
     Object.keys($rootScope.selectedOrders).forEach(
       (k) => delete $rootScope.selectedOrders[k]
     );

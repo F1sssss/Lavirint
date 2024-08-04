@@ -11,7 +11,8 @@ function paymentMethodTypeahead(fisConfig) {
         link: link,
         scope: {
             onSelect: '&',
-            isCash: '='
+            isCash: '=',
+            shouldHideOrderType: '='
         }
     }
 

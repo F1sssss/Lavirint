@@ -50,8 +50,8 @@ function FakturaPregledPorudzbineController(
 
   ctrl.komitenti = initialData.komitenti;
   ctrl.areFiltersCollapsed = true;
-  ctrl.stranica = initialData;
-  ctrl.broj_stranice = initialData.broj_stranice;
+  ctrl.stranica = initialData.stranica;
+  ctrl.broj_stranice = initialData.stranica.broj_stranice;
 
   ctrl.selectedOrders = $rootScope.selectedOrders;
   ctrl.selectedOrdersTotals = $rootScope.selectedOrdersTotals;
