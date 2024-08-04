@@ -141,6 +141,9 @@ function ApiService($http, $q, invoiceFactory) {
   api.dospjelaFaktura.poId.dokument.listaj =
     apiDospjelaFakturaPoIdDokumentListaj;
 
+  api.order_groups = {};
+  api.order_groups.all = apiGetOrderGroups;
+
   return api;
 
   //------------------------------------------------------------------------------------------------------------------
@@ -775,6 +778,13 @@ function ApiService($http, $q, invoiceFactory) {
         "/api/customer/firma/dospjela_faktura/" +
         dospjelaFakturaId +
         "/dokument/listaj",
+    });
+  }
+
+  function apiGetOrderGroups() {
+    return _getRequest({
+      method: "GET",
+      url: "/api/customer/order_grupa/listaj",
     });
   }
 }

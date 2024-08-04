@@ -26,6 +26,7 @@ function fisModal($q, $uibModal, fisConfig, api, invoiceFactory) {
   service.invalidForm = invalidForm;
   service.certificateUpload = certificateUpload;
   service.orderGroupModal = orderGroupModal;
+  service.orderGroupCreateOrEditModal = orderGroupCreateOrEditModal;
   service.ordersFinalPaymentMethod = ordersFinalPaymentMethod;
 
   return service;
@@ -274,7 +275,7 @@ function fisModal($q, $uibModal, fisConfig, api, invoiceFactory) {
     return modalInstance.result;
   }
 
-  function orderGroupModal() {
+  function orderGroupModal(invoice) {
     let modalInstance = $uibModal.open({
       templateUrl:
         "app/modals/order-group-modal/order-group-modal.template.html",
@@ -284,7 +285,24 @@ function fisModal($q, $uibModal, fisConfig, api, invoiceFactory) {
       backdrop: "static",
       windowTemplateUrl: "app/modals/window-fixed.template.html",
       resolve: {
-        // groups: mockGetGroups(),
+        invoice,
+      },
+    });
+
+    return modalInstance.result;
+  }
+
+  function orderGroupCreateOrEditModal(group) {
+    let modalInstance = $uibModal.open({
+      templateUrl:
+        "app/modals/order-group-create-modal/order-group-create-modal.template.html",
+      controller: "OrderGroupCreateModalController",
+      controllerAs: "ctrl",
+      size: "lg",
+      backdrop: "static",
+      windowTemplateUrl: "app/modals/window-fixed.template.html",
+      resolve: {
+        group,
       },
     });
 

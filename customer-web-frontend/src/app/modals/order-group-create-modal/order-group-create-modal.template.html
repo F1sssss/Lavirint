@@ -11,11 +11,8 @@
   </button>
 </div>
 <div class="modal-body">
-  <label class="form-label" for="group">
-    Odaberite groupu kojoj porudžbina pripada:
-  </label>
-  <order-group-picker data-invoice="ctrl.invoice" ng-model="ctrl.group">
-  </order-group-picker>
+  <label class="form-label" for="name">Naziv grupe:</label>
+  <input class="form-control" id="name" name="name" ng-model="ctrl.name" />
 </div>
 <div class="modal-footer d-none d-md-block">
   <div class="text-end">
@@ -29,7 +26,7 @@
     <button
       type="button"
       class="btn btn-primary"
-      data-ng-click="$close({ isConfirmed: true, group: ctrl.group })"
+      data-ng-click="ctrl.confirm()"
     >
       Potvrdi
     </button>

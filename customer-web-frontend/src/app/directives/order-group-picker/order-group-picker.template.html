@@ -4,7 +4,7 @@
     <input
       type="text"
       class="form-control"
-      uib-typeahead="item as item.naziv for item in searchBuyers($viewValue)"
+      uib-typeahead="item as item.naziv for item in searchGroups($viewValue)"
       typeahead-template-url="app/directives/order-group-picker/order-group-picker-popup.template.html"
       typeahead-focus-first="false"
       typeahead-min-length="0"
@@ -13,7 +13,6 @@
       typeahead-on-select="onSelect($item, $model, $label); query = '';"
       typeahead-additional-options="{ openOnFocus: true, clearOnFocus: true }"
       ng-model="query"
-      ng-disabled="stavka.isDisabled"
     />
   </div>
 </div>
@@ -24,7 +23,6 @@
 <div class="card bg-light" ng-if="invoice.order_group">
   <div class="card-body">
     <div class="fw-bold fs-5">{{ invoice.order_group.naziv }}</div>
-    <div>{{ invoice.order_group.opis }}</div>
   </div>
 </div>
 <div class="mt-2" ng-if="!disabled">
@@ -33,7 +31,7 @@
       <button
         type="button"
         class="btn btn-light border w-100"
-        data-ng-click="showCreateBuyerModal();"
+        data-ng-click="showCreateGroupModal();"
       >
         <i class="fa fa-plus"></i> Nova grupa
       </button>
@@ -42,7 +40,7 @@
       <button
         type="button"
         class="btn btn-light border w-100"
-        data-ng-click="removeBuyer()"
+        data-ng-click="removeGroup()"
         ng-if="invoice.order_group !== null"
       >
         <i class="fa fa-close"></i> Poništi odabir
@@ -52,7 +50,7 @@
       <button
         type="button"
         class="btn btn-light border w-100"
-        data-ng-click="showBuyerUpdateModal()"
+        data-ng-click="showGroupUpdateModal()"
         ng-if="invoice.order_group !== null"
       >
         <i class="fa fa-edit"></i> Izmijeni podatke

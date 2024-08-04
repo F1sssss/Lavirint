@@ -1,295 +1,624 @@
 <div class="d-flex h-100">
-    <div class="d-none d-lg-block flex-grow-1 h-100">
-        <div ng-if="ctrl.odabrana_grupa === undefined" class="d-flex flex-column h-100">
-            <div class="bg-white border-bottom d-flex justify-content-between">
-                <div>
-                    <button class="btn btn-primary-light py-3 px-4 rounded-0 fw-bold">
-                        Sve grupe
-                    </button>
-                </div>
-                <div class="d-flex">
-                    <div class="dropdown">
-                        <button type="button" class="btn btn-light py-3 px-4 rounded-0 border-start" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-bars"></i> {{ ctrl.grupaArtikalaGrid.rowNum }}
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, ctrl.grupaArtikalaGrid.colNum, 3); $event.preventDefault();">3 reda</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, ctrl.grupaArtikalaGrid.colNum, 4); $event.preventDefault();">4 reda</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, ctrl.grupaArtikalaGrid.colNum, 5); $event.preventDefault();">5 redova</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, ctrl.grupaArtikalaGrid.colNum, 6); $event.preventDefault();">6 redova</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, ctrl.grupaArtikalaGrid.colNum, 8); $event.preventDefault();">8 redova</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, ctrl.grupaArtikalaGrid.colNum, 10); $event.preventDefault();">10 redova</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, ctrl.grupaArtikalaGrid.colNum, 12); $event.preventDefault();">12 redova</a></li>
-                        </ul>
-                    </div>
-                    <div class="dropdown">
-                        <button type="button" class="btn btn-light py-3 px-4 rounded-0 border-start border-end" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-bars fa-rotate-90"></i> {{ ctrl.grupaArtikalaGrid.colNum }}
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, 3, ctrl.grupaArtikalaGrid.rowNum); $event.preventDefault();">3 kolone</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, 4, ctrl.grupaArtikalaGrid.rowNum); $event.preventDefault();">4 kolone</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, 5, ctrl.grupaArtikalaGrid.rowNum); $event.preventDefault();">5 kolona</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, 6, ctrl.grupaArtikalaGrid.rowNum); $event.preventDefault();">6 kolona</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, 8, ctrl.grupaArtikalaGrid.rowNum); $event.preventDefault();">8 kolona</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, 10, ctrl.grupaArtikalaGrid.rowNum); $event.preventDefault();">10 kolona</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, 12, ctrl.grupaArtikalaGrid.rowNum); $event.preventDefault();">12 kolona</a></li>
-                        </ul>
-                    </div>
-                    <div class="ms-3"></div>
-                    <button class="btn btn-light border-start py-3 px-4 rounded-0" ng-click="ctrl.prevPage(ctrl.grupaArtikalaGrid)">
-                        <i class="fa fa-arrow-left"></i>
-                    </button>
-                    <div class="fs-5 fw-bold bg-light d-flex align-items-center justify-content-center border-start" style="width: 100px;">
-                        {{ ctrl.grupaArtikalaGrid.currentPage }}/{{ ctrl.grupaArtikalaGrid.totalPages }}
-                    </div>
-                    <button class="btn btn-light border-start py-3 px-4 rounded-0" ng-click="ctrl.nextPage(ctrl.grupaArtikalaGrid)">
-                        <i class="fa fa-arrow-right"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="d-flex flex-column h-100 gap-3 m-3">
-                <div class="d-flex flex-row flex-grow-1 flex-basis-0 h-100 gap-3" ng-repeat="grupaArtikalaRow in ctrl.grupaArtikalaGrid.rows track by $index">
-                    <div class="flex-grow-1 flex-basis-0" ng-repeat="grupaArtikala in grupaArtikalaRow track by $index">
-                        <div class="card h-100" ng-if="grupaArtikala !== null" ng-click="ctrl.selectItemGroup(grupaArtikala)" ng-style="{ backgroundColor: grupaArtikala.boja }">
-                            <div class="card-body d-flex flex-column justify-content-between fw-bold">
-                                <div class="fs-5">{{ grupaArtikala.naziv }}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="d-none d-lg-block flex-grow-1 h-100">
+    <div
+      ng-if="ctrl.odabrana_grupa === undefined"
+      class="d-flex flex-column h-100"
+    >
+      <div class="bg-white border-bottom d-flex justify-content-between">
+        <div>
+          <button class="btn btn-primary-light py-3 px-4 rounded-0 fw-bold">
+            Sve grupe
+          </button>
         </div>
-        <div ng-if="ctrl.odabrana_grupa !== undefined" class="d-flex flex-column h-100">
-            <div class="bg-white border-bottom d-flex justify-content-between align-items-center">
-                <div>
-                    <button class="btn btn-light py-3 px-4 rounded-0 fw-bold" data-ng-click="ctrl.deselectItemTemplateGroup();">
-                        Sve grupe
-                    </button>
-                    <button  class="btn btn-primary-light py-3 px-4 rounded-0 fw-bold" ng-style="{ backgroundColor: ctrl.odabrana_grupa.boja, borderColor: ctrl.odabrana_grupa.boja }">
-                        {{ ctrl.odabrana_grupa.naziv }} ({{ ctrl.artikalGrid.currentPage }}/{{ ctrl.artikalGrid.totalPages }})
-                    </button>
-                </div>
-                <div class="d-flex">
-                    <div class="dropdown">
-                        <button type="button" class="btn btn-light py-3 px-4 rounded-0 border-start" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-bars"></i> {{ ctrl.artikalGrid.rowNum }}
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, ctrl.artikalGrid.colNum, 3); $event.preventDefault();">3 reda</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, ctrl.artikalGrid.colNum, 4); $event.preventDefault();">4 reda</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, ctrl.artikalGrid.colNum, 5); $event.preventDefault();">5 redova</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, ctrl.artikalGrid.colNum, 6); $event.preventDefault();">6 redova</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, ctrl.artikalGrid.colNum, 8); $event.preventDefault();">8 redova</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, ctrl.artikalGrid.colNum, 10); $event.preventDefault();">10 redova</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, ctrl.artikalGrid.colNum, 12); $event.preventDefault();">12 redova</a></li>
-                        </ul>
-                    </div>
-                    <div class="dropdown">
-                        <button type="button" class="btn btn-light py-3 px-4 rounded-0 border-start border-end" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-bars fa-rotate-90"></i> {{ ctrl.artikalGrid.colNum }}
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, 3, ctrl.artikalGrid.rowNum); $event.preventDefault();">3 kolone</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, 4, ctrl.artikalGrid.rowNum); $event.preventDefault();">4 kolone</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, 5, ctrl.artikalGrid.rowNum); $event.preventDefault();">5 kolona</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, 6, ctrl.artikalGrid.rowNum); $event.preventDefault();">6 kolona</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, 8, ctrl.artikalGrid.rowNum); $event.preventDefault();">8 kolona</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, 10, ctrl.artikalGrid.rowNum); $event.preventDefault();">10 kolona</a></li>
-                            <li><a class="dropdown-item" href="#" ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, 12, ctrl.artikalGrid.rowNum); $event.preventDefault();">12 kolona</a></li>
-                        </ul>
-                    </div>
-                    <div class="ms-3"></div>
-                    <button class="btn btn-light py-3 px-4 rounded-0 border-start" ng-click="ctrl.prevPage(ctrl.artikalGrid)">
-                        <i class="fa fa-arrow-left"></i>
-                    </button>
-                    <div class="bg-light d-flex align-items-center justify-content-center border-start" style="width: 100px;">
-                        {{ ctrl.artikalGrid.currentPage }}/{{ ctrl.artikalGrid.totalPages }}
-                    </div>
-                    <button class="btn btn-light py-3 px-4 rounded-0 border-start" ng-click="ctrl.nextPage(ctrl.artikalGrid)">
-                        <i class="fa fa-arrow-right"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="d-flex flex-column h-100 gap-3 m-3 overflow-y-auto">
-                <div class="d-flex flex-row flex-grow-1 flex-basis-0 h-100 gap-3" ng-repeat="red in ctrl.artikalGrid.rows track by $index">
-                    <div class="flex-grow-1 flex-basis-0" ng-repeat="zaliha in red track by $index">
-                        <div
-                            class="card h-100"
-                            ng-click="ctrl.odaberiZalihuTablet(zaliha);"
-                            ng-if="zaliha !== null">
-                            <div class="card-body flex-grow-1 rounded-top bg-white">
-                                <div class="fs-5 fw-bold" title="{{ zaliha.artikal.naziv }}">
-                                    <span ng-if="zaliha.artikal.naziv.length > 100">
-                                        {{ zaliha.artikal.naziv.substring(0, 100) }}...
-                                    </span>
-                                    <span ng-if="zaliha.artikal.naziv.length <= 100">
-                                        {{ zaliha.artikal.naziv }}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="card-body flex-grow-0">
-                                <div class="d-flex justify-content-end fs-5 fw-bold text-danger">
-                                    <div class="d-flex" ng-show="zaliha.invoiceItem !== null">
-                                        {{ zaliha.invoiceItem.kolicina }}
-                                        <div class="px-2">x</div>
-                                    </div>
-                                    <div>{{ zaliha.jedinicna_cijena_puna | fisRoundHalfUp:2 }} {{ $root.currency }}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="p-3 flex-grow-1 d-none" style="overflow-y: auto;">
-                <div class="row g-3">
-                    <div class="col-3" ng-repeat="zaliha in ctrl.zalihe track by $index">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div>
-                                    {{ zaliha.artikal.naziv }}
-                                </div>
-                                <div>
-                                    <b>Cijena:</b>
-                                    <span>{{ zaliha.jedinicna_cijena_puna }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="unos-po-grupama-right-panel" class="h-100 border-start">
-        <div class="bg-white d-flex flex-column h-100">
-            <div class="d-flex align-items-center justify-content-between px-3" style="height: 51px; min-height: 51px;">
-                <span class="fw-bold">Prodajna cijena</span>
-                <span class="fw-bold fs-4">{{ ctrl.racun.ukupna_cijena_prodajna | fisRoundHalfUp:2 }} {{ $root.currency }} </span>
-            </div>
-            <div class="border-bottom d-none d-lg-block"></div>
-            <ul class="nav nav-tabs d-lg-none" data-bs-tabs="tabs">
-                <li class="nav-item d-lg-none">
-                    <a
-                      class="nav-link"
-                      ng-class="{ 'active': ctrl.invoiceTab === 'product_groups_list' }"
-                      ng-click="ctrl.invoiceTab = 'product_groups_list'; ctrl.odabrana_grupa = undefined;">
-                        Grupe
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a
-                      class="nav-link"
-                      ng-class="{ 'active': ctrl.invoiceTab === 'items' }"
-                      ng-click="ctrl.invoiceTab = 'items'">
-                        Stavke
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a
-                      class="nav-link"
-                      ng-class="{ 'active': ctrl.invoiceTab === 'buyer' }"
-                      ng-click="ctrl.invoiceTab = 'buyer'">
-                        Kupac
-                    </a>
-                </li>
+        <div class="d-flex">
+          <div class="dropdown">
+            <button
+              type="button"
+              class="btn btn-light py-3 px-4 rounded-0 border-start"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="fa fa-bars"></i> {{ ctrl.grupaArtikalaGrid.rowNum }}
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, ctrl.grupaArtikalaGrid.colNum, 3); $event.preventDefault();"
+                  >3 reda</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, ctrl.grupaArtikalaGrid.colNum, 4); $event.preventDefault();"
+                  >4 reda</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, ctrl.grupaArtikalaGrid.colNum, 5); $event.preventDefault();"
+                  >5 redova</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, ctrl.grupaArtikalaGrid.colNum, 6); $event.preventDefault();"
+                  >6 redova</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, ctrl.grupaArtikalaGrid.colNum, 8); $event.preventDefault();"
+                  >8 redova</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, ctrl.grupaArtikalaGrid.colNum, 10); $event.preventDefault();"
+                  >10 redova</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, ctrl.grupaArtikalaGrid.colNum, 12); $event.preventDefault();"
+                  >12 redova</a
+                >
+              </li>
             </ul>
-            <div class="flex-grow-1 flex-basis-0" style="overflow-y: auto;">
-                <div ng-if="ctrl.invoiceTab === 'product_groups_list'">
-                    <div ng-if="ctrl.odabrana_grupa === undefined">
-                        <button
-                          type="button"
-                          class="btn btn-outline-secondary border-0 border-bottom text-start rounded-0 w-100 p-3"
-                          ng-repeat="grupa_artikala in ctrl.grupe_artikala"
-                          ng-click="ctrl.selectItemGroup(grupa_artikala); ctrl.invoiceTab = 'product_list'">
-                            {{ grupa_artikala.naziv }}
-                        </button>
-                    </div>
-                </div>
-                <div ng-if="ctrl.invoiceTab === 'product_list'">
-                    <div ng-if="ctrl.odabrana_grupa !== undefined">
-                        <div class="p-3 border-bottom" ng-repeat="zaliha in ctrl.zalihe">
-                            <div class="fs-5">{{ zaliha.artikal.naziv }}</div>
-                            <div class="d-flex flex-wrap">
-                                <div>
-                                    <span class="fs-5" ng-show="zaliha.invoiceItem !== null">{{ zaliha.invoiceItem.kolicina }}</span>
-                                    <span class="fs-5" ng-show="zaliha.invoiceItem === null">0</span>
-                                    <span> x </span>
-                                    <span class="fs-5">{{ zaliha.jedinicna_cijena_puna }}</span>
-                                    <span>{{ $root.currency }}</span>
-                                </div>
-                                <div class="ms-auto" ng-if="zaliha.invoiceItem !== null">
-                                    <span> = </span>
-                                    <span class="fs-5">{{ zaliha.invoiceItem.ukupna_cijena_prodajna }}</span>
-                                    <span>{{ $root.currency }}</span>
-                                </div>
-                            </div>
-                            <div class="mt-3" ng-if="zaliha.artikal.jedinica_mjere.naziv === 'kom'">
-                                <button type="button" class="btn btn-light border" data-ng-click="ctrl.decrementQuantity(zaliha);">
-                                    <i class="fa fa-minus"></i>
-                                </button>
-                                <button type="button" class="btn btn-light border" data-ng-click="ctrl.incrementQuantity(zaliha);">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
-                            <div class="mt-3" ng-if="zaliha.artikal.jedinica_mjere.naziv !== 'kom'">
-                                <button type="button" class="btn btn-light border" data-ng-click="ctrl.editQuantityInNumericModal(zaliha);">
-                                    <i class="fa fa-edit"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div ng-if="ctrl.invoiceTab === 'items'">
-                    <div ng-if="ctrl.racun.stavke.length === 0">
-                        <div class="p-3">
-                            <div class="card bg-light">
-                                <div class="card-body">
-                                    Račun ne sadrži nijednu stavku.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div ng-if="ctrl.racun.stavke.length > 0">
-                        <table class="table m-0">
-                            <tbody>
-                            <tr class="bg-white" ng-repeat="stavka in ctrl.racun.stavke" ng-click="ctrl.azurirajStavku($index)">
-                                <td class="ps-4 py-3 w-1 text-end text-nowrap">{{ stavka.kolicina }} x</td>
-                                <td class="py-3">{{ stavka.magacin_zaliha.artikal.naziv }}</td>
-                                <td class="py-3 w-1 text-end text-nowrap">{{ stavka.ukupna_cijena_prodajna }} {{ $root.currency }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div ng-if="ctrl.invoiceTab === 'buyer'">
-                    <div class="p-3">
-                        <invoice-buyer-picker
-                            data-invoice="ctrl.racun"
-                            button-responsive-classes="col-6"
-                            ng-model="ctrl.racun.komitent_id">
-
-                        </invoice-buyer-picker>
-                    </div>
-                </div>
-            </div>
-            <div class="d-flex gap-3 p-3 border-top">
-                <button class="btn btn-success py-2 lh-base flex-grow-1" ng-click="ctrl.upis(1)">
-                    <div><i class="fa fa fa-money"></i></div>
-                    <div>Gotovina</div>
-                </button>
-                <button class="btn btn-success py-2 lh-base flex-grow-1" ng-click="ctrl.upis(2)">
-                    <div><i class="fa fa-credit-card"></i></div>
-                    <div>Kartica</div>
-                </button>
-                <button class="btn btn-warning py-2 lh-base flex-grow-1" ng-click="ctrl.upis(6)">
-                    <div><i class="fa fa fa-plus"></i></div>
-                    <div>Porudžbina</div>
-                </button>
-                <button class="btn btn-success py-2 lh-base flex-grow-1" ng-click="ctrl.upisSaKupcem(8)">
-                    <div><i class="fa fa-file"></i></div>
-                    <div>Virman</div>
-                </button>
-            </div>
+          </div>
+          <div class="dropdown">
+            <button
+              type="button"
+              class="btn btn-light py-3 px-4 rounded-0 border-start border-end"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="fa fa-bars fa-rotate-90"></i> {{
+              ctrl.grupaArtikalaGrid.colNum }}
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, 3, ctrl.grupaArtikalaGrid.rowNum); $event.preventDefault();"
+                  >3 kolone</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, 4, ctrl.grupaArtikalaGrid.rowNum); $event.preventDefault();"
+                  >4 kolone</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, 5, ctrl.grupaArtikalaGrid.rowNum); $event.preventDefault();"
+                  >5 kolona</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, 6, ctrl.grupaArtikalaGrid.rowNum); $event.preventDefault();"
+                  >6 kolona</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, 8, ctrl.grupaArtikalaGrid.rowNum); $event.preventDefault();"
+                  >8 kolona</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, 10, ctrl.grupaArtikalaGrid.rowNum); $event.preventDefault();"
+                  >10 kolona</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.grupaArtikalaGrid, 12, ctrl.grupaArtikalaGrid.rowNum); $event.preventDefault();"
+                  >12 kolona</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="ms-3"></div>
+          <button
+            class="btn btn-light border-start py-3 px-4 rounded-0"
+            ng-click="ctrl.prevPage(ctrl.grupaArtikalaGrid)"
+          >
+            <i class="fa fa-arrow-left"></i>
+          </button>
+          <div
+            class="fs-5 fw-bold bg-light d-flex align-items-center justify-content-center border-start"
+            style="width: 100px"
+          >
+            {{ ctrl.grupaArtikalaGrid.currentPage }}/{{
+            ctrl.grupaArtikalaGrid.totalPages }}
+          </div>
+          <button
+            class="btn btn-light border-start py-3 px-4 rounded-0"
+            ng-click="ctrl.nextPage(ctrl.grupaArtikalaGrid)"
+          >
+            <i class="fa fa-arrow-right"></i>
+          </button>
         </div>
+      </div>
+      <div class="d-flex flex-column h-100 gap-3 m-3">
+        <div
+          class="d-flex flex-row flex-grow-1 flex-basis-0 h-100 gap-3"
+          ng-repeat="grupaArtikalaRow in ctrl.grupaArtikalaGrid.rows track by $index"
+        >
+          <div
+            class="flex-grow-1 flex-basis-0"
+            ng-repeat="grupaArtikala in grupaArtikalaRow track by $index"
+          >
+            <div
+              class="card h-100"
+              ng-if="grupaArtikala !== null"
+              ng-click="ctrl.selectItemGroup(grupaArtikala)"
+              ng-style="{ backgroundColor: grupaArtikala.boja }"
+            >
+              <div
+                class="card-body d-flex flex-column justify-content-between fw-bold"
+              >
+                <div class="fs-5">{{ grupaArtikala.naziv }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+    <div
+      ng-if="ctrl.odabrana_grupa !== undefined"
+      class="d-flex flex-column h-100"
+    >
+      <div
+        class="bg-white border-bottom d-flex justify-content-between align-items-center"
+      >
+        <div>
+          <button
+            class="btn btn-light py-3 px-4 rounded-0 fw-bold"
+            data-ng-click="ctrl.deselectItemTemplateGroup();"
+          >
+            Sve grupe
+          </button>
+          <button
+            class="btn btn-primary-light py-3 px-4 rounded-0 fw-bold"
+            ng-style="{ backgroundColor: ctrl.odabrana_grupa.boja, borderColor: ctrl.odabrana_grupa.boja }"
+          >
+            {{ ctrl.odabrana_grupa.naziv }} ({{ ctrl.artikalGrid.currentPage
+            }}/{{ ctrl.artikalGrid.totalPages }})
+          </button>
+        </div>
+        <div class="d-flex">
+          <div class="dropdown">
+            <button
+              type="button"
+              class="btn btn-light py-3 px-4 rounded-0 border-start"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="fa fa-bars"></i> {{ ctrl.artikalGrid.rowNum }}
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, ctrl.artikalGrid.colNum, 3); $event.preventDefault();"
+                  >3 reda</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, ctrl.artikalGrid.colNum, 4); $event.preventDefault();"
+                  >4 reda</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, ctrl.artikalGrid.colNum, 5); $event.preventDefault();"
+                  >5 redova</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, ctrl.artikalGrid.colNum, 6); $event.preventDefault();"
+                  >6 redova</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, ctrl.artikalGrid.colNum, 8); $event.preventDefault();"
+                  >8 redova</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, ctrl.artikalGrid.colNum, 10); $event.preventDefault();"
+                  >10 redova</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, ctrl.artikalGrid.colNum, 12); $event.preventDefault();"
+                  >12 redova</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="dropdown">
+            <button
+              type="button"
+              class="btn btn-light py-3 px-4 rounded-0 border-start border-end"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="fa fa-bars fa-rotate-90"></i> {{ ctrl.artikalGrid.colNum
+              }}
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, 3, ctrl.artikalGrid.rowNum); $event.preventDefault();"
+                  >3 kolone</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, 4, ctrl.artikalGrid.rowNum); $event.preventDefault();"
+                  >4 kolone</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, 5, ctrl.artikalGrid.rowNum); $event.preventDefault();"
+                  >5 kolona</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, 6, ctrl.artikalGrid.rowNum); $event.preventDefault();"
+                  >6 kolona</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, 8, ctrl.artikalGrid.rowNum); $event.preventDefault();"
+                  >8 kolona</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, 10, ctrl.artikalGrid.rowNum); $event.preventDefault();"
+                  >10 kolona</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  ng-click="ctrl.updateGridLayout(ctrl.artikalGrid, 12, ctrl.artikalGrid.rowNum); $event.preventDefault();"
+                  >12 kolona</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="ms-3"></div>
+          <button
+            class="btn btn-light py-3 px-4 rounded-0 border-start"
+            ng-click="ctrl.prevPage(ctrl.artikalGrid)"
+          >
+            <i class="fa fa-arrow-left"></i>
+          </button>
+          <div
+            class="bg-light d-flex align-items-center justify-content-center border-start"
+            style="width: 100px"
+          >
+            {{ ctrl.artikalGrid.currentPage }}/{{ ctrl.artikalGrid.totalPages }}
+          </div>
+          <button
+            class="btn btn-light py-3 px-4 rounded-0 border-start"
+            ng-click="ctrl.nextPage(ctrl.artikalGrid)"
+          >
+            <i class="fa fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+      <div class="d-flex flex-column h-100 gap-3 m-3 overflow-y-auto">
+        <div
+          class="d-flex flex-row flex-grow-1 flex-basis-0 h-100 gap-3"
+          ng-repeat="red in ctrl.artikalGrid.rows track by $index"
+        >
+          <div
+            class="flex-grow-1 flex-basis-0"
+            ng-repeat="zaliha in red track by $index"
+          >
+            <div
+              class="card h-100"
+              ng-click="ctrl.odaberiZalihuTablet(zaliha);"
+              ng-if="zaliha !== null"
+            >
+              <div class="card-body flex-grow-1 rounded-top bg-white">
+                <div class="fs-5 fw-bold" title="{{ zaliha.artikal.naziv }}">
+                  <span ng-if="zaliha.artikal.naziv.length > 100">
+                    {{ zaliha.artikal.naziv.substring(0, 100) }}...
+                  </span>
+                  <span ng-if="zaliha.artikal.naziv.length <= 100">
+                    {{ zaliha.artikal.naziv }}
+                  </span>
+                </div>
+              </div>
+              <div class="card-body flex-grow-0">
+                <div
+                  class="d-flex justify-content-end fs-5 fw-bold text-danger"
+                >
+                  <div class="d-flex" ng-show="zaliha.invoiceItem !== null">
+                    {{ zaliha.invoiceItem.kolicina }}
+                    <div class="px-2">x</div>
+                  </div>
+                  <div>
+                    {{ zaliha.jedinicna_cijena_puna | fisRoundHalfUp:2 }} {{
+                    $root.currency }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="p-3 flex-grow-1 d-none" style="overflow-y: auto">
+        <div class="row g-3">
+          <div class="col-3" ng-repeat="zaliha in ctrl.zalihe track by $index">
+            <div class="card h-100">
+              <div class="card-body">
+                <div>{{ zaliha.artikal.naziv }}</div>
+                <div>
+                  <b>Cijena:</b>
+                  <span>{{ zaliha.jedinicna_cijena_puna }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="unos-po-grupama-right-panel" class="h-100 border-start">
+    <div class="bg-white d-flex flex-column h-100">
+      <div
+        class="d-flex align-items-center justify-content-between px-3"
+        style="height: 51px; min-height: 51px"
+      >
+        <span class="fw-bold">Prodajna cijena</span>
+        <span class="fw-bold fs-4"
+          >{{ ctrl.racun.ukupna_cijena_prodajna | fisRoundHalfUp:2 }} {{
+          $root.currency }}
+        </span>
+      </div>
+      <div class="border-bottom d-none d-lg-block"></div>
+      <ul class="nav nav-tabs d-lg-none" data-bs-tabs="tabs">
+        <li class="nav-item d-lg-none">
+          <a
+            class="nav-link"
+            ng-class="{ 'active': ctrl.invoiceTab === 'product_groups_list' }"
+            ng-click="ctrl.invoiceTab = 'product_groups_list'; ctrl.odabrana_grupa = undefined;"
+          >
+            Grupe
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            ng-class="{ 'active': ctrl.invoiceTab === 'items' }"
+            ng-click="ctrl.invoiceTab = 'items'"
+          >
+            Stavke
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            ng-class="{ 'active': ctrl.invoiceTab === 'buyer' }"
+            ng-click="ctrl.invoiceTab = 'buyer'"
+          >
+            Kupac
+          </a>
+        </li>
+      </ul>
+      <div class="flex-grow-1 flex-basis-0" style="overflow-y: auto">
+        <div ng-if="ctrl.invoiceTab === 'product_groups_list'">
+          <div ng-if="ctrl.odabrana_grupa === undefined">
+            <button
+              type="button"
+              class="btn btn-outline-secondary border-0 border-bottom text-start rounded-0 w-100 p-3"
+              ng-repeat="grupa_artikala in ctrl.grupe_artikala"
+              ng-click="ctrl.selectItemGroup(grupa_artikala); ctrl.invoiceTab = 'product_list'"
+            >
+              {{ grupa_artikala.naziv }}
+            </button>
+          </div>
+        </div>
+        <div ng-if="ctrl.invoiceTab === 'product_list'">
+          <div ng-if="ctrl.odabrana_grupa !== undefined">
+            <div class="p-3 border-bottom" ng-repeat="zaliha in ctrl.zalihe">
+              <div class="fs-5">{{ zaliha.artikal.naziv }}</div>
+              <div class="d-flex flex-wrap">
+                <div>
+                  <span class="fs-5" ng-show="zaliha.invoiceItem !== null"
+                    >{{ zaliha.invoiceItem.kolicina }}</span
+                  >
+                  <span class="fs-5" ng-show="zaliha.invoiceItem === null"
+                    >0</span
+                  >
+                  <span> x </span>
+                  <span class="fs-5">{{ zaliha.jedinicna_cijena_puna }}</span>
+                  <span>{{ $root.currency }}</span>
+                </div>
+                <div class="ms-auto" ng-if="zaliha.invoiceItem !== null">
+                  <span> = </span>
+                  <span class="fs-5"
+                    >{{ zaliha.invoiceItem.ukupna_cijena_prodajna }}</span
+                  >
+                  <span>{{ $root.currency }}</span>
+                </div>
+              </div>
+              <div
+                class="mt-3"
+                ng-if="zaliha.artikal.jedinica_mjere.naziv === 'kom'"
+              >
+                <button
+                  type="button"
+                  class="btn btn-light border"
+                  data-ng-click="ctrl.decrementQuantity(zaliha);"
+                >
+                  <i class="fa fa-minus"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-light border"
+                  data-ng-click="ctrl.incrementQuantity(zaliha);"
+                >
+                  <i class="fa fa-plus"></i>
+                </button>
+              </div>
+              <div
+                class="mt-3"
+                ng-if="zaliha.artikal.jedinica_mjere.naziv !== 'kom'"
+              >
+                <button
+                  type="button"
+                  class="btn btn-light border"
+                  data-ng-click="ctrl.editQuantityInNumericModal(zaliha);"
+                >
+                  <i class="fa fa-edit"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div ng-if="ctrl.invoiceTab === 'items'">
+          <div ng-if="ctrl.racun.stavke.length === 0">
+            <div class="p-3">
+              <div class="card bg-light">
+                <div class="card-body">Račun ne sadrži nijednu stavku.</div>
+              </div>
+            </div>
+          </div>
+          <div ng-if="ctrl.racun.stavke.length > 0">
+            <table class="table m-0">
+              <tbody>
+                <tr
+                  class="bg-white"
+                  ng-repeat="stavka in ctrl.racun.stavke"
+                  ng-click="ctrl.azurirajStavku($index)"
+                >
+                  <td class="ps-4 py-3 w-1 text-end text-nowrap">
+                    {{ stavka.kolicina }} x
+                  </td>
+                  <td class="py-3">
+                    {{ stavka.magacin_zaliha.artikal.naziv }}
+                  </td>
+                  <td class="py-3 w-1 text-end text-nowrap">
+                    {{ stavka.ukupna_cijena_prodajna }} {{ $root.currency }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div ng-if="ctrl.invoiceTab === 'buyer'">
+          <div class="p-3">
+            <invoice-buyer-picker
+              data-invoice="ctrl.racun"
+              button-responsive-classes="col-6"
+              ng-model="ctrl.racun.komitent_id"
+            >
+            </invoice-buyer-picker>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex gap-3 p-3 border-top">
+        <button
+          class="btn btn-success py-2 lh-base flex-grow-1"
+          ng-click="ctrl.upis(1)"
+        >
+          <div><i class="fa fa fa-money"></i></div>
+          <div>Gotovina</div>
+        </button>
+        <button
+          class="btn btn-success py-2 lh-base flex-grow-1"
+          ng-click="ctrl.upis(2)"
+        >
+          <div><i class="fa fa-credit-card"></i></div>
+          <div>Kartica</div>
+        </button>
+        <button
+          class="btn btn-warning py-2 lh-base flex-grow-1"
+          ng-click="ctrl.porudzbina()"
+        >
+          <div><i class="fa fa fa-plus"></i></div>
+          <div>Porudžbina</div>
+        </button>
+        <button
+          class="btn btn-success py-2 lh-base flex-grow-1"
+          ng-click="ctrl.upisSaKupcem(8)"
+        >
+          <div><i class="fa fa-file"></i></div>
+          <div>Virman</div>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

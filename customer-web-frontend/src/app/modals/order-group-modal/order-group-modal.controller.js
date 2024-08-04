@@ -1,11 +1,11 @@
 angular
-    .module('app')
-    .controller('OrderGroupModalController', OrderGroupModalController);
+  .module("app")
+  .controller("OrderGroupModalController", OrderGroupModalController);
 
-OrderGroupModalController.$inject = ['$uibModalInstance', "groups"];
+OrderGroupModalController.$inject = ["$uibModalInstance", "invoice"];
 
-function OrderGroupModalController($uibModalInstance, groups) {
-    let ctrl = this;
-    ctrl.group = "";
-    ctrl.groups = groups;
+function OrderGroupModalController($uibModalInstance, invoice) {
+  let ctrl = this;
+  ctrl.group = "";
+  ctrl.invoice = invoice;
 }
