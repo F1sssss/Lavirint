@@ -14,6 +14,7 @@ from dateutil.relativedelta import relativedelta
 from OpenSSL.crypto import Error as OpenSSLCryptoError
 from sqlalchemy import func, orm
 from sqlalchemy import sql
+from sqlalchemy import select
 
 from backend import efi_xml
 from backend import enums
@@ -45,6 +46,7 @@ from backend.models import PaymentMethodType
 from backend.models import RegisterInvoiceRequest
 from backend.models import RegisterInvoiceResponse
 from backend.models import TaxExemptionReason
+from backend.models import VezaZbirnaFaktura
 from backend.models import Valuta
 from backend.opb import certificate_opb
 from backend.opb import depozit_opb
@@ -227,6 +229,15 @@ def validan_format_faktura(faktura_ids: list) -> bool:
         return False
     else:
         return True
+
+def orders_are_part_of_invoice(invoices) -> bool:
+    order_ids = [order.id for order in invoices]
+    stmt = select(VezaZbirnaFaktura).where(VezaZbirnaFaktura.c.clanica_faktura_id.in_(order_ids))
+    result = db.session.execute(stmt).fetchall()
+    if len(result) > 0:
+        return True
+    else:
+        return False
 
 def sve_fakture_su_order(invoices):
     if not all( all( payment_method.payment_method_type_id == PaymentMethod.TYPE_ORDER  for payment_method in invoice.payment_methods) for invoice in invoices):
@@ -776,32 +787,10 @@ def get_order_invoice(invoice_data, firma, operater, naplatni_uredjaj, calculate
     return invoice
 
 def get_cummulative_invoice(invoices_data, firma, operater, naplatni_uredjaj, calculate_totals, calculate_tax_groups):
-    
-    if (validan_format_faktura(invoices_data)):
-        invoices = listaj_fakture_po_idevima(invoices_data['invoice_ids'])
-
-    if (sve_fakture_su_order(invoices)):
-        raise InvoiceProcessingException(
-            messages={
-                i18n.LOCALE_SR_LATN_ME: "Sve fakture moraju biti tipa 'Order'.",
-                i18n.LOCALE_EN_US: "All invoices must be of type 'Order'.",
-            }
-        )
-
-    if len(invoices) == 0:
-        raise InvoiceProcessingException(
-            messages={
-                i18n.LOCALE_SR_LATN_ME: "Nijedna faktura nije pronađena.",
-                i18n.LOCALE_EN_US: "No invoices found.",
-            }
-        )
-
-    payment_methods = get_payment_methods_list_from_dict(invoices_data)
-
-    invoice = create_cummulative_invoice(invoices, payment_methods, invoices_data['napomena'], firma, operater, naplatni_uredjaj, calculate_totals, calculate_tax_groups)
+    invoice = create_cummulative_invoice(invoices_data, firma, operater, naplatni_uredjaj, calculate_totals, calculate_tax_groups)
 
     invoice.tip_fakture_id = Faktura.TYPE_CUMMULATIVE
-    invoice.customer_invoice_view = enums.CustomerInvoiceView.CUMMULATIVE_INVOICES.value
+    invoice.customer_invoice_view = enums.CustomerInvoiceView.REGULAR_INVOICES.value
 
     return invoice
 
@@ -1413,7 +1402,7 @@ def make_regular_invoice(invoice_data, firma, operater, naplatni_uredjaj, calcul
 
     return processing, invoice
 
-def make_cummulative_invoice(invoice_ids, firma, operater, naplatni_uredjaj, calculate_totals=True,
+def make_cummulative_invoice(invoice_data, firma, operater, naplatni_uredjaj, calculate_totals=True,
                              calculate_tax_groups=True, fiscalization_date=None):
     processing = InvoiceProcessing()
     invoice = None
@@ -1423,7 +1412,7 @@ def make_cummulative_invoice(invoice_ids, firma, operater, naplatni_uredjaj, cal
 
     with processing.acquire_lock(naplatni_uredjaj.id) as _:
         invoice = get_cummulative_invoice(
-            invoice_ids, firma, operater, naplatni_uredjaj, calculate_totals, calculate_tax_groups)
+            invoice_data, firma, operater, naplatni_uredjaj, calculate_totals, calculate_tax_groups)
 
         db.session.add(invoice)
         db.session.commit()
@@ -1456,11 +1445,6 @@ def make_order_invoice(
         db.session.commit()
 
         invoice = fiscalize_invoice(invoice, fiscalization_date)
-
-        #Posle uspjesne fiskalizacije, dodajemo fakturu u order_grupa_stavka
-        #order_grupa_stavka = OrderGrupaStavka(faktura_id=invoice.id)
-        #db.session.add(order_grupa_stavka)
-        #db.session.commit()  
 
         update_inventory_from_invoice(invoice)
         save_invoice_print(invoice)
@@ -1643,19 +1627,51 @@ def update_invoice_amounts(invoice, corrected_invoice_data):
     db.session.add(invoice)
     db.session.commit()
 
+
 def create_cummulative_invoice(     
-        invoices,
-        payment_methods,
-        napomena,
+        invoices_data,
         firma: Firma,
         operater: Operater,
         naplatni_uredjaj: NaplatniUredjaj,
         calculate_totals: bool = True,
         calculate_tax_groups: bool = True
 ):
+     
+    if (validan_format_faktura(invoices_data)):
+        invoices = listaj_fakture_po_idevima(invoices_data['invoice_ids'])
+
+    if not(sve_fakture_su_order(invoices)):
+        raise InvoiceProcessingException(
+            messages={
+                i18n.LOCALE_SR_LATN_ME: "Sve fakture moraju biti tipa 'Order'.",
+                i18n.LOCALE_EN_US: "All invoices must be of type 'Order'.",
+            }
+        )
+
+    if len(invoices) == 0:
+        raise InvoiceProcessingException(
+            messages={
+                i18n.LOCALE_SR_LATN_ME: "Nijedna faktura nije pronađena.",
+                i18n.LOCALE_EN_US: "No invoices found.",
+            }
+        )
+    
+    if (orders_are_part_of_invoice(invoices)):
+        raise InvoiceProcessingException(
+            messages={
+                i18n.LOCALE_SR_LATN_ME: "Neki od ordera su već dio sumarnog računa.",
+                i18n.LOCALE_EN_US: "Some of the orders are already part of a cummulative invoice.",
+            }
+        )
+
     zbirna_faktura = Faktura()
+    zbirna_faktura.is_cash = invoices_data['is_cash']
     zbirna_faktura.tip_fakture_id = Faktura.TYPE_CUMMULATIVE
+    #TODO maknuti hardkodirane vrijednosti i korisriti trenutno zakomentarisane linije
+    zbirna_faktura.datumvalute = datetime.now(pytz.timezone('Europe/Podgorica'))
     zbirna_faktura.poreski_period = datetime.now(pytz.timezone('Europe/Podgorica'))
+    #zbirna_faktura.datumvalute = datetime.fromisoformat(invoices_data['datumvalute'].replace('Z', podesavanja.TIMEZONE))
+    #zbirna_faktura.poreski_period = datetime.fromisoformat(invoices_data['poreski_period'].replace('Z', podesavanja.TIMEZONE))
     zbirna_faktura.poreski_period.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     zbirna_faktura.operater = operater
     zbirna_faktura.status = Faktura.STATUS_STORED
@@ -1663,7 +1679,7 @@ def create_cummulative_invoice(
     zbirna_faktura.firma_id = firma.id
     zbirna_faktura.naplatni_uredjaj_id = naplatni_uredjaj.id
     zbirna_faktura.naplatni_uredjaj = naplatni_uredjaj
-    zbirna_faktura.napomena = napomena 
+    zbirna_faktura.napomena = invoices_data['napomena']
 
     #Valuta u orderima je ista (EUR), pa je dovoljno uzeti prvu
     zbirna_faktura.valuta_id = invoices[0].valuta_id
@@ -1711,6 +1727,7 @@ def create_cummulative_invoice(
     zbirna_faktura.credit_note_turnover_remaining = zbirna_faktura.ukupna_cijena_prodajna
     zbirna_faktura.credit_note_turnover_used = 0
 
+    payment_methods = get_payment_methods_list_from_dict(invoices_data)
     for payment_method in payment_methods:
         zbirna_faktura.payment_methods.append(payment_method)
 
