@@ -52,7 +52,6 @@ function ApiService($http, $q, invoiceFactory) {
     api__faktura__pd_id__invoice_schedule__add;
 
   api.order = {};
-  api.order.listaj = apiKomitentListaj;
   api.order.summerize = api_order_summerize;
 
   api.profaktura = {};
